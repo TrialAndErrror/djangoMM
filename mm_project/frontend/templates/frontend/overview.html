@@ -1,0 +1,90 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}" />
+    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <h2 style="text-decoration-underline">Accounts Overview:</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="sortable table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Account</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in accounts %}
+                    <tr>
+                      <th scope="row">{{ entry.name }}</th>
+                      <td>{{ entry.type }}</td>
+                      <td>${{ entry.balance }}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col">
+            <a href="{% url 'frontend:all_accounts' %}"><h2>View All Accounts</h2></a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container mt-5">
+
+    <div class="row">
+        <div class="col">
+            <h2 style="text-decoration-underline">Upcoming Bills:</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="sortable table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Bills</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Last Paid</th>
+                  <th scope="col">Next Due</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills %}
+                    <tr>
+                      <td scope="row"><a href="{% url 'frontend:bill_update' pk=bill.id %}"> {{ bill.name }}</a></td>
+                        {% if bill.variable %}
+                            <td>${{ bill.amount }} (Variable)</td>
+                        {% else %}
+                            <td>${{ bill.amount }}</td>
+                        {% endif %}
+                      <td>{{ bill.last_paid }}</td>
+                      <td>{{ bill.next_due }}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <a href="{% url 'frontend:all_bills' %}"><h2>View All Bills</h2></a>
+    </div>
+</div>
+{% endblock %}

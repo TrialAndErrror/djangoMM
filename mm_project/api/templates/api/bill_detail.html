@@ -1,20 +1,36 @@
-
 {% extends "frontend/base.html" %}
+{% load humanize %}
+
 {% block body %}
   <article class="media content-section">
-    <div class="media-body">
-      <div class="article-metadata">
-        <a class="mr-2" href="{% url 'frontend:profile' %}">{{ object.owner }}</a>
-        <small class="text-muted">{{ object.last_paid|date:"F d, Y" }}</small>
-        {% if object.author == user %}
-          <div>
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
-          </div>
-        {% endif %}
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-decoration-underline">View Bill:</h1>
+        </div>
       </div>
-      <h2 class="article-title">{{ object.name }}</h2>
-      <p class="article-content">{{ object.amount }}</p>
+      <div class="row">
+        <div class="col">
+          {% if object.author == user %}
+            <h2 class="article-title">{{ object.name }}</h2>
+            <p class="article-content">Amount: ${{ object.amount|intcomma }}</p>
+            <small class="text-muted">Last Paid: {{ object.last_paid|date:"F d, Y" }}</small>
+              <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:bill_update' object.id %}">Update</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:bill_delete' object.id %}">Delete</a>
+              </div>
+            {% else %}
+              <h2 class="article-title">Error: Invalid Bill ID.</h2>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h4><a href="{% url 'frontend:all_bills' %}">Return to Bills List</a></h4>
+      </div>
+    </div>
+
     </div>
   </article>
 {% endblock body %}

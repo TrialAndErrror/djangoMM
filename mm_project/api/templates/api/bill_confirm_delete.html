@@ -1,0 +1,29 @@
+{% extends "frontend/base.html" %}
+{% load humanize %}
+
+{% block body %}
+    <div class="content-section">
+        {% if object.owner == user %}
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Delete Bill</legend>
+                <div class="container p-3">
+                    <h4>Bill Name: {{ object.name }}</h4>
+                    <p class="text-muted">Amount: ${{ object.amount|intcomma }}</p>
+                    <p class="text-muted">Last Paid: {{ object.last_paid }}</p>
+                    <p class="text-muted">Next Due: {{ object.next_due }}</p>
+                </div>
+
+            </fieldset>
+            <div class="form-group mt-3 ">
+                <h4>Are you sure you want to delete the this bill?</h4>
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                <a class="btn btn-outline-secondary" href="{% url 'frontend:bill_detail' object.id %}">Cancel</a>
+            </div>
+        </form>
+        {% else %}
+            <h2 class="article-title">Error: Invalid Bill ID.</h2>
+        {% endif %}
+    </div>
+{% endblock %}

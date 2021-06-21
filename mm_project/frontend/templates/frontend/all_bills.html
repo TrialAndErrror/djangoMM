@@ -13,16 +13,17 @@
                 <table class="sortable table table-hover">
                   <thead>
                     <tr>
-                      <th scope="col">Bills</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Last Paid</th>
-                      <th scope="col">Next Due</th>
+                        <th scope="col">Bills</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Last Paid</th>
+                        <th scope="col">Next Due</th>
+                        <th scope="col">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for bill in bills %}
                         <tr>
-                          <td scope="row">{{ bill.name }}</td>
+                          <td scope="row"><a href="{% url 'frontend:bill_update' pk=bill.id %}"> {{ bill.name }}</a></td>
                             {% if bill.variable %}
                                 <td>${{ bill.amount }} (Variable)</td>
                             {% else %}
@@ -30,6 +31,10 @@
                             {% endif %}
                           <td>{{ bill.last_paid }}</td>
                           <td>{{ bill.next_due }}</td>
+                            <td>
+                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:bill_update' bill.id %}">Edit</a>
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:bill_delete' bill.id %}">Delete</a>
+                            </td>
                         </tr>
                     {% endfor %}
                   </tbody>

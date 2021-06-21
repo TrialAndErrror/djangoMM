@@ -34,6 +34,9 @@ class Account(models.Model):
     def __str__(self):
         return f"{self.name} (Account {self.id})"
 
+    def get_absolute_url(self):
+        return reverse('frontend:account_detail', kwargs={'pk': self.pk})
+
 
 PERIOD_CHOICES = (
     ("day", "Daily"),

@@ -4,8 +4,8 @@ from api.forms import UserRegisterForm
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from api.tools import get_next_date
 
@@ -31,19 +31,26 @@ def view_profile(request):
 
 
 @login_required
+def view_summary(request):
+    bills = Bill.objects.filter(owner=request.user).order_by('next_due')[:3]
+    accounts = Account.objects.filter(owner=request.user).order_by('-balance')[:3]
+    context = {
+        'bills': bills,
+        'accounts': accounts,
+        'user': request.user.username
+    }
+
+    return render(request, "frontend/overview.html", context)
+
+
+@login_required
 def view_all_bills(request):
     bills = Bill.objects.filter(owner=request.user)
-    # for bill in bills:
-    #     if not bill.next_due:
-    #         next_date = get_next_date(bill.last_paid, bill.period)
-    #         bill.next_due = next_date
-    #         bill.save()
 
     context = {
         'bills': bills,
         'user': request.user.username
     }
-    print(context)
 
     return render(request, 'frontend/all_bills.html', context)
 
@@ -55,7 +62,6 @@ def view_all_accounts(request):
         'accounts': accounts,
         'user': request.user.username
     }
-    print(context)
     return render(request, 'frontend/all_accounts.html', context)
 
 
@@ -97,8 +103,12 @@ class BillCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class BillDetailView(DetailView):
+class BillDetailView(LoginRequiredMixin, DetailView):
     model = Bill
+
+
+class AccountDetailView(LoginRequiredMixin,DetailView):
+    model = Account
 
 
 class AccountCreateView(LoginRequiredMixin, CreateView):
@@ -108,3 +118,55 @@ class AccountCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
+
+
+class BillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Bill
+    fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.owner:
+            return True
+        return False
+
+
+class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Account
+    fields = ['name', 'balance', 'type']
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.owner:
+            return True
+        return False
+
+
+class BillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Bill
+    success_url = '/bills/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.owner:
+            return True
+        return False
+
+
+class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Account
+    success_url = '/accounts/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.owner:
+            return True
+        return False
