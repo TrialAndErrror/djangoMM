@@ -1,0 +1,5 @@
+/mm_project/db.sqlite3
+/mm_project/manage.py
+/mm_project/api/migrations/
+/mm_project/frontend/migrations/
+venv/

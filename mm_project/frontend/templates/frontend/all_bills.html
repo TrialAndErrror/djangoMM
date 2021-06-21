@@ -1,0 +1,43 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}" />
+    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="sortable table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Bills</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Last Paid</th>
+                      <th scope="col">Next Due</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills %}
+                        <tr>
+                          <td scope="row">{{ bill.name }}</td>
+                            {% if bill.variable %}
+                                <td>${{ bill.amount }} (Variable)</td>
+                            {% else %}
+                                <td>${{ bill.amount }}</td>
+                            {% endif %}
+                          <td>{{ bill.last_paid }}</td>
+                          <td>{{ bill.next_due }}</td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <a href="{% url 'frontend:add_bill' %}"><h2>Add New Bill</h2></a>
+    </div>
+{% endblock %}

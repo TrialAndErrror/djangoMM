@@ -1,0 +1,37 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}" />
+    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="sortable table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Account</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for entry in accounts %}
+                        <tr>
+                          <th scope="row">{{ entry.name }}</th>
+                          <td>{{ entry.type }}</td>
+                          <td>${{ entry.balance }}</td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <a href="{% url 'frontend:add_account' %}"><h2>Add New Account</h2></a>
+    </div>
+{% endblock %}
