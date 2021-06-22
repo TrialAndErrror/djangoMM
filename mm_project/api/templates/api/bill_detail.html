@@ -9,9 +9,9 @@
           <h1 class="text-decoration-underline">View Bill:</h1>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col">
-          {% if object.author == user %}
+          {% if object.owner == user %}
             <h2 class="article-title">{{ object.name }}</h2>
             <p class="article-content">Amount: ${{ object.amount|intcomma }}</p>
             <small class="text-muted">Last Paid: {{ object.last_paid|date:"F d, Y" }}</small>
