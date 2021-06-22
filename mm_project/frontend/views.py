@@ -7,12 +7,42 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
+from django.db.models import Avg, Count, Min, Sum
+
 from api.tools import get_next_date
 
 
 # Create your views here.
 def frontend_home(request):
-    return render(request, "frontend/home.html", {})
+    bills = Bill.objects.filter(owner=request.user)
+    accounts = Account.objects.filter(owner=request.user)
+
+    converter = {
+        "day": 30,
+        "week": 4,
+        "biweek": 2,
+        "month": 1,
+        "quarter": 1/3,
+        "biyear": 1/6,
+        "year": 1/12,
+    }
+
+    accounts_total = sum(
+        [entry.balance
+         for entry in accounts]
+    )
+    bill_total = sum(
+        [entry.amount * converter[entry.period]
+         for entry in bills]
+    )
+    context_dict = {
+        'account_total': accounts_total,
+        'account_count': accounts.aggregate(Count('id'))['id__count'],
+        'bill_total': bill_total,
+        'bill_count': bills.aggregate(Count('id'))['id__count'],
+        'user': request.user.username
+    }
+    return render(request, "frontend/home.html", context_dict)
 
 
 @login_required
@@ -107,7 +137,7 @@ class BillDetailView(LoginRequiredMixin, DetailView):
     model = Bill
 
 
-class AccountDetailView(LoginRequiredMixin,DetailView):
+class AccountDetailView(LoginRequiredMixin, DetailView):
     model = Account
 
 
@@ -126,6 +156,7 @@ class BillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
         return super().form_valid(form)
 
     def test_func(self):

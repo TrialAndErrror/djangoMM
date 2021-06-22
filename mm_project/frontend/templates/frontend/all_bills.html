@@ -7,13 +7,18 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container card">
+        <div class="row card-header text-white bg-secondary">
+            <div class="col">
+                <h1 style="text-decoration-underline">All Bills:</h1>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="sortable table table-hover">
+                <table class="sortable table table-hover border-secondary">
                   <thead>
                     <tr>
-                        <th scope="col">Bills</th>
+                        <th scope="col">Bill Name</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Last Paid</th>
                         <th scope="col">Next Due</th>
@@ -23,7 +28,7 @@
                   <tbody>
                     {% for bill in bills %}
                         <tr>
-                          <td scope="row"><a href="{% url 'frontend:bill_update' pk=bill.id %}"> {{ bill.name }}</a></td>
+                          <td><a href="{% url 'frontend:bill_detail' bill.id %}"> {{ bill.name }}</a></td>
                             {% if bill.variable %}
                                 <td>${{ bill.amount }} (Variable)</td>
                             {% else %}
@@ -41,8 +46,9 @@
                 </table>
             </div>
         </div>
+        <div class="row m-3">
+            <a href="{% url 'frontend:add_bill' %}"><h2 class="text-secondary">Add New Bill</h2></a>
+        </div>
     </div>
-    <div class="container">
-        <a href="{% url 'frontend:add_bill' %}"><h2>Add New Bill</h2></a>
-    </div>
+
 {% endblock %}
