@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 def logout_view(request):
     logout(request)
-    return render(request, "frontend/loggedout.html", {})
+    return render(request, "frontend/profile/loggedout.html", {})
 
 
 def register(request):

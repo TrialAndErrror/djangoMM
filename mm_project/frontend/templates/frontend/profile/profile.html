@@ -1,0 +1,22 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% block body %}
+    <div class="container">
+        <h2>
+            User {{ user_obj.id }}
+        </h2>
+        <h3>
+            Username:{{ user_obj.username }}
+        </h3>
+        <h3>
+            Name:{{ user_obj.first_name }} {{ user_obj.last_name}}
+        </h3>
+
+        <h3>
+            E-mail: {{ user_obj.email }}
+        </h3>
+        <h4>
+            Date Joined: {{ user_obj.date_joined }}
+        </h4>
+    </div>
+{% endblock %}

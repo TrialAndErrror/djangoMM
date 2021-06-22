@@ -33,4 +33,11 @@ urlpatterns = [
     path("accounts/<int:pk>", AccountDetailView.as_view(), name="account_detail"),
     path("accounts/<int:pk>/update/", AccountUpdateView.as_view(), name="account_update"),
     path("accounts/<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
+    path("expenses/", view_all_expenses, name="all_expenses"),
+    path("expenses/add", ExpenseCreateView.as_view(), name="add_expense"),
+    path("expenses/<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
+    path("expenses/<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
+    path("expenses/<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
+    path("expenses/<int:year>/", view_year_expenses, name="year_expenses"),
+    path("expenses/<int:year>/<int:month>/", view_month_expenses, name="month_expenses"),
 ]

@@ -1,0 +1,36 @@
+{% load humanize %}
+
+<div class="row card-header text-white bg-primary">
+    <div class="col">
+        <h2 class="text-decoration-underline">Accounts Overview:</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div>
+        <table class="sortable table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Account</th>
+                <th scope="col">Type</th>
+                <th scope="col">Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entry in accounts %}
+                <tr>
+                    <td><a href="{% url 'frontend:account_detail' entry.id %}">{{ entry.name }}</a></td>
+                    <td>{{ entry.type }}</td>
+                    <td>${{ entry.balance|intcomma }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row m-3">
+    <div class="col">
+        <a href="{% url 'frontend:all_accounts' %}"><h2>View All Accounts</h2></a>
+    </div>
+</div>

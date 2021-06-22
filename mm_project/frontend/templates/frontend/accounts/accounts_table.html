@@ -1,0 +1,27 @@
+{% load humanize %}
+
+<table class="sortable table table-hover border-primary">
+    <thead>
+    <tr>
+        <th scope="col">Account Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Balance</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entry in accounts %}
+        <tr>
+            <td><a href="{% url 'frontend:account_detail' entry.id %}">{{ entry.name }}</a></td>
+            <td>{{ entry.type }}</td>
+            <td>${{ entry.balance|intcomma }}</td>
+            <td>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                   href="{% url 'frontend:account_update' entry.id %}">Edit</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1"
+                   href="{% url 'frontend:account_delete' entry.id %}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

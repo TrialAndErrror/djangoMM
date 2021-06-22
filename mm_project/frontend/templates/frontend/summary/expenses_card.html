@@ -1,0 +1,41 @@
+{% load humanize %}
+
+<div class="row card-header text-white bg-info">
+    <div class="col">
+        <h1 class="text-decoration-underline">Expenses</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="sortable table table-hover border-info">
+            <thead>
+            <tr>
+                <th scope="col">Expense Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Account</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for expense in expenses %}
+                <tr>
+                    <td><a href="{% url 'frontend:expense_detail' expense.id %}"> {{ expense.name }}</a>
+                    </td>
+                    <td>${{ expense.amount|intcomma }}</td>
+                    <td>{{ expense.date|date:"F d, Y" }}</td>
+                    {% if expense.other_category %}
+                        <td>{{ expense.other_category }}</td>
+                    {% else %}
+                        <td>{{ expense.category }}</td>
+                    {% endif %}
+                    <td>{{ expense.account.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row m-3">
+    <a href="{% url 'frontend:all_expenses' %}"><h2 class="text-info">View All Expenses</h2></a>
+</div>

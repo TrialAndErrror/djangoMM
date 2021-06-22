@@ -22,7 +22,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("register/", register, name='register'),
     path("logout/", logout_view, name='logout'),
-    path('login/', auth_views.LoginView.as_view(template_name='frontend/login.html'), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='frontend/profile/login.html'), name='login'),
     path("", include("frontend.urls")),
     path("api/", include("api.urls")),
 ]
