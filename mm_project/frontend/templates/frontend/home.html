@@ -10,7 +10,10 @@
             <h1>Money Manager Home</h1>
         </div>
         <div class="col-xl-4 d-grid gap-2">
-            <button type="button" class="btn btn-lg btn-warning"><a href="{% url 'frontend:refresh' %}" class="text-white">Refresh Graphs</a></button>
+            {% if account_count > 0 or bills_count > 0 or expenses_count > 0 %}
+                <button type="button" class="btn btn-lg btn-warning"><a href="{% url 'frontend:refresh' %}"
+                                                                        class="text-white">Refresh Graphs</a></button>
+            {% endif %}
         </div>
     </div>
     <div class="row mt-3">
@@ -57,16 +60,31 @@
     </div>
     <div class="row mt-3">
         <div class="col-xl-4">
-            <img src="{% get_media_prefix %}{{ user }}/piechart_accounts.png" alt="Account Overview Pie Chart">
+            {% if account_count > 0 %}
+                <img src="{% get_media_prefix %}{{ user }}/piechart_accounts.png" alt="Account Overview Pie Chart">
+            {% else %}
+                <p>Add an Account, then Refresh Graphs to show your Accounts Breakdown chart here!</p>
+            {% endif %}
         </div>
         <div class="col-xl-4">
-            <img src="{% get_media_prefix %}{{ user }}/piechart_bills.png" alt="Bills Overview Pie Chart">
+            {% if bills_count > 0 %}
+                <img src="{% get_media_prefix %}{{ user }}/piechart_bills.png" alt="Bills Overview Pie Chart">
+            {% else %}
+                <p>Add a Bill, then Refresh Graphs to show your Bill Breakdown chart here!</p>
+
+            {% endif %}
+
         </div>
         <div class="col-xl-4">
-            <img src="{% get_media_prefix %}{{ user }}/piechart_expenses.png" alt="Expenses Overview Pie Chart">
+            {% if expenses_count > 0 %}
+                <img src="{% get_media_prefix %}{{ user }}/piechart_expenses.png" alt="Expenses Overview Pie Chart">
+            {% else %}
+                <p>Add an Expense, then Refresh Graphs to show your Expenses Breakdown chart here!</p>python3 manage.py check --deploy
+            {% endif %}
+
         </div>
     </div>
     <div class="row mt-3">
 
-    <div>
+        <div>
 {% endblock %}

@@ -3,3 +3,4 @@
 /mm_project/api/migrations/
 /mm_project/frontend/migrations/
 venv/
+/mm_project/mm_project/settings.ini
