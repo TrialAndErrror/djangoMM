@@ -7,6 +7,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from api.models import Bill
 from api.tools import get_next_date
+from api.forms import BillPayForm
 
 
 @login_required
@@ -24,12 +25,33 @@ def view_all_bills(request):
 @login_required
 def pay_bill(request, pk):
     bill = Bill.objects.get(owner=request.user, id=pk)
-    if bill:
-        bill.last_paid = bill.next_due
-        bill.next_due = get_next_date(bill.last_paid, bill.period)
-        bill.save()
-        messages.success(request, f'Bill {bill.name} marked as paid.')
-        return redirect(f'/bills/{bill.id}/')
+
+    if request.method == 'POST':
+        form = BillPayForm(request.POST)
+        if form.is_valid():
+            amount_paid = form.cleaned_data.get("amount")
+            date_paid = form.cleaned_data.get("date_paid")
+
+            if amount_paid > bill.account.balance:
+                messages.warning(request, f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
+            else:
+                bill.last_paid = date_paid
+                bill.next_due = get_next_date(bill.last_paid, bill.period)
+                bill.account.balance -= amount_paid
+                bill.save()
+                bill.account.save()
+                messages.success(request, f'Bill {bill.name} paid from {bill.account.name}.')
+                return redirect(f'/bills/{bill.id}/')
+    form = BillPayForm({
+        "amount": bill.amount,
+        "date_paid": bill.next_due
+    })
+    context = {
+        'form': form,
+        'object': bill,
+        'user': request.user.username
+    }
+    return render(request, "frontend/bills/pay_bill.html", context)
 
 
 class BillDetailView(LoginRequiredMixin, DetailView):

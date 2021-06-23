@@ -19,7 +19,7 @@
             <tbody>
             {% for bill in bills %}
                 <tr>
-                    <td scope="row"><a href="{% url 'frontend:bill_update' pk=bill.id %}"> {{ bill.name }}</a></td>
+                    <td scope="row"><a href="{% url 'frontend:bill_update' pk=bill.id %}" class="text-secondary"> {{ bill.name }}</a></td>
                     {% if bill.variable %}
                         <td>${{ bill.amount }} (Variable)</td>
                     {% else %}
@@ -27,7 +27,7 @@
                     {% endif %}
                     <td>{{ bill.last_paid }}</td>
                     <td>{{ bill.next_due }}</td>
-                <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Mark as Paid</a></td>
+                <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Pay Bill</a></td>
 
                 </tr>
             {% endfor %}
@@ -37,5 +37,5 @@
 </div>
 
 <div class="row m-3">
-    <a href="{% url 'frontend:all_bills' %}"><h2  class="text-secondary">View All Bills</h2></a>
+    <h2><a href="{% url 'frontend:all_bills' %}" class="text-secondary">View All Bills</a></h2>
 </div>

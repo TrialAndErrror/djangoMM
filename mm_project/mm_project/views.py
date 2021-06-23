@@ -21,4 +21,4 @@ def register(request):
             return redirect('frontend:home')
     else:
         form = UserRegisterForm()
-    return render(request, 'frontend/register.html', {'form': form})
+    return render(request, 'frontend/profile/register.html', {'form': form})

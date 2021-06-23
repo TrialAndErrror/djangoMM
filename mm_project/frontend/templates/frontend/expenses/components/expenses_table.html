@@ -1,6 +1,6 @@
 {% load humanize %}
 
-<table class="sortable table table-hover border-info">
+<table class="sortable table table-hover border-info mb-3">
   <thead>
     <tr>
         <th scope="col">Expense Name</th>
@@ -14,7 +14,7 @@
   <tbody>
     {% for expense in expenses %}
         <tr>
-            <td><a href="{% url 'frontend:expense_detail' expense.id %}"> {{ expense.name }}</a></td>
+            <td><a href="{% url 'frontend:expense_detail' expense.id %}" class="text-info"> {{ expense.name }}</a></td>
             <td>${{ expense.amount|intcomma }}</td>
             <td>{{ expense.date|date:"F d, Y" }}</td>
             {% if expense.other_category %}

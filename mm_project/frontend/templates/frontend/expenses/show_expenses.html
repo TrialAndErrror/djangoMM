@@ -1,0 +1,42 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% load static %}
+
+{% block title %} Money Manager: View Expenses {% endblock %}
+
+{% block head %}
+    {% include 'frontend/utils/table_sort_header.html' %}
+{% endblock %}
+
+{% block body %}
+    <div class="container card">
+        <div class="row card-header text-white bg-info">
+            <div class="col">
+                {% include 'frontend/expenses/components/expense_header.html' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include 'frontend/expenses/components/expenses_search.html' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% if found %}
+                  {% include 'frontend/expenses/components/expenses_table.html' %}
+                {% else %}
+                    {% include 'frontend/expenses/components/no_expenses_found.html' %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row m-3">
+            <div class="col">
+                <a href="{% url 'frontend:add_expense' %}"><h2 class="text-info">Add New Expense</h2></a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,24 +1,14 @@
-from calendar import month_name
-from datetime import date
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from api.models import Expense
+from api.forms import ExpenseFilterForm
+from django.contrib import messages
 
-
-@login_required
-def view_all_expenses(request):
-    expenses = Expense.objects.filter(owner=request.user).order_by("date")
-    context = {
-        'expenses': expenses,
-        'user': request.user.username
-    }
-    return render(request, 'frontend/expenses/all_expenses.html', context)
-
+from calendar import month_name
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expense
@@ -63,31 +53,47 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
 
 @login_required
-def view_year_expenses(request, year):
-    expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=date(year, 1, 1),
-                                      date__lte=date(year, 12, 31)).order_by("date")
+def view_all_expenses(request):
+    expenses = Expense.objects.filter(owner=request.user).order_by("date")
+    month = None
+    year = None
+
+    if request.method == 'POST':
+        form = ExpenseFilterForm(request.POST)
+
+        if form.is_valid():
+            month = form.cleaned_data.get('month', None)
+            year = form.cleaned_data.get('year', None)
+
+        else:
+            messages.error(request, 'Invalid Filter Parameters')
+
+    return view_expenses_list(request, expenses, year, month)
+
+
+def view_expenses_list(request, expenses, year=None, month=None):
     context = {
-        'expenses': expenses,
         'user': request.user.username,
+        'found': False,
+        'month': month,
         'year': year
     }
-    if len(expenses) > 0:
-        return render(request, 'frontend/expenses/period_expenses.html', context)
-    return render(request, 'frontend/expenses/no_expenses.html', context)
+    if month:
+        context['month'] = month_name[int(month)]
+        expenses = expenses.filter(date__year=year, date__month=month)
+    if year:
+        expenses = expenses.filter(date__year=year)
 
+    form = ExpenseFilterForm()
 
-@login_required
-def view_month_expenses(request, year, month):
-    expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=date(year, int(month), 1),
-                                      date__lte=date(year, int(month), 31)).order_by("date")
-    context = {
-        'expenses': expenses,
-        'month': month_name[month],
-        'year': year,
-        'user': request.user.username
-    }
     if len(expenses) > 0:
-        return render(request, 'frontend/expenses/period_expenses.html', context)
-    return render(request, 'frontend/expenses/no_expenses.html', context)
+
+        context['found'] = True
+        context['expenses'] = expenses
+
+        form.year = year
+        form.month = month
+
+    context['form'] = form
+
+    return render(request, 'frontend/expenses/show_expenses.html', context)

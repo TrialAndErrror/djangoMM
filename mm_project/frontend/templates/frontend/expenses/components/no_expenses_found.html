@@ -1,0 +1,10 @@
+<div class="card m-3">
+    <div class="card-header">No Expenses Found</div>
+    <div class="card-body">
+        {% if month %}
+            <div class="card-text">No Expense entries found for {{ month }} {{ year }}</div>
+        {% else %}
+            <div class="card-text">No Expense entries found for {{ year }}</div>
+        {% endif %}
+    </div>
+</div>

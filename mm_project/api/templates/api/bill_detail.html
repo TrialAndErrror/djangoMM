@@ -16,11 +16,11 @@
       <div class="row mt-3">
         <div class="col ml-5">
           {% if object.owner == user %}
-          <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-            <div class="card-header">Bill #{{ object.id }}</div>
-            <div class="card-body">
-              <h4 class="card-title">{{ object.name }}</h4>
-              <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
+          <div class="card mb-3" style="max-width: 20rem;">
+            <div class="card-header text-white bg-secondary">Bill #{{ object.id }}</div>
+            <div class="card-body bg-light">
+              <h4 class="card-title mb-3">{{ object.name }}</h4>
+              <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
               <p class="card-text">Last Paid: {{ object.last_paid|date:"F d, Y" }}</p>
               <p class="card-text">Period: {{ object.period }}</p>
               <p class="card-text">Next Due: {{ object.next_due|date:"F d, Y" }}</p>

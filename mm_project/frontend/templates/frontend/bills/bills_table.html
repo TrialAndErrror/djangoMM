@@ -13,7 +13,7 @@
     <tbody>
     {% for bill in bills %}
         <tr>
-            <td><a href="{% url 'frontend:bill_detail' bill.id %}"> {{ bill.name }}</a></td>
+            <td><a href="{% url 'frontend:bill_detail' bill.id %}" class="text-secondary"> {{ bill.name }}</a></td>
             {% if bill.variable %}
                 <td>${{ bill.amount }} (Variable)</td>
             {% else %}
@@ -22,7 +22,7 @@
             <td>{{ bill.last_paid }}</td>
             <td>{{ bill.next_due }}</td>
             <td>
-                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Mark as Paid</a>
+                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Pay Bill</a>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:bill_update' bill.id %}">Edit</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:bill_delete' bill.id %}">Delete</a>
             </td>

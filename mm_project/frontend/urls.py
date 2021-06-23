@@ -22,7 +22,7 @@ from .views.accounts_views import view_all_accounts, AccountDetailView, AccountC
     AccountDeleteView
 from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillCreateView, BillUpdateView, BillDeleteView
 from .views.expense_views import view_all_expenses, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, \
-    ExpenseDeleteView, view_year_expenses, view_month_expenses
+    ExpenseDeleteView
 
 app_name = "frontend"
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path("", frontend_home, name="home"),
     path("profile/", view_profile, name="profile"),
     path("summary/", view_summary, name="summary"),
+    path("refresh/", refresh_graphs, name="refresh"),
     path("bills/", view_all_bills, name="all_bills"),
     path("bills/add", BillCreateView.as_view(), name="add_bill"),
     path('bills/<int:pk>/', BillDetailView.as_view(), name='bill_detail'),
@@ -46,6 +47,4 @@ urlpatterns = [
     path("expenses/<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
     path("expenses/<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("expenses/<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
-    path("expenses/date/<int:year>/", view_year_expenses, name="year_expenses"),
-    path("expenses/date/<int:year>/<int:month>/", view_month_expenses, name="month_expenses"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
