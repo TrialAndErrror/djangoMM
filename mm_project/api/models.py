@@ -39,13 +39,13 @@ class Account(models.Model):
 
 
 PERIOD_CHOICES = (
-    ("day", "Daily"),
-    ("week", "Weekly"),
-    ("biweek", "Bi-Weekly"),
-    ("month", "Monthly"),
-    ("quarter", "Quarterly"),
-    ("biyear", "Semi-Annual"),
-    ("year", "Annual"),
+    ("Daily", "Daily"),
+    ("Weekly", "Weekly"),
+    ("Bi-Weekly", "Bi-Weekly"),
+    ("Monthly", "Monthly"),
+    ("Quarterly", "Quarterly"),
+    ("Semi-Annual", "Semi-Annual"),
+    ("Annual", "Annual"),
 )
 
 
@@ -55,7 +55,7 @@ class Bill(models.Model):
     variable = models.BooleanField(default=False)
     day = models.IntegerField(blank=True, null=True)
     period = models.CharField(
-        max_length=20, choices=PERIOD_CHOICES, default="week", blank=True, null=True
+        max_length=20, choices=PERIOD_CHOICES, default="Monthly", blank=True, null=True
     )
     last_paid = models.DateField(blank=True, null=True)
     next_due = models.DateField(blank=True, null=True)

@@ -1,14 +1,18 @@
-from django.shortcuts import render, Http404
+from django.shortcuts import render, Http404, redirect
 from api.models import User, Bill, Account, Expense
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 
 from django.db.models import Count
 
-from api.tools import get_next_date
+from api.tools import get_next_date, BILLS_CONVERTER, make_graphs
 
 from datetime import date
 from calendar import month_name
@@ -20,28 +24,12 @@ def frontend_home(request):
     accounts = Account.objects.filter(owner=request.user)
     expenses = Expense.objects.filter(owner=request.user)
 
-    converter = {
-        "day": 30,
-        "week": 4,
-        "biweek": 2,
-        "month": 1,
-        "quarter": 1/3,
-        "biyear": 1/6,
-        "year": 1/12,
-    }
+    accounts_balances, expense_balances = make_graphs(accounts, bills, expenses, request.user.username)
 
-    accounts_total = sum(
-        [entry.balance
-         for entry in accounts]
-    )
-    bill_total = sum(
-        [entry.amount * converter[entry.period]
-         for entry in bills]
-    )
-    expenses_total = sum(
-        [entry.amount
-         for entry in expenses]
-    )
+    accounts_total = sum(accounts_balances)
+    expenses_total = sum(expense_balances)
+
+    bill_total = sum([entry.amount * BILLS_CONVERTER[entry.period] for entry in bills])
 
     context_dict = {
         'account_total': accounts_total,
@@ -110,7 +98,7 @@ def view_summary(request):
 
 @login_required
 def view_all_bills(request):
-    bills = Bill.objects.filter(owner=request.user)
+    bills = Bill.objects.filter(owner=request.user).order_by("next_due")
 
     context = {
         'bills': bills,
@@ -120,13 +108,25 @@ def view_all_bills(request):
     return render(request, 'frontend/bills/all_bills.html', context)
 
 
+@login_required
+def pay_bill(request, pk):
+    bill = Bill.objects.get(owner=request.user, id=pk)
+    if bill:
+        bill.last_paid = bill.next_due
+        bill.next_due = get_next_date(bill.last_paid, bill.period)
+        bill.save()
+        messages.success(request, f'Bill {bill.name} marked as paid.')
+        return redirect(f'/bills/{bill.id}/')
+
+
 class BillDetailView(LoginRequiredMixin, DetailView):
     model = Bill
 
 
-class BillCreateView(LoginRequiredMixin, CreateView):
+class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Bill
     fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
+    success_message = 'Bill "%(name)s" Created'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -134,9 +134,10 @@ class BillCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
     
-class BillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class BillUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Bill
     fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
+    success_message = 'Bill "%(name)s" Updated'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -150,9 +151,10 @@ class BillUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
     
         
-class BillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class BillDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Bill
     success_url = '/bills/'
+    success_message = 'Bill "%(name)s" Deleted'
 
     def test_func(self):
         post = self.get_object()
@@ -163,7 +165,7 @@ class BillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def view_all_accounts(request):
-    accounts = Account.objects.filter(owner=request.user)
+    accounts = Account.objects.filter(owner=request.user).order_by("balance")
     context = {
         'accounts': accounts,
         'user': request.user.username
@@ -180,18 +182,20 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     model = Account
 
 
-class AccountCreateView(LoginRequiredMixin, CreateView):
+class AccountCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Account
     fields = ['name', 'balance', 'type']
+    success_message = 'Account "%(name)s" Created'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Account
     fields = ['name', 'balance', 'type']
+    success_message = 'Account "%(name)s" Updated'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -204,9 +208,10 @@ class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
-class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class AccountDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Account
     success_url = '/accounts/'
+    success_message = 'Account "%(name)s" Deleted'
 
     def test_func(self):
         post = self.get_object()
@@ -217,7 +222,7 @@ class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def view_all_expenses(request):
-    expenses = Expense.objects.filter(owner=request.user)
+    expenses = Expense.objects.filter(owner=request.user).order_by("date")
     context = {
         'expenses': expenses,
         'user': request.user.username
@@ -229,18 +234,20 @@ class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expense
 
 
-class ExpenseCreateView(LoginRequiredMixin, CreateView):
+class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Expense
     fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
+    success_message = 'Expense "%(name)s" Created'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class ExpenseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Expense
     fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
+    success_message = 'Expense "%(name)s" Updated'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -253,9 +260,10 @@ class ExpenseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
-class ExpenseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Expense
     success_url = '/accounts/'
+    success_message = 'Expense "%(name)s" Deleted'
 
     def test_func(self):
         post = self.get_object()
@@ -268,7 +276,7 @@ class ExpenseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 def view_year_expenses(request, year):
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date(year, 1, 1),
-                                      date__lte=date(year, 12, 31))
+                                      date__lte=date(year, 12, 31)).order_by("date")
     context = {
         'expenses': expenses,
         'user': request.user.username,
@@ -283,7 +291,7 @@ def view_year_expenses(request, year):
 def view_month_expenses(request, year, month):
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date(year, int(month), 1),
-                                      date__lte=date(year, int(month), 31))
+                                      date__lte=date(year, int(month), 31)).order_by("date")
     context = {
         'expenses': expenses,
         'month': month_name[month],

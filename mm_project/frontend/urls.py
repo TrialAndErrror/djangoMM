@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 from .views import *
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "frontend"
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path('bills/<int:pk>/', BillDetailView.as_view(), name='bill_detail'),
     path("bills/<int:pk>/update/", BillUpdateView.as_view(), name="bill_update"),
     path("bills/<int:pk>/delete/", BillDeleteView.as_view(), name="bill_delete"),
+    path("bills/<int:pk>/pay/", pay_bill, name="pay_bill"),
     path("accounts/", view_all_accounts, name="all_accounts"),
     path("accounts/add", AccountCreateView.as_view(), name="add_account"),
     path("accounts/<int:pk>", AccountDetailView.as_view(), name="account_detail"),
@@ -38,6 +40,6 @@ urlpatterns = [
     path("expenses/<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
     path("expenses/<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("expenses/<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
-    path("expenses/<int:year>/", view_year_expenses, name="year_expenses"),
-    path("expenses/<int:year>/<int:month>/", view_month_expenses, name="month_expenses"),
-]
+    path("expenses/date/<int:year>/", view_year_expenses, name="year_expenses"),
+    path("expenses/date/<int:year>/<int:month>/", view_month_expenses, name="month_expenses"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

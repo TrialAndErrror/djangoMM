@@ -2,49 +2,54 @@
 {% load humanize %}
 
 {% block body %}
-  <article class="media content-section">
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h1 class="text-decoration-underline">View Expense:</h1>
-        </div>
-      </div>
-      <div class="row mt-3">
-        <div class="col ml-5">
-          {% if object.owner == user %}
-          <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-            <div class="card-header">Expense #{{ object.id }}</div>
-            <div class="card-body">
-              <h4 class="card-title">{{ object.name }}</h4>
-              <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
-              <p class="card-text mb-0">Account: {{ object.account }}</p>
-              <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-              {% if object.other_category %}
-                <p class="card-text">Category: {{ object.other_category }}</p>
-              {% else %}
-                <p class="card-text">Category: {{ object.category }}</p>
-              {% endif %}
-              {% if object.notes %}
-                <p class="card-text">Notes: {{ object.notes }}</p>
-              {% endif %}
+    <article class="media content-section">
+        <div class="container">
+            {% include 'api/messages.html' %}
+
+            <div class="row">
+                <div class="col">
+                    <h1 class="text-decoration-underline">View Expense:</h1>
+                </div>
             </div>
-          </div>
-          <div class="mt-2">
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:bill_update' object.id %}">Edit</a>
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:bill_delete' object.id %}">Delete</a>
-          </div>
-          {% else %}
-            <h2 class="article-title">Error: Invalid Bill ID.</h2>
-          {% endif %}
+
+            <div class="row mt-3">
+                <div class="col ml-5">
+                    {% if object.owner == user %}
+                        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">Expense #{{ object.id }}</div>
+                            <div class="card-body">
+                                <h4 class="card-title">{{ object.name }}</h4>
+                                <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
+                                <p class="card-text mb-0">Account: {{ object.account.name }}</p>
+                                <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
+                                {% if object.other_category %}
+                                    <p class="card-text">Category: {{ object.other_category }}</p>
+                                {% else %}
+                                    <p class="card-text">Category: {{ object.category }}</p>
+                                {% endif %}
+                                {% if object.notes %}
+                                    <p class="card-text">Notes: {{ object.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                               href="{% url 'frontend:expense_update' object.id %}">Edit</a>
+                            <a class="btn btn-danger btn-sm mt-1 mb-1"
+                               href="{% url 'frontend:expense_delete' object.id %}">Delete</a>
+                        </div>
+                    {% else %}
+                        <h2 class="article-title">Error: Invalid Bill ID.</h2>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <h4><a href="{% url 'frontend:all_expenses' %}">Return to Bills List</a></h4>
+                </div>
+            </div>
+
         </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="col">
-        <h4><a href="{% url 'frontend:all_bills' %}">Return to Bills List</a></h4>
-      </div>
-    </div>
-
-    </div>
-  </article>
+    </article>
 {% endblock body %}

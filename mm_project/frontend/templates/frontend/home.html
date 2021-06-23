@@ -1,5 +1,6 @@
 {% extends 'frontend/utils/base.html' %}
 {% load humanize %}
+{% load static %}
 
 {% block body %}
     <div class="row">
@@ -19,6 +20,7 @@
                 </div>
             </a>
         </div>
+
         <div class="col-xl-4">
             <a href="{% url 'frontend:all_bills' %}" style="text-decoration: none;">
                 <div class="card text-white bg-secondary m-3" style="max-width: 20rem;">
@@ -31,6 +33,7 @@
                 </div>
             </a>
         </div>
+
         <div class="col-xl-4">
             <a href="{% url 'frontend:all_expenses' %}" style="text-decoration: none;">
                 <div class="card text-white bg-info m-3" style="max-width: 20rem;">
@@ -43,5 +46,17 @@
                 </div>
             </a>
         </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-xl-4">
+            <img src="{% get_media_prefix %}{{ user }}/piechart_accounts.png" alt="Account Overview Pie Chart" height="240px" width="340px">
+        </div>
+        <div class="col-xl-4">
+            <img src="{% get_media_prefix %}{{ user }}/piechart_bills.png" alt="Bills Overview Pie Chart" height="240px" width="340px">
+        </div>
+        <div class="col-xl-4">
+            <img src="{% get_media_prefix %}{{ user }}/piechart_expenses.png" alt="Expenses Overview Pie Chart" height="240px" width="340px">
+        </div>
+
     </div>
 {% endblock %}

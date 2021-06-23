@@ -13,6 +13,7 @@
                 <th scope="col">Amount</th>
                 <th scope="col">Last Paid</th>
                 <th scope="col">Next Due</th>
+                <th>Pay Bill</th>
             </tr>
             </thead>
             <tbody>
@@ -26,6 +27,8 @@
                     {% endif %}
                     <td>{{ bill.last_paid }}</td>
                     <td>{{ bill.next_due }}</td>
+                <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Mark as Paid</a></td>
+
                 </tr>
             {% endfor %}
             </tbody>

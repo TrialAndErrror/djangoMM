@@ -4,11 +4,15 @@
 {% block body %}
   <article class="media content-section">
     <div class="container">
+
+    {% include 'api/messages.html' %}
+
       <div class="row">
         <div class="col">
           <h1 class="text-decoration-underline">View Bill:</h1>
         </div>
       </div>
+
       <div class="row mt-3">
         <div class="col ml-5">
           {% if object.owner == user %}
