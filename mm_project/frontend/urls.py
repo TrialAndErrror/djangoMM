@@ -18,6 +18,12 @@ from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
+from .views.accounts_views import view_all_accounts, AccountDetailView, AccountCreateView, AccountUpdateView, \
+    AccountDeleteView
+from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillCreateView, BillUpdateView, BillDeleteView
+from .views.expense_views import view_all_expenses, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, \
+    ExpenseDeleteView, view_year_expenses, view_month_expenses
+
 app_name = "frontend"
 
 urlpatterns = [
