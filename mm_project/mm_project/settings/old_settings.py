@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config, Csv
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,13 +127,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, '../static'),
 )
 
 # Default primary key field type
@@ -148,6 +149,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # HTTPS Settings
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
+
+ADMINS = [('Wade', 'thewadegreen@gmail.com'),]
