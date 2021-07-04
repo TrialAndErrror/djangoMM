@@ -142,7 +142,7 @@ MEDIA_URL = 'media/'
 # HTTPS Settings
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
