@@ -1,14 +1,17 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
-from api.models import Expense
+from api.models import Expense, Account
 from api.forms import ExpenseFilterForm
 from django.contrib import messages
 
 from calendar import month_name
+
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expense
@@ -18,10 +21,17 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Expense
     fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
     success_message = 'Expense "%(name)s" Created'
+    initial = {'date': datetime.date.today().strftime("%m/%d/%Y")}
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    def get_form(self, *args, **kwargs):
+        form = super(ExpenseCreateView, self).get_form(*args, **kwargs)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        return form
+
 
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -38,6 +48,11 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         if self.request.user == post.owner:
             return True
         return False
+
+    def get_form(self, *args, **kwargs):
+        form = super(ExpenseUpdateView, self).get_form(*args, **kwargs)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        return form
 
 
 class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):

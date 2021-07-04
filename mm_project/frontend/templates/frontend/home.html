@@ -9,12 +9,12 @@
         <div class="col-xl-8">
             <h1>Money Manager Home</h1>
         </div>
-        <div class="col-xl-4 d-grid gap-2">
-            {% if account_count > 0 or bills_count > 0 or expenses_count > 0 %}
-                <button type="button" class="btn btn-lg btn-warning"><a href="{% url 'frontend:refresh' %}"
-                                                                        class="text-white">Refresh Graphs</a></button>
-            {% endif %}
-        </div>
+        {#        <div class="col-xl-4 d-grid gap-2">#}
+        {#            {% if account_count > 0 or bills_count > 0 or expenses_count > 0 %}#}
+        {#                <button type="button" class="btn btn-lg btn-warning"><a href="{% url 'frontend:refresh' %}"#}
+        {#                                                                        class="text-white">Refresh Graphs</a></button>#}
+        {#            {% endif %}#}
+        {#        </div>#}
     </div>
     <div class="row mt-3">
         <div class="col-xl-4">
@@ -28,6 +28,16 @@
                         <p class="card-text">Total Assets: ${{ account_total|intcomma }}</p>
                         <p class="card-text">Number of Accounts: {{ account_count }}</p>
                     </div>
+
+                </div>
+                <div class="m-3" style="max-width: 20rem;">
+                    {% if account_count > 0 %}
+{#                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" width=300px#}
+{#                             height=300px style="margin: auto; display: block">#}
+                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" style="margin: auto; display: block">
+                    {% else %}
+                        <p style="text-align: center">Add an Account to show your Accounts Breakdown chart here!</p>
+                    {% endif %}
                 </div>
             </a>
         </div>
@@ -42,6 +52,17 @@
                         <p class="card-text">Number of Bills: {{ bill_count }}</p>
                     </div>
                 </div>
+                <div class="p-3 m-0" style="max-width: 320px;">
+                    {% if bill_count > 0 %}
+{#                        <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart" width=300px#}
+{#                             height=300px style="margin: auto; display: block">#}
+                        <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart" style="margin: auto; display: block">
+                    {% else %}
+                        <p style="text-align: center">Add a Bill to show your Bill Breakdown chart here!</p>
+
+                    {% endif %}
+
+                </div>
             </a>
         </div>
 
@@ -55,33 +76,18 @@
                         <p class="card-text">Number of Bills: {{ expense_count }}</p>
                     </div>
                 </div>
+                <div class="m-3" style="max-width: 320px;">
+                    {% if expense_count > 0 %}
+{#                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart" width=300px#}
+{#                             height=300px style="margin: auto; display: block">#}
+                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart" style="margin: auto; display: block">
+                    {% else %}
+                        <p class="text-black-50" style="text-align: center">Add an Expense to show your Expenses
+                            Breakdown chart here!</p>
+                    {% endif %}
+
+                </div>
             </a>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-xl-4">
-            {% if account_count > 0 %}
-                <img src="{% get_media_prefix %}{{ user }}/piechart_accounts.png" alt="Account Overview Pie Chart">
-            {% else %}
-                <p>Add an Account, then Refresh Graphs to show your Accounts Breakdown chart here!</p>
-            {% endif %}
-        </div>
-        <div class="col-xl-4">
-            {% if bills_count > 0 %}
-                <img src="{% get_media_prefix %}{{ user }}/piechart_bills.png" alt="Bills Overview Pie Chart">
-            {% else %}
-                <p>Add a Bill, then Refresh Graphs to show your Bill Breakdown chart here!</p>
-
-            {% endif %}
-
-        </div>
-        <div class="col-xl-4">
-            {% if expenses_count > 0 %}
-                <img src="{% get_media_prefix %}{{ user }}/piechart_expenses.png" alt="Expenses Overview Pie Chart">
-            {% else %}
-                <p>Add an Expense, then Refresh Graphs to show your Expenses Breakdown chart here!</p>
-            {% endif %}
-
         </div>
     </div>
     <div class="row mt-3">

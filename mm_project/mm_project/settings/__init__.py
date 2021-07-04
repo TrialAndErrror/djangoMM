@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config, Csv
+from decouple import config
 import django_heroku
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://boiling-fortress-61251.herokuapp.com/', '127.0.0.1']
+ALLOWED_HOSTS = ['https://boiling-fortress-61251.herokuapp.com/', '127.0.0.1', '0.0.0.0']
 
 # Application definition
 
@@ -135,14 +137,13 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 
 # HTTPS Settings
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 
-import dj_database_url
 DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
 # Activate Django-Heroku.

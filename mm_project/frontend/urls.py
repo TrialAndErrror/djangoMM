@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from .views import *
-from django.conf import settings
-from django.conf.urls.static import static
+
 
 from .views.accounts_views import view_all_accounts, AccountDetailView, AccountCreateView, AccountUpdateView, \
     AccountDeleteView
@@ -47,4 +46,4 @@ urlpatterns = [
     path("expenses/<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
     path("expenses/<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("expenses/<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

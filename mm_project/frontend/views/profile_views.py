@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 
 from api.models import Bill, Account, Expense
-from api.tools import make_graphs, make_context_dict
+from api.tools import make_graphs, make_homepage_context_dict
 
 
 @login_required
@@ -15,7 +15,7 @@ def frontend_home(request):
     accounts = Account.objects.filter(owner=request.user)
     expenses = Expense.objects.filter(owner=request.user)
 
-    context = make_context_dict(accounts, bills, expenses, request.user.username)
+    context = make_homepage_context_dict(accounts, bills, expenses, request.user.username)
 
     return render(request, "frontend/home.html", context)
 
@@ -26,11 +26,9 @@ def refresh_graphs(request):
     accounts = Account.objects.filter(owner=request.user)
     expenses = Expense.objects.filter(owner=request.user)
 
-    make_graphs(accounts, bills, expenses, request.user.username)
+    make_graphs(accounts, bills, expenses)
 
     return redirect('frontend:home')
-
-
 
 
 @login_required
