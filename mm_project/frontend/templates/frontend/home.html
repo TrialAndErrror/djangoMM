@@ -21,10 +21,10 @@
             <a href="{% url 'frontend:all_accounts' %}" style="text-decoration: none;">
                 <div class="card text-white bg-primary m-3" style="max-width: 20rem;">
                     <div class="card-header bg-primary">
-                        Accounts
+                        <h4 class="card-title">Accounts Summary</h4>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Accounts Summary</h4>
+
                         <p class="card-text">Total Assets: ${{ account_total|intcomma }}</p>
                         <p class="card-text">Number of Accounts: {{ account_count }}</p>
                     </div>
@@ -45,9 +45,10 @@
         <div class="col-xl-4">
             <a href="{% url 'frontend:all_bills' %}" style="text-decoration: none;">
                 <div class="card text-white bg-secondary m-3" style="max-width: 20rem;">
-                    <div class="card-header bg-secondary">Bills</div>
-                    <div class="card-body">
+                    <div class="card-header bg-secondary">
                         <h4 class="card-title">Bills Summary</h4>
+                    </div>
+                    <div class="card-body">
                         <p class="card-text">Monthly Total: ${{ bill_total|intcomma }}</p>
                         <p class="card-text">Number of Bills: {{ bill_count }}</p>
                     </div>
@@ -69,9 +70,10 @@
         <div class="col-xl-4">
             <a href="{% url 'frontend:all_expenses' %}" style="text-decoration: none;">
                 <div class="card text-white bg-info m-3" style="max-width: 20rem;">
-                    <div class="card-header bg-info">Expenses</div>
-                    <div class="card-body">
+                    <div class="card-header bg-info">
                         <h4 class="card-title">Expenses Summary</h4>
+                    </div>
+                    <div class="card-body">
                         <p class="card-text">Monthly Total: ${{ expense_total|intcomma }}</p>
                         <p class="card-text">Number of Bills: {{ expense_count }}</p>
                     </div>
