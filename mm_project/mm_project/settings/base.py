@@ -1,24 +1,28 @@
+import json
 from pathlib import Path
 import os
-from decouple import config
-import django_heroku
-import dj_database_url
+
+print(os.listdir())
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+with open(f'{BASE_DIR}/settings/config_data.json', 'r') as config_file:
+    config_data = json.load(config_file)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config_data.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = False
+DEBUG = bool(config_data.get('DEBUG', False))
 
-ALLOWED_HOSTS = ['https://boiling-fortress-61251.herokuapp.com/', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
 # Application definition
 
@@ -69,6 +73,10 @@ WSGI_APPLICATION = "mm_project.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES = {
+    "default": config_data.get('default_db')
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -131,10 +139,5 @@ MEDIA_URL = 'media/'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False
-
-DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
 
 ADMINS = [('Wade', 'thewadegreen@gmail.com'),]

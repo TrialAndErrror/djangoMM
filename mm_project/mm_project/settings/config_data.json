@@ -1,0 +1,12 @@
+{
+  "SECRET_KEY": "3uhhilodlj*m&v0s4w25zx$td31)kbx90lltrr=fnwp$nycl6p",
+  "DEBUG": false,
+  "default_db": {
+      "ENGINE": "django.db.backends.postgresql",
+      "NAME": "yfpqcjef",
+      "USER": "yfpqcjef",
+      "PASSWORD": "eIMl8fuh1myLqzpehgZnUj21uQ-id1s2",
+      "HOST": "chunee.db.elephantsql.com",
+      "PORT": "5432"
+  }
+}
