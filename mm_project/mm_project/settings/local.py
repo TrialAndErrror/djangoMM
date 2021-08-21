@@ -1,7 +1,6 @@
-from mm_project.settings import *
 from decouple import config
 
-DEBUG = False
+DEBUG = True
 
 DATABASES = {
     "default": {
@@ -14,5 +13,8 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = ['https://young-peak-42669.herokuapp.com/', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False

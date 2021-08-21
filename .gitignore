@@ -1,6 +1,6 @@
 /mm_project/db.sqlite3
-/mm_project/manage.py
 /mm_project/api/migrations/
 /mm_project/frontend/migrations/
 venv/
 /mm_project/mm_project/settings.ini
+/mm_project/mm_project/settings/config_data.json
