@@ -24,5 +24,5 @@ class ExpenseFilterForm(forms.Form):
 
 
 class BillPayForm(forms.Form):
-    amount = forms.IntegerField()
+    amount = forms.DecimalField()
     date_paid = forms.DateField()
