@@ -7,7 +7,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from api.models import Bill
 from api.tools import get_next_date
-from api.forms import BillPayForm
+from api.forms import BillPayForm, BillCreateForm, BillUpdateForm
 
 
 @login_required
@@ -59,25 +59,24 @@ class BillDetailView(LoginRequiredMixin, DetailView):
 
 
 class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    model = Bill
-    fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
-    success_message = 'Bill "%(name)s" Created'
+    form_class = BillCreateForm
+    template_name = 'api/bill_form.html'
 
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-        return super().form_valid(form)
+    def get_form_kwargs(self):
+        kwargs = super(BillCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class BillUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Bill
-    fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
-    success_message = 'Bill "%(name)s" Updated'
+    form_class = BillUpdateForm
+    template_name = 'api/bill_form.html'
 
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-        return super().form_valid(form)
+    def get_form_kwargs(self):
+        kwargs = super(BillUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def test_func(self):
         post = self.get_object()
