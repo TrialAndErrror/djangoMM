@@ -1,5 +1,5 @@
 {
-  "SECRET_KEY": "No Secrets in Production",
+  "SECRET_KEY": "No Secrets on GitHub",
   "DEBUG": true,
   "default_db": {
       "ENGINE": "django.db.backends.postgresql",
@@ -8,5 +8,11 @@
       "PASSWORD": "DB_PASS",
       "HOST": "DB_HOST",
       "PORT": "5432"
-  }
+  },
+  "ADMINS": [
+    ["Name", "Email"]
+  ],
+  "ALLOWED_HOSTS": [
+    "LIST", "OF", "HOST", "IP", "ADDRESSES", "AND", "DOMAINS"
+  ]
 }

@@ -3,12 +3,12 @@
 <table class="sortable table table-hover border-info mb-3">
   <thead>
     <tr>
-        <th scope="col">Expense Name</th>
+        <th scope="col">Name</th>
         <th scope="col">Amount</th>
         <th scope="col">Date</th>
-        <th scope="col">Category</th>
-        <th scope="col">Account</th>
-        <th scope="col">Actions</th>
+        <th scope="col" class="d-none d-sm-table-cell">Category</th>
+        <th scope="col" class="d-none d-sm-table-cell">Account</th>
+        <th scope="col" class="d-none d-md-table-cell">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -18,12 +18,12 @@
             <td>${{ expense.amount|intcomma }}</td>
             <td>{{ expense.date|date:"F d, Y" }}</td>
             {% if expense.other_category %}
-                <td>{{ expense.other_category }}</td>
+                <td class="d-none d-sm-table-cell">{{ expense.other_category }}</td>
             {% else %}
-                <td>{{ expense.category }}</td>
+                <td class="d-none d-sm-table-cell">{{ expense.category }}</td>
             {% endif %}
-            <td>{{ expense.account.name }}</td>
-            <td>
+            <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
+            <td class="d-none d-md-table-cell">
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:expense_update' expense.id %}">Edit</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:expense_delete' expense.id %}">Delete</a>
             </td>

@@ -5,9 +5,9 @@
     <tr>
         <th scope="col">Bill Name</th>
         <th scope="col">Amount</th>
-        <th scope="col">Last Paid</th>
+        <th scope="col" class="d-none d-sm-table-cell">Last Paid</th>
         <th scope="col">Next Due</th>
-        <th scope="col">Actions</th>
+        <th scope="col" class="d-none d-sm-table-cell">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -19,10 +19,11 @@
             {% else %}
                 <td>${{ bill.amount }}</td>
             {% endif %}
-            <td>{{ bill.last_paid }}</td>
+            <td class="d-none d-sm-table-cell">{{ bill.last_paid }}</td>
             <td>{{ bill.next_due }}</td>
-            <td>
+            <td class="d-none d-sm-table-cell">
                 <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'frontend:pay_bill' bill.id %}">Pay Bill</a>
+                <br />
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:bill_update' bill.id %}">Edit</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:bill_delete' bill.id %}">Delete</a>
             </td>

@@ -1,28 +1,18 @@
-import json
-from pathlib import Path
 import os
+from . import BASE_DIR
+from .utils import load_config_data
 
-print(os.listdir())
 
+"""
+Load config data from json file.
+"""
+config_data = load_config_data()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-with open(f'{BASE_DIR}/settings/config_data.json', 'r') as config_file:
-    config_data = json.load(config_file)
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = config('SECRET_KEY')
 SECRET_KEY = config_data.get('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = bool(config_data.get('DEBUG', False))
-
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+if config_data.get('ALLOWED_HOSTS', None):
+    ALLOWED_HOSTS.extend(config_data['ALLOWED_HOSTS'])
 
 # Application definition
 
@@ -140,4 +130,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = False
 
-ADMINS = [('Wade', 'thewadegreen@gmail.com'),]
+admin_list = config_data.get('ADMINS', None)
+if admin_list:
+    ADMINS = [tuple(item) for item in admin_list]
