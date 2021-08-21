@@ -11,6 +11,8 @@ config_data = load_config_data()
 SECRET_KEY = config_data.get('SECRET_KEY')
 DEBUG = bool(config_data.get('DEBUG', False))
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+if config_data.get('ALLOWED_HOSTS', None):
+    ALLOWED_HOSTS.extend(config_data['ALLOWED_HOSTS'])
 
 # Application definition
 

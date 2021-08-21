@@ -11,5 +11,8 @@
   },
   "ADMINS": [
     ["Name", "Email"]
+  ],
+  "ALLOWED_HOSTS": [
+    "LIST", "OF", "HOST", "IP", "ADDRESSES", "AND", "DOMAINS"
   ]
 }
