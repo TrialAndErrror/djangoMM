@@ -9,14 +9,10 @@
         <div class="col-xl-8">
             <h1>Money Manager Home</h1>
         </div>
-        {#        <div class="col-xl-4 d-grid gap-2">#}
-        {#            {% if account_count > 0 or bills_count > 0 or expenses_count > 0 %}#}
-        {#                <button type="button" class="btn btn-lg btn-warning"><a href="{% url 'frontend:refresh' %}"#}
-        {#                                                                        class="text-white">Refresh Graphs</a></button>#}
-        {#            {% endif %}#}
-        {#        </div>#}
     </div>
+
     <div class="row mt-3">
+
         <div class="col-xl-4">
             <a href="{% url 'frontend:all_accounts' %}" style="text-decoration: none;">
                 <div class="card text-white bg-primary m-3" style="max-width: 20rem;">
@@ -30,11 +26,11 @@
                     </div>
 
                 </div>
+
                 <div class="m-3" style="max-width: 20rem;">
                     {% if account_count > 0 %}
-{#                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" width=300px#}
-{#                             height=300px style="margin: auto; display: block">#}
-                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" style="margin: auto; display: block">
+{#                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" style="margin: auto; display: block">#}
+                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart">
                     {% else %}
                         <p style="text-align: center">Add an Account to show your Accounts Breakdown chart here!</p>
                     {% endif %}
@@ -55,12 +51,9 @@
                 </div>
                 <div class="p-3 m-0" style="max-width: 320px;">
                     {% if bill_count > 0 %}
-{#                        <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart" width=300px#}
-{#                             height=300px style="margin: auto; display: block">#}
                         <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart" style="margin: auto; display: block">
                     {% else %}
                         <p style="text-align: center">Add a Bill to show your Bill Breakdown chart here!</p>
-
                     {% endif %}
 
                 </div>
@@ -80,8 +73,6 @@
                 </div>
                 <div class="m-3" style="max-width: 320px;">
                     {% if expense_count > 0 %}
-{#                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart" width=300px#}
-{#                             height=300px style="margin: auto; display: block">#}
                         <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart" style="margin: auto; display: block">
                     {% else %}
                         <p class="text-black-50" style="text-align: center">Add an Expense to show your Expenses
@@ -91,6 +82,7 @@
                 </div>
             </a>
         </div>
+
     </div>
     <div class="row mt-3">
 
