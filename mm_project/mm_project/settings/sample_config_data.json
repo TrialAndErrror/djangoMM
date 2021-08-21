@@ -1,5 +1,5 @@
 {
-  "SECRET_KEY": "No Secrets in Production",
+  "SECRET_KEY": "No Secrets on GitHub",
   "DEBUG": true,
   "default_db": {
       "ENGINE": "django.db.backends.postgresql",
