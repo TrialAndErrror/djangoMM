@@ -1,12 +1,14 @@
 import os
-from . import BASE_DIR
+from pathlib import Path
 from .utils import load_config_data
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONFIG_PATH = f'{BASE_DIR}/settings/config_data.json'
 
 """
 Load config data from json file.
 """
-config_data = load_config_data()
+config_data = load_config_data(CONFIG_PATH)
 
 SECRET_KEY = config_data.get('SECRET_KEY')
 DEBUG = bool(config_data.get('DEBUG', False))
@@ -127,9 +129,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 
 # HTTPS Settings
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 admin_list = config_data.get('ADMINS', None)
 if admin_list:
