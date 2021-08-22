@@ -16,3 +16,9 @@ from .utils import *
 TESTING = False
 if TESTING:
     from .local import *
+
+SECURE = True
+if SECURE:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False
