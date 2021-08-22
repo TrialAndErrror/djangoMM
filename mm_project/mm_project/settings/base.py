@@ -148,7 +148,8 @@ X_FRAME_OPTIONS = 'DENY'
 
 CSP_DEFAULT_SRC = ["'none'"]
 CSP_SCRIPT_SRC = [
-    "https://cdn.jsdelivr.net/"
+    "https://cdn.jsdelivr.net/",
+    "'self'"
 ]
 
 PERMISSIONS_POLICY = {
