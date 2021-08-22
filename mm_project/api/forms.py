@@ -3,9 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from datetime import datetime
 from .widgets import FengyuanChenDatePickerInput
-from .models import Account, Bill
+from .models import Account, Bill, PERIOD_CHOICES
 from api.tools import get_next_date
-
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -45,6 +44,9 @@ class BillCreateForm(forms.ModelForm):
         model = Bill
         fields = ['name', 'amount', 'variable', 'last_paid', 'period', 'account']
         success_message = 'Bill "%(name)s" Created'
+        widgets = {
+            'last_paid': FengyuanChenDatePickerInput
+        }
 
     def __init__(self, *args, **kwargs):
         """
@@ -57,10 +59,10 @@ class BillCreateForm(forms.ModelForm):
         super(BillCreateForm, self).__init__(*args, **kwargs)
         self.fields['account'].queryset = Account.objects.filter(owner=user)
 
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.owner = self.request.user
+    #     form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
+    #     return super().form_valid(form)
 
 
 class BillUpdateForm(forms.ModelForm):

@@ -19,7 +19,7 @@ from .views import *
 
 from .views.accounts_views import view_all_accounts, AccountDetailView, AccountCreateView, AccountUpdateView, \
     AccountDeleteView
-from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillCreateView, BillUpdateView, BillDeleteView
+from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillUpdateView, BillDeleteView
 from .views.expense_views import view_all_expenses, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, \
     ExpenseDeleteView
 
@@ -31,7 +31,7 @@ urlpatterns = [
     path("summary/", view_summary, name="summary"),
     path("refresh/", refresh_graphs, name="refresh"),
     path("bills/", view_all_bills, name="all_bills"),
-    path("bills/add", BillCreateView.as_view(), name="add_bill"),
+    path("bills/add", bill_create, name="add_bill"),
     path('bills/<int:pk>/', BillDetailView.as_view(), name='bill_detail'),
     path("bills/<int:pk>/update/", BillUpdateView.as_view(), name="bill_update"),
     path("bills/<int:pk>/delete/", BillDeleteView.as_view(), name="bill_delete"),

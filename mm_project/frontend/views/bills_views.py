@@ -42,6 +42,7 @@ def pay_bill(request, pk):
                 bill.account.save()
                 messages.success(request, f'Bill {bill.name} paid from {bill.account.name}.')
                 return redirect(f'/bills/{bill.id}/')
+
     form = BillPayForm({
         "amount": bill.amount,
         "date_paid": bill.next_due
@@ -58,14 +59,39 @@ class BillDetailView(LoginRequiredMixin, DetailView):
     model = Bill
 
 
-class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    form_class = BillCreateForm
-    template_name = 'api/bill_form.html'
+@login_required
+def bill_create(request):
+    if request.method == 'POST':
+        form = BillCreateForm(request.POST)
+        if form.is_valid():
+            new_bill = Bill.objects.create(form.cleaned_data)
+            new_bill.next_due = get_next_date(form.instance.last_paid, form.instance.period)
+            new_bill.owner = request.user
+            new_bill.save()
+            messages.success(request, form.success_message)
+            # TODO: Could use error handling here
 
-    def get_form_kwargs(self):
-        kwargs = super(BillCreateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
+    form = BillCreateForm(user=request.user)
+    context = {
+        'form': form,
+        'user': request.user.username
+    }
+    return render(request, "api/bill_form.html", context)
+
+
+# class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+#     form_class = BillCreateForm
+#     template_name = 'api/bill_form.html'
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(BillCreateView, self).get_form_kwargs()
+#         kwargs['user'] = self.request.user
+#         return kwargs
+#
+#     def form_valid(self, form):
+#         form.instance.owner = self.request.user
+#         form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
+#         return super().form_valid(form)
 
 
 class BillUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
