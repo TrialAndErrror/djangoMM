@@ -40,7 +40,6 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.last_updated = datetime.datetime.today()
         return super().form_valid(form)
 
     def test_func(self):
