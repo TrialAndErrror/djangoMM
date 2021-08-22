@@ -138,6 +138,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SAMESITE = 'Strict'
 
 SECURE_HSTS_SECONDS = 2592000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -151,6 +152,10 @@ CSP_SCRIPT_SRC = [
     "https://cdn.jsdelivr.net/",
     "'self'"
 ]
+CSP_STYLE_SRC = ["'self'"]
+CSP_IMG_SRC = ["'self'"]
+CSP_FRAME_SRC = ["'none'"]
+
 
 PERMISSIONS_POLICY = {
     "accelerometer": [],
