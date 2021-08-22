@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -38,6 +40,7 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.last_updated = datetime.datetime.today()
         return super().form_valid(form)
 
     def test_func(self):

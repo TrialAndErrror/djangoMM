@@ -14,6 +14,7 @@
                 <th scope="col">Account</th>
                 <th scope="col">Type</th>
                 <th scope="col">Balance</th>
+                <th scope="col">Last Updated</th>
             </tr>
             </thead>
             <tbody>
@@ -22,6 +23,7 @@
                     <td><a href="{% url 'frontend:account_detail' entry.id %}">{{ entry.name }}</a></td>
                     <td>{{ entry.type }}</td>
                     <td>${{ entry.balance|intcomma }}</td>
+                    <td>{{ entry.last_update|naturalday|capfirst }}</td>
                 </tr>
             {% endfor %}
             </tbody>

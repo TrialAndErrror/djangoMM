@@ -2,45 +2,50 @@
 {% load humanize %}
 
 {% block body %}
-  <article class="media content-section">
-    <div class="container">
-        {% include 'api/messages.html' %}
+    <article class="media content-section">
+        <div class="container">
+            {% include 'api/messages.html' %}
 
 
-      <div class="row">
-        <div class="col">
-          <h1 class="text-decoration-underline">View Account:</h1>
-        </div>
-      </div>
-
-      <div class="row ml-3">
-        <div class="col">
-          {% if object.owner == user %}
-            <div class="card mb-3" style="max-width: 25rem;">
-              <div class="card-header text-white bg-primary">Account #{{ object.id }}</div>
-              <div class="card-body bg-light">
-                <h4 class="card-title mb-3">{{ object.name }}</h4>
-                <p class="card-text">Amount: ${{ object.balance|intcomma }}</p>
-                <p class="card-text">Type: {{ object.type }}</p>
-
-              </div>
+            <div class="row">
+                <div class="col">
+                    <h1 class="text-decoration-underline">View Account:</h1>
+                </div>
             </div>
-            <div class="mt-2">
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:account_update' object.id %}">Edit</a>
-              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:account_delete' object.id %}">Delete</a>
+
+            <div class="row ml-3">
+                <div class="col">
+                    {% if object.owner == user %}
+                        <div class="card mb-3" style="max-width: 25rem;">
+                            <div class="card-header text-white bg-primary"><h4
+                                    class="card-title m-2">{{ object.name }}</h4></div>
+                            <div class="card-body bg-light">
+                                {#                <h4 class="card-title mb-3">{{ object.name }}</h4>#}
+                                <p class="card-text">Amount: ${{ object.balance|intcomma }}</p>
+                                <p class="card-text">Type: {{ object.type }}</p>
+                                <p class="card-text">Last Updated: {{ object.last_update|naturalday|capfirst }}</p>
+
+
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                               href="{% url 'frontend:account_update' object.id %}">Edit</a>
+                            <a class="btn btn-danger btn-sm mt-1 mb-1"
+                               href="{% url 'frontend:account_delete' object.id %}">Delete</a>
+                        </div>
+                    {% else %}
+                        <h2 class="article-title">Error: Invalid Account ID.</h2>
+                    {% endif %}
+                </div>
             </div>
-          {% else %}
-            <h2 class="article-title">Error: Invalid Account ID.</h2>
-          {% endif %}
-        </div>
-      </div>
 
-      <div class="row mt-5">
-        <div class="col">
-          <h4><a href="{% url 'frontend:all_accounts' %}">Return to Accounts List</a></h4>
-        </div>
-      </div>
+            <div class="row mt-5">
+                <div class="col">
+                    <h4><a href="{% url 'frontend:all_accounts' %}">Return to Accounts List</a></h4>
+                </div>
+            </div>
 
-    </div>
-  </article>
+        </div>
+    </article>
 {% endblock body %}

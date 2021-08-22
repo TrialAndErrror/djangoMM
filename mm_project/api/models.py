@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -29,6 +31,7 @@ class Account(models.Model):
     name = models.CharField(max_length=150)
     balance = models.DecimalField(decimal_places=2, max_digits=10)
     type = models.CharField(max_length=20, choices=ACCOUNT_CHOICES, default="checking")
+    last_update = models.DateField('Last Updated', auto_now=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
