@@ -171,4 +171,4 @@ PERMISSIONS_POLICY = {
     "usb": [],
 }
 
-SECURE_REFERRER_POLICY = "no-referrer"
+SECURE_REFERRER_POLICY = "same-origin"
