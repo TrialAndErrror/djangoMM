@@ -5,3 +5,5 @@ venv/
 /mm_project/mm_project/settings.ini
 /mm_project/mm_project/settings/config_data.json
 /media/
+**/staticfiles/
+**/__pycache__/
