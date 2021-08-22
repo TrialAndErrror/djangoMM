@@ -24,7 +24,14 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     initial = {'date': datetime.date.today().strftime("%m/%d/%Y")}
 
     def form_valid(self, form):
+        # Deduct expense balance from account
+        if self.object.account:
+            self.object.account.balance -= self.object.amount
+            self.object.account.save()
+
+        # Set expense owner as current user
         form.instance.owner = self.request.user
+
         return super().form_valid(form)
 
     def get_form(self, *args, **kwargs):
@@ -33,15 +40,51 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         return form
 
 
-
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Expense
     fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
     success_message = 'Expense "%(name)s" Updated'
 
+    def get_object(self):
+        obj = super().get_object()
+
+        # Get previous expense amount
+        self.data_previous_amount = obj.amount
+
+        # Get previous expense account
+        self.data_previous_account = obj.account
+
+        return obj
+
     def form_valid(self, form):
+        self.handle_balance_update()
+
         form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    def handle_balance_update(self):
+        # Update balances fo old and new accounts
+        if self.object.account:
+            # Case 1: New account is same as previous account
+            if self.object.account == self.data_previous_account:
+                # Find difference between new and old balances, and deduct the difference from account
+                balance_diff = self.object.amount - self.data_previous_amount
+                self.object.account.balance -= balance_diff
+                self.object.account.save()
+            # Case 2: New account is not the same as previous account
+            else:
+                # Add old amount to the previous account
+                self.data_previous_account.balance += self.data_previous_amount
+                self.data_previous_account.save()
+
+                # Remove new amount from new account
+                self.object.account.balance -= self.object.amount
+                self.object.account.save()
+        # Case 3: Previous account exists but was removed from expense; currently no associated account
+        elif self.data_previous_account:
+            # Add old amount to previous account
+            self.data_previous_account.balance += self.data_previous_amount
+            self.data_previous_account.save()
 
     def test_func(self):
         post = self.get_object()
