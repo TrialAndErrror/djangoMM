@@ -25,9 +25,10 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         # Deduct expense balance from account
-        if self.object.account:
-            self.object.account.balance -= self.object.amount
-            self.object.account.save()
+        account_object: Account = form.cleaned_data.get('account', None)
+        if form.cleaned_data.get('account', None):
+            account_object.balance -= form.cleaned_data.get('amount', 0)
+            account_object.save()
 
         # Set expense owner as current user
         form.instance.owner = self.request.user
@@ -57,31 +58,55 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return obj
 
     def form_valid(self, form):
-        self.handle_balance_update()
+        """
+        Intercepting form validation
+        to update balances
+        and set owner field in form
+
+        :param form: forms.Form
+        :return:
+        """
+        self.handle_balance_update(form)
 
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
-    def handle_balance_update(self):
-        # Update balances fo old and new accounts
-        if self.object.account:
-            # Case 1: New account is same as previous account
-            if self.object.account == self.data_previous_account:
+    def handle_balance_update(self, form):
+        """
+        Update balance of accounts currently and/or previously linked to expense.
+
+        :param form: forms.Form
+        :return: None
+        """
+
+        # Update balances of old and new accounts
+        account_object: Account = form.cleaned_data.get('account', None)
+        if account_object:
+            if account_object == self.data_previous_account:
+                """
+                Case 1: New account is same as previous account
+                """
                 # Find difference between new and old balances, and deduct the difference from account
-                balance_diff = self.object.amount - self.data_previous_amount
-                self.object.account.balance -= balance_diff
-                self.object.account.save()
-            # Case 2: New account is not the same as previous account
+                balance_diff = form.cleaned_data.get('amount', None) - self.data_previous_amount
+                account_object.balance -= balance_diff
+                account_object.save()
             else:
+                """
+                Case 2: New account is not the same as previous account
+                """
                 # Add old amount to the previous account
                 self.data_previous_account.balance += self.data_previous_amount
                 self.data_previous_account.save()
 
                 # Remove new amount from new account
-                self.object.account.balance -= self.object.amount
-                self.object.account.save()
-        # Case 3: Previous account exists but was removed from expense; currently no associated account
+                account_object.balance -= self.object.amount
+                account_object.save()
         elif self.data_previous_account:
+            """
+            Case 3:
+            Previous account exists but was removed from expense; 
+            no account listed on submitted form
+            """
             # Add old amount to previous account
             self.data_previous_account.balance += self.data_previous_amount
             self.data_previous_account.save()
@@ -93,7 +118,15 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return False
 
     def get_form(self, *args, **kwargs):
+        """
+        Intercepting get_form to set the queryset for the Accounts dropdown on form
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         form = super(ExpenseUpdateView, self).get_form(*args, **kwargs)
+        # Only include Accounts in the Account dropdown that are associated with the current user
         form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
         return form
 
