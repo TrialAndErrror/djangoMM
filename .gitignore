@@ -1,11 +1,10 @@
-/mm_project/db.sqlite3
-/mm_project/api/migrations/
-/mm_project/frontend/migrations/
+**/db.sqlite3
 venv/
-/mm_project/mm_project/settings.ini
-/mm_project/mm_project/settings/config_data.json
+**/settings.ini
+**/config_data.json
 **/media/
 **/staticfiles/
 **/__pycache__/
 /mm_project/mm_project/static/
 /.idea/
+**/migrations/
