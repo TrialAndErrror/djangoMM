@@ -1,3 +1,4 @@
+#!/bin/bash
 export APP_LOCATION=$HOME
 
 sudo apt-get update -y && sudo apt-get upgrade -y
