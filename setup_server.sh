@@ -20,7 +20,7 @@ cd "$HOME/my_app/mm_project" || exit
 mkdir "./mm_project/static"
 python3 manage.py collectstatic
 
-sudo apt-get install nginx
+sudo apt-get install -y nginx
 cd "$HOME/my_app" || exit
 sudo cp mm_app.conf /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/mm_app.conf /etc/nginx/sites-enabled
