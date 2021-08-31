@@ -1,0 +1,9 @@
+[Unit]
+Description = uwsgi emperor for mm_app
+After = network.target
+[Service]
+User = accountant
+Restart = always
+ExecStart = /home/accountant/mm_app/env/mm_app/bin/uwsgi --emperor /home/accountant/mm_app/env/mm_app/vassals --uid www-data --gid www-data
+[Install]
+WantedBy = multi-user.target

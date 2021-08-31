@@ -3,8 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from datetime import datetime
 from .widgets import FengyuanChenDatePickerInput
-from .models import Account, Bill, PERIOD_CHOICES
+from .models import Account, Bill
 from api.tools import get_next_date
+
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -14,6 +15,7 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
+# TODO: Remove choices in favor of django filtering
 YEAR_CHOICES = [tuple([None, ''])] + [tuple([str(x), str(x)]) for x in range(2020, datetime.now().year + 1)]
 MONTH_CHOICES = [tuple([None, ''])] + [tuple([str(x), str(x)]) for x in range(1, 13)]
 
@@ -58,11 +60,6 @@ class BillCreateForm(forms.ModelForm):
         user = kwargs.pop('user')
         super(BillCreateForm, self).__init__(*args, **kwargs)
         self.fields['account'].queryset = Account.objects.filter(owner=user)
-
-    # def form_valid(self, form):
-    #     form.instance.owner = self.request.user
-    #     form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-    #     return super().form_valid(form)
 
 
 class BillUpdateForm(forms.ModelForm):

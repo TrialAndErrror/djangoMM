@@ -145,6 +145,7 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
 @login_required
 def view_all_expenses(request):
+    # TODO: Replace filter with django-filter based dropdowns
     expenses = Expense.objects.filter(owner=request.user).order_by("date")
     month = None
     year = None
@@ -163,22 +164,40 @@ def view_all_expenses(request):
 
 
 def view_expenses_list(request, expenses, year=None, month=None):
+    """
+    Function implemented in view_all_expenses to handle date filtering
+
+    :param request: request
+    :param expenses: list
+    :param year: int
+    :param month: int
+    :return: render
+    """
     context = {
         'user': request.user.username,
         'found': False,
         'month': month,
         'year': year
     }
+
     if month:
+        """
+        If month is provided, we filter by month and year
+        """
         context['month'] = month_name[int(month)]
         expenses = expenses.filter(date__year=year, date__month=month)
     if year:
+        """
+        If not month, but year provided, then we just filter by year
+        """
         expenses = expenses.filter(date__year=year)
 
     form = ExpenseFilterForm()
 
     if len(expenses) > 0:
-
+        """
+        If expenses are found, then we set found to be true and pass expenses in context dict.
+        """
         context['found'] = True
         context['expenses'] = expenses
 
