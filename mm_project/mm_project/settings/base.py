@@ -128,47 +128,63 @@ admin_list = config_data.get('ADMINS', None)
 if admin_list:
     ADMINS = [tuple(item) for item in admin_list]
 
-# HTTPS Settings
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SAMESITE = 'Strict'
 
-SECURE_HSTS_SECONDS = 15768000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+TESTING = True
+if not TESTING:
+    # HTTPS Settings
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SAMESITE = 'Strict'
 
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_SECONDS = 15768000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
-CSP_DEFAULT_SRC = ["'none'"]
-CSP_SCRIPT_SRC = [
-    "https://cdn.jsdelivr.net/",
-    "'self'"
-]
-CSP_STYLE_SRC = ["'self'"]
-CSP_IMG_SRC = ["'self'"]
-CSP_FRAME_SRC = ["'none'"]
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+
+    CSP_DEFAULT_SRC = ["'none'"]
+    CSP_SCRIPT_SRC = [
+        "https://cdn.jsdelivr.net/",
+        "'self'"
+    ]
+    CSP_STYLE_SRC = ["'self'"]
+    CSP_IMG_SRC = ["'self'"]
+    CSP_FRAME_SRC = ["'none'"]
 
 
-PERMISSIONS_POLICY = {
-    "accelerometer": [],
-    "ambient-light-sensor": [],
-    "autoplay": [],
-    "camera": [],
-    "display-capture": [],
-    "document-domain": [],
-    "encrypted-media": [],
-    "fullscreen": [],
-    "geolocation": [],
-    "gyroscope": [],
-    "interest-cohort": [],
-    "magnetometer": [],
-    "microphone": [],
-    "midi": [],
-    "payment": [],
-    "usb": [],
-}
+    PERMISSIONS_POLICY = {
+        "accelerometer": [],
+        "ambient-light-sensor": [],
+        "autoplay": [],
+        "camera": [],
+        "display-capture": [],
+        "document-domain": [],
+        "encrypted-media": [],
+        "fullscreen": [],
+        "geolocation": [],
+        "gyroscope": [],
+        "interest-cohort": [],
+        "magnetometer": [],
+        "microphone": [],
+        "midi": [],
+        "payment": [],
+        "usb": [],
+    }
 
-SECURE_REFERRER_POLICY = "same-origin"
+    SECURE_REFERRER_POLICY = "same-origin"
+else:
+    # HTTPS Settings
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    SECURE_BROWSER_XSS_FILTER = False
+
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+    X_FRAME_OPTIONS = 'DENY'
