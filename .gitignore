@@ -2,9 +2,10 @@
 venv/
 **/settings.ini
 **/config_data.json
+**/test_config_data.json
 **/media/
 **/staticfiles/
 **/__pycache__/
 /mm_project/mm_project/static/
 /.idea/
-**/migrations/
+**/migrations/!/mm_project/mm_project/settings/test_config_data.json

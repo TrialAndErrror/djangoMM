@@ -1,21 +1,13 @@
 import os
 from pathlib import Path
-from .utils import load_config_data
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-CONFIG_PATH = f'{BASE_DIR}/settings/config_data.json'
+
 
 """
 Load config data from json file.
 """
-config_data = load_config_data(CONFIG_PATH)
 
-SECRET_KEY = config_data.get('SECRET_KEY')
-DEBUG = bool(config_data.get('DEBUG', False))
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
-
-if config_data.get('ALLOWED_HOSTS', None):
-    ALLOWED_HOSTS.extend(config_data['ALLOWED_HOSTS'])
 
 # Application definition
 
@@ -65,13 +57,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "mm_project.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    "default": config_data.get('default_db')
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -112,11 +97,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -129,51 +109,5 @@ LOGIN_URL = 'login'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 
-admin_list = config_data.get('ADMINS', None)
-if admin_list:
-    ADMINS = [tuple(item) for item in admin_list]
-
-# HTTPS Settings
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-
-SECURE_HSTS_SECONDS = 15768000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-
-CSP_DEFAULT_SRC = ["'none'"]
-CSP_SCRIPT_SRC = [
-    "https://cdn.jsdelivr.net/",
-    "'self'"
-]
-CSP_STYLE_SRC = ["'self'"]
-CSP_IMG_SRC = ["'self'"]
-CSP_FRAME_SRC = ["'none'"]
 
 
-PERMISSIONS_POLICY = {
-    "accelerometer": [],
-    "ambient-light-sensor": [],
-    "autoplay": [],
-    "camera": [],
-    "display-capture": [],
-    "document-domain": [],
-    "encrypted-media": [],
-    "fullscreen": [],
-    "geolocation": [],
-    "gyroscope": [],
-    "interest-cohort": [],
-    "magnetometer": [],
-    "microphone": [],
-    "midi": [],
-    "payment": [],
-    "usb": [],
-}
-
-SECURE_REFERRER_POLICY = "same-origin"
