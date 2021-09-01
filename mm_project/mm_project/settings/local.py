@@ -1,7 +1,7 @@
 from .base import *
 from .utils import load_config_data
 
-CONFIG_PATH = f'./mm_project/settings/test_config_data.json'
+CONFIG_PATH = f'{BASE_DIR}/settings/test_config_data.json'
 
 config_data = load_config_data(CONFIG_PATH)
 

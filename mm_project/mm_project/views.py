@@ -3,7 +3,6 @@ from api.models import User, Bill, Account
 from api.forms import UserRegisterForm
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 
 
 def logout_view(request):
