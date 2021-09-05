@@ -8,4 +8,4 @@ venv/
 **/__pycache__/
 /mm_project/mm_project/static/
 /.idea/
-**/migrations/!/mm_project/mm_project/settings/test_config_data.json
+**/migrations/

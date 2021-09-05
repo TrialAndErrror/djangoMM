@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-
 ACCOUNT_CHOICES = (
     ("Checking", "Checking"),
     ("Savings", "Savings"),
@@ -42,7 +41,7 @@ PERIOD_CHOICES = (
 
 class Bill(models.Model):
     name = models.CharField(max_length=150)
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
+    amount = models.FloatField()
     variable = models.BooleanField(default=False)
     day = models.IntegerField(blank=True, null=True)
     period = models.CharField(
@@ -51,7 +50,7 @@ class Bill(models.Model):
     last_paid = models.DateField(blank=True, null=True)
     next_due = models.DateField(blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, default=None)
+    account = models.ForeignKey(Account, null=True, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"{self.name} ({self.period} Bill)"
@@ -92,5 +91,3 @@ class Expense(models.Model):
 
     def get_absolute_url(self):
         return reverse('frontend:expense_detail', kwargs={'pk': self.pk})
-
-

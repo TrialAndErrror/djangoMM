@@ -2,12 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from api.models import Bill
 from api.tools import get_next_date
 from api.forms import BillPayForm, BillCreateForm, BillUpdateForm
+from api.serializers import BillSerializer
+from django.forms.models import model_to_dict
 
 
 @login_required
@@ -62,14 +64,13 @@ class BillDetailView(LoginRequiredMixin, DetailView):
 @login_required
 def bill_create(request):
     if request.method == 'POST':
-        form = BillCreateForm(request.POST)
+        form = BillCreateForm(request.POST, user=request.user)
         if form.is_valid():
-            new_bill = Bill.objects.create(form.cleaned_data)
-            new_bill.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-            new_bill.owner = request.user
-            new_bill.save()
+            form.save()
             messages.success(request, form.success_message)
             # TODO: Could use error handling here
+
+            return redirect(resolve_url("frontend:bill_detail", pk=form.cleaned_data.get("pk")))
 
     form = BillCreateForm(user=request.user)
     context = {
@@ -109,6 +110,20 @@ class BillUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixi
         if self.request.user == post.owner:
             return True
         return False
+
+
+@login_required
+def bill_update_view(request, pk):
+    selected_bill = Bill.objects.get(id=pk)
+
+    if request.method == "POST":
+        form = BillUpdateForm(request.POST, instance=selected_bill, user=request.user)
+        if form.is_valid():
+            data = Bill(form.cleaned_data)
+            data.save()
+
+    form = BillUpdateForm(instance=selected_bill, user=request.user)
+    return render(request, "api/bill_form.html", {"form": form})
 
 
 class BillDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):

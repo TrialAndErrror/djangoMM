@@ -6,6 +6,7 @@ from .widgets import FengyuanChenDatePickerInput
 from .models import Account, Bill, PERIOD_CHOICES
 from api.tools import get_next_date
 
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
 
@@ -58,11 +59,18 @@ class BillCreateForm(forms.ModelForm):
         user = kwargs.pop('user')
         super(BillCreateForm, self).__init__(*args, **kwargs)
         self.fields['account'].queryset = Account.objects.filter(owner=user)
+        self.success_message = ''
 
-    # def form_valid(self, form):
-    #     form.instance.owner = self.request.user
-    #     form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-    #     return super().form_valid(form)
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        self.success_message = f'Bill "{self.pk}" Created'
+        return super().form_valid(form)
+
+    def save(self, commit=True):
+        self.instance.next_due = get_next_date(self.instance.last_paid, self.instance.period)
+        self.instance.owner = self.request.user
+
+        return super(BillCreateForm).save()
 
 
 class BillUpdateForm(forms.ModelForm):
@@ -98,6 +106,6 @@ class BillUpdateForm(forms.ModelForm):
         :param form:
         :return:
         """
-        form.instance.owner = self.request.user
+        # form.instance.owner = self.request.user
         form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
         return super().form_valid(form)
