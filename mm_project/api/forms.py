@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from datetime import datetime
 from .widgets import FengyuanChenDatePickerInput
-from .models import Account, Bill, PERIOD_CHOICES
+from .models import Account, Bill, Expense
 from api.tools import get_next_date
 
 
@@ -32,6 +32,76 @@ class BillPayForm(forms.Form):
     date_paid = forms.DateField(
         widget=FengyuanChenDatePickerInput()
     )
+
+
+class ExpenseUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        success_message = 'Expense "%(name)s" Updated'
+        fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
+
+    def __init__(self, *args, **kwargs):
+        """
+        Get 'user' keyword argument and filter Account field by objects owned by the user.
+
+        :param args: *args
+        :param kwargs: **kwargs
+        """
+        user = kwargs.pop('user')
+        super(ExpenseUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['account'].queryset = Account.objects.filter(owner=user)
+
+    # Is this necessary?
+    # def test_func(self):
+    #     post = self.get_object()
+    #     if self.request.user == post.owner:
+    #         return True
+    #     return False
+
+    def form_valid(self, form):
+        # self.handle_balance_update(form)
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+    def handle_balance_update(self, form):
+        """
+        Update balance of accounts currently and/or previously linked to expense.
+
+        :param form: forms.Form
+        :return: None
+        """
+
+        # Update balances of old and new accounts
+        account_object: Account = form.cleaned_data.get('account', None)
+        if account_object:
+            if account_object == self.data_previous_account:
+                """
+                Case 1: New account is same as previous account
+                """
+                # Find difference between new and old balances, and deduct the difference from account
+                balance_diff = form.cleaned_data.get('amount', None) - self.data_previous_amount
+                account_object.balance -= balance_diff
+                account_object.save()
+            else:
+                """
+                Case 2: New account is not the same as previous account
+                """
+                # Add old amount to the previous account
+                self.data_previous_account.balance += self.data_previous_amount
+                self.data_previous_account.save()
+
+                # Remove new amount from new account
+                account_object.balance -= self.object.amount
+                account_object.save()
+        elif self.data_previous_account:
+            """
+            Case 3:
+            Previous account exists but was removed from expense; 
+            no account listed on submitted form
+            """
+            # Add old amount to previous account
+            self.data_previous_account.balance += self.data_previous_amount
+            self.data_previous_account.save()
 
 
 class BillCreateForm(forms.ModelForm):

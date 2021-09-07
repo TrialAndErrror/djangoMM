@@ -19,9 +19,9 @@ from .views import *
 
 from .views.accounts_views import view_all_accounts, AccountDetailView, AccountCreateView, AccountUpdateView, \
     AccountDeleteView
-from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillUpdateView, BillDeleteView
-from .views.expense_views import view_all_expenses, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, \
-    ExpenseDeleteView
+from .views.bills_views import view_all_bills, pay_bill, BillDetailView, BillDeleteView
+from .views.expense_views import view_all_expenses, ExpenseDetailView, ExpenseCreateView, \
+    ExpenseDeleteView, expense_update_view
 
 app_name = "frontend"
 
@@ -44,6 +44,6 @@ urlpatterns = [
     path("expenses/", view_all_expenses, name="all_expenses"),
     path("expenses/add", ExpenseCreateView.as_view(), name="add_expense"),
     path("expenses/<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
-    path("expenses/<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
+    path("expenses/<int:pk>/update/", expense_update_view, name="expense_update"),
     path("expenses/<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
 ]

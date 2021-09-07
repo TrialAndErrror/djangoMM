@@ -26,5 +26,5 @@ urlpatterns = [
     path("logout/", logout_view, name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='frontend/profile/login.html'), name='login'),
     path("", include("frontend.urls")),
-    path("api/", include("api.urls")),
+    # path("api/", include("api.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

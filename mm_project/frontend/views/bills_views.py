@@ -3,13 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, resolve_url
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, DeleteView
 
 from api.models import Bill
 from api.tools import get_next_date
 from api.forms import BillPayForm, BillCreateForm, BillUpdateForm
-from api.serializers import BillSerializer
-from django.forms.models import model_to_dict
 
 
 @login_required
@@ -80,38 +78,6 @@ def bill_create(request):
     return render(request, "api/bill_form.html", context)
 
 
-# class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-#     form_class = BillCreateForm
-#     template_name = 'api/bill_form.html'
-#
-#     def get_form_kwargs(self):
-#         kwargs = super(BillCreateView, self).get_form_kwargs()
-#         kwargs['user'] = self.request.user
-#         return kwargs
-#
-#     def form_valid(self, form):
-#         form.instance.owner = self.request.user
-#         form.instance.next_due = get_next_date(form.instance.last_paid, form.instance.period)
-#         return super().form_valid(form)
-
-
-class BillUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Bill
-    form_class = BillUpdateForm
-    template_name = 'api/bill_form.html'
-
-    def get_form_kwargs(self):
-        kwargs = super(BillUpdateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.owner:
-            return True
-        return False
-
-
 @login_required
 def bill_update_view(request, pk):
     selected_bill = Bill.objects.get(id=pk)
@@ -119,8 +85,7 @@ def bill_update_view(request, pk):
     if request.method == "POST":
         form = BillUpdateForm(request.POST, instance=selected_bill, user=request.user)
         if form.is_valid():
-            data = Bill(form.cleaned_data)
-            data.save()
+            form.save()
 
     form = BillUpdateForm(instance=selected_bill, user=request.user)
     return render(request, "api/bill_form.html", {"form": form})
