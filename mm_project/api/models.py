@@ -84,7 +84,7 @@ class Expense(models.Model):
     other_category = models.CharField(max_length=150, null=True, blank=True, verbose_name='If Other, please specify:')
     notes = models.CharField(max_length=150, null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, default=None)
+    account = models.ForeignKey(Account, null=True, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"{self.name} ({self.category} Expense on {self.date})"

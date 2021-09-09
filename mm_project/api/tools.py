@@ -100,6 +100,8 @@ def sort_labels(labels, sizes, threshold=0):
     """
     data_list.sort(key=lambda x: x[1])
     accounts_sum = sum(sizes)
+    if accounts_sum == 0:
+        accounts_sum = 1
 
     labels = []
     sizes = []
@@ -116,7 +118,7 @@ def sort_labels(labels, sizes, threshold=0):
         else:
             labels.append(data_list[i][0])
 
-        sizes.append(data_list[i][1])
+        sizes.append(abs(data_list[i][1]))
     return labels, sizes
 
 
@@ -212,7 +214,7 @@ def make_graphs(accounts, bills, expenses):
     Currently, graph doesn't support negative balances.
     """
     accounts_balances = [item.balance for item in accounts]
-    accounts_balances_for_charts = [item if item > 0 else 0 for item in accounts_balances]
+    accounts_balances_for_charts = [item for item in accounts_balances]
     accounts_labels = [item.name for item in accounts]
 
     """

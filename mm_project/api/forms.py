@@ -49,7 +49,8 @@ class ExpenseUpdateForm(forms.ModelForm):
         """
         user = kwargs.pop('user')
         super(ExpenseUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['account'].queryset = Account.objects.filter(owner=user)
+        # self.fields['account'].queryset = Account.objects.filter(owner=user)
+        # self.fields['account'].queryset = self.fields['account'].queryset.filter(owner=user)
 
     # Is this necessary?
     # def test_func(self):
