@@ -27,10 +27,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'django.contrib.humanize',
-    "frontend.apps.FrontendConfig",
-    "api.apps.ApiConfig",
+    "frontend",
+    "api",
     "rest_framework",
     "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -69,7 +70,14 @@ WSGI_APPLICATION = "mm_project.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": config_data.get('default_db')
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_NAME"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": "db",
+        "PORT": "5432"
+    },
 }
 
 # Password validation
@@ -112,11 +120,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -156,7 +159,6 @@ CSP_STYLE_SRC = ["'self'"]
 CSP_IMG_SRC = ["'self'"]
 CSP_FRAME_SRC = ["'none'"]
 
-
 PERMISSIONS_POLICY = {
     "accelerometer": [],
     "ambient-light-sensor": [],
@@ -177,3 +179,7 @@ PERMISSIONS_POLICY = {
 }
 
 SECURE_REFERRER_POLICY = "same-origin"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
