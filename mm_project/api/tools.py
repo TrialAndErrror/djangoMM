@@ -3,7 +3,6 @@ import os
 from django.db.models import Count
 
 from dateutil.relativedelta import relativedelta
-from matplotlib import pyplot as plt
 
 from io import BytesIO
 import base64
@@ -35,37 +34,39 @@ def get_next_date(date, period):
 
 
 def make_chart(labels, sizes):
-    fig1, ax1 = plt.subplots()
-    """
-    Sort labels and remove labels for smaller sections.
-    
-    Third parameter is the decimal representation of the percentage that acts as the cutoff;
-    i.e. 0.05 means "Remove any labels of sections that are 5% of the total or smaller"
-    """
-    labels, sizes = sort_labels(labels, sizes, .05)
+    # TODO: reimplement charts
 
-    """
-    Make pie chart.
-    Only shows labels that are above the threshold indicated in sort_labels.
-    """
-    # ax1.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
-    ax1.pie(sizes, labels=labels, shadow=True, startangle=90)
+    raise NotImplemented()
+    # fig1, ax1 = plt.subplots()
+    # """
+    # Sort labels and remove labels for smaller sections.
+    #
+    # Third parameter is the decimal representation of the percentage that acts as the cutoff;
+    # i.e. 0.05 means "Remove any labels of sections that are 5% of the total or smaller"
+    # """
+    # labels, sizes = sort_labels(labels, sizes, .05)
+    #
+    # """
+    # Make pie chart.
+    # Only shows labels that are above the threshold indicated in sort_labels.
+    # """
+    # # ax1.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+    # ax1.pie(sizes, labels=labels, shadow=True, startangle=90)
+    #
+    # ax1.axis('equal')
+    #
+    # """
+    # Setup center white circle.
+    # """
+    # centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+    # fig = plt.gcf()
+    # fig.gca().add_artist(centre_circle)
+    #
+    # """
+    # Set font size.
+    # """
+    # plt.rcParams.update({'font.size': 14})
 
-    ax1.axis('equal')
-
-    """
-    Setup center white circle.
-    """
-    centre_circle = plt.Circle((0, 0), 0.70, fc='white')
-    fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
-
-    """
-    Set font size.
-    """
-    plt.rcParams.update({'font.size': 14})
-
-    # TODO: Move legend to full sized graph
     # plt.legend(labels=labels, bbox_to_anchor=(0.5, -0.25))
 
 
@@ -162,7 +163,8 @@ def make_homepage_context_dict(accounts, bills, expenses, username):
     """
     Adding the graphs directly to the context dictionary to be passed into the template directly.
     """
-    context.update(make_graphs(accounts, bills, expenses))
+    # TODO: Add charts
+    # context.update(make_graphs(accounts, bills, expenses))
 
     return context
 
@@ -172,15 +174,16 @@ def new_get_graph():
     Matplotlib integration with Django
     https://www.youtube.com/watch?v=jrT6NiM46jk
     """
+    raise NotImplemented
 
-    buffer = BytesIO()
-    plt.savefig(buffer, format='png', dpi=60)
-    buffer.seek(0)
-    image_png = buffer.getvalue()
-    graph = base64.b64encode(image_png)
-    graph = graph.decode('utf-8')
-    buffer.close()
-    return graph
+    # buffer = BytesIO()
+    # plt.savefig(buffer, format='png', dpi=60)
+    # buffer.seek(0)
+    # image_png = buffer.getvalue()
+    # graph = base64.b64encode(image_png)
+    # graph = graph.decode('utf-8')
+    # buffer.close()
+    # return graph
 
 
 def new_get_plot(labels, sizes):
@@ -188,9 +191,10 @@ def new_get_plot(labels, sizes):
     Matplotlib integration with Django
     https://www.youtube.com/watch?v=jrT6NiM46jk
     """
+    raise NotImplemented
 
-    plt.switch_backend('AGG')
-    make_chart(labels, sizes)
+    # plt.switch_backend('AGG')
+    # make_chart(labels, sizes)
     graph = new_get_graph()
     return graph
 
@@ -232,6 +236,7 @@ def make_graphs(accounts, bills, expenses):
     expense_amounts = [sum([item.amount if item.category == category else 0 for item in expenses])
                        for category in expense_categories]
 
+    return {}
     return {
         'graph_b': new_get_plot(bills_labels, bills_balances),
         'graph_a': new_get_plot(accounts_labels, accounts_balances_for_charts),
