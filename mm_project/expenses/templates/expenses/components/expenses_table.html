@@ -14,7 +14,7 @@
   <tbody>
     {% for expense in expenses %}
         <tr>
-            <td><a href="{% url 'frontend:expense_detail' expense.id %}" class="text-info"> {{ expense.name }}</a></td>
+            <td><a href="{% url 'expenses:expense_detail' expense.id %}" class="text-info"> {{ expense.name }}</a></td>
             <td>${{ expense.amount|intcomma }}</td>
             <td>{{ expense.date|date:"F d, Y" }}</td>
             {% if expense.other_category %}
@@ -24,8 +24,8 @@
             {% endif %}
             <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
             <td class="d-none d-md-table-cell">
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'frontend:expense_update' expense.id %}">Edit</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'frontend:expense_delete' expense.id %}">Delete</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'expenses:expense_update' expense.id %}">Edit</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'expenses:expense_delete' expense.id %}">Delete</a>
             </td>
         </tr>
     {% endfor %}

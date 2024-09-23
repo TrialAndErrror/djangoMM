@@ -1,12 +1,13 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-from api.models import Bill, Account, Expense
-from api.tools import make_graphs, make_homepage_context_dict
+from accounts.models import Account
+from api.tools import make_homepage_context_dict
+from bills.models import Bill
+from expenses.models import Expense
 
 
 @login_required
@@ -26,7 +27,7 @@ def refresh_graphs(request):
     accounts = Account.objects.filter(owner=request.user)
     expenses = Expense.objects.filter(owner=request.user)
 
-    make_graphs(accounts, bills, expenses)
+    # TODO: Make the graph part
 
     return redirect('frontend:home')
 
@@ -48,7 +49,7 @@ def view_profile(request):
 
 @login_required
 def view_summary(request):
-    bills = Bill.objects.filter(owner=request.user).order_by('next_due')[:3]
+    bills = Bill.objects.filter(owner=request.user).order_by('last_paid')[:3]
     accounts = Account.objects.filter(owner=request.user).order_by('-balance')[:3]
     expenses = Expense.objects.filter(owner=request.user).order_by('-date')[:5]
     context = {

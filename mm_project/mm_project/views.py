@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, Http404
-from api.models import User, Bill, Account
-from api.forms import UserRegisterForm
+
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
+
+from api.forms import UserRegisterForm
 
 
 def logout_view(request):

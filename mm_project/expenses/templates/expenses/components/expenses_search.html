@@ -1,5 +1,5 @@
 <div class="form-group m-2">
-    <form action="/expenses/" method="post">
+    <form action="/expenses" method="post">
         {% csrf_token %}
         <div class="container">
             <table>
@@ -15,7 +15,7 @@
         </div>
         <div class="container m-2">
             <input type="submit" value="Filter" class="btn btn-primary">
-            <button type="button" class="btn btn-secondary"><a href="{% url 'frontend:all_expenses' %}"
+            <button type="button" class="btn btn-secondary"><a href="{% url 'expenses:all_expenses' %}"
                                                                class="text-dark" style="text-decoration: none;">Clear
                 Filter</a></button>
         </div>

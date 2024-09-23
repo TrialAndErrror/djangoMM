@@ -24,23 +24,23 @@
                 </li>
                 <li class="nav-item">
                     {% if 'accounts' in request.path %}
-                    <a class="nav-link active" href="{% url 'frontend:all_accounts' %}">Accounts</a>
+                    <a class="nav-link active" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'frontend:all_accounts' %}">Accounts</a>
+                    <a class="nav-link" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
                     {% if 'bills' in request.path %}
-                    <a class="nav-link active" href="{% url 'frontend:all_bills' %}">Bills</a>
+                    <a class="nav-link active" href="{% url 'bills:all_bills' %}">Bills</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'frontend:all_bills' %}">Bills</a>
+                    <a class="nav-link" href="{% url 'bills:all_bills' %}">Bills</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
                     {% if 'expenses' in request.path %}
-                    <a class="nav-link active" href="{% url 'frontend:all_expenses' %}">Expenses</a>
+                    <a class="nav-link active" href="{% url 'expenses:all_expenses' %}">Expenses</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'frontend:all_expenses' %}">Expenses</a>
+                    <a class="nav-link" href="{% url 'expenses:all_expenses' %}">Expenses</a>
                     {% endif %}
                 </li>
                 <li class="nav-item dropdown">

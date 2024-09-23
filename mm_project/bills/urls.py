@@ -16,12 +16,16 @@ Including another URLconf
 from django.urls import path
 from .views import *
 
+from bills.views import view_all_bills, pay_bill, BillDetailView, BillUpdateView, BillDeleteView
 
-app_name = "frontend"
+
+app_name = "bills"
 
 urlpatterns = [
-    path("", frontend_home, name="home"),
-    path("profile/", view_profile, name="profile"),
-    path("summary/", view_summary, name="summary"),
-    path("refresh/", refresh_graphs, name="refresh"),
+    path("", view_all_bills, name="all_bills"),
+    path("add", BillCreateView.as_view(), name="add_bill"),
+    path('<int:pk>/', BillDetailView.as_view(), name='bill_detail'),
+    path("<int:pk>/update/", BillUpdateView.as_view(), name="bill_update"),
+    path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill_delete"),
+    path("<int:pk>/pay/", pay_bill, name="pay_bill"),
 ]

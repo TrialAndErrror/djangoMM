@@ -19,7 +19,7 @@
             <div class="form-group mt-3 ">
                 <h4>Are you sure you want to delete the this bill?</h4>
                 <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <a class="btn btn-outline-secondary" href="{% url 'frontend:bill_detail' object.id %}">Cancel</a>
+                <a class="btn btn-outline-secondary" href="{% url 'bills:bill_detail' object.id %}">Cancel</a>
             </div>
         </form>
         {% else %}

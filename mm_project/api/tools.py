@@ -29,8 +29,8 @@ BILLS_CONVERTER = {
 }
 
 
-def get_next_date(date, period):
-    return date + calc_date[period]
+def get_next_date(date, days_in_period):
+    return date + datetime.timedelta(days=days_in_period)
 
 
 def make_chart(labels, sizes):
