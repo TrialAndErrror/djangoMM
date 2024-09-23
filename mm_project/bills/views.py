@@ -4,7 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, UpdateView, DeleteView, CreateView
+from django.views.generic import DetailView, UpdateView, DeleteView, CreateView, FormView
+from django.views.generic.detail import SingleObjectMixin
 
 from accounts.models import Account
 from api.forms import BillPayForm, BillCreateForm, BillUpdateForm
@@ -26,6 +27,44 @@ def view_all_bills(request):
     return render(request, 'bills/all_bills.html', context)
 
 
+class BillPayView(LoginRequiredMixin, SuccessMessageMixin, SingleObjectMixin, FormView):
+    template_name = 'bills/pay_bill.html'
+    model = Bill
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+    def get_form(self, **kwargs):
+        bill = self.get_object()
+
+        form = self.form_class({
+            "amount": bill.amount,
+            "date_paid": bill.next_due
+        })
+
+        return form
+
+    def form_valid(self, form):
+        bill = self.get_object()
+
+        amount_paid = form.cleaned_data.get("amount")
+        date_paid = form.cleaned_data.get("date_paid")
+
+        if amount_paid > bill.account.balance:
+            messages.warning(
+                self.request,
+                f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
+        else:
+            bill.last_paid = date_paid
+            bill.account.balance -= amount_paid
+            bill.save()
+            bill.account.save()
+            messages.success(self.request, f'Bill {bill.name} paid from {bill.account.name}.')
+            return redirect(reverse_lazy('bills:bill_detail', kwargs={"pk": bill.id}))
+
+
 @login_required
 def pay_bill(request, pk):
     bill = Bill.objects.get(owner=request.user, id=pk)
@@ -37,7 +76,8 @@ def pay_bill(request, pk):
             date_paid = form.cleaned_data.get("date_paid")
 
             if amount_paid > bill.account.balance:
-                messages.warning(request, f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
+                messages.warning(request,
+                                 f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
             else:
                 bill.last_paid = date_paid
                 bill.account.balance -= amount_paid

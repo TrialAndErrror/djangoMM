@@ -80,6 +80,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         :param form: forms.Form
         :return: None
         """
+        expense_object = self.get_object()
 
         # Update balances of old and new accounts
         account_object: Account = form.cleaned_data.get('account', None)
@@ -101,7 +102,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
                 self.data_previous_account.save()
 
                 # Remove new amount from new account
-                account_object.balance -= self.object.amount
+                account_object.balance -= expense_object.amount
                 account_object.save()
         elif self.data_previous_account:
             """
@@ -114,10 +115,8 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
             self.data_previous_account.save()
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.owner:
-            return True
-        return False
+        return self.request.user ==  self.get_object().owner
+
 
     def get_form(self, *args, **kwargs):
         """
@@ -139,10 +138,7 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
     success_message = 'Expense "%(name)s" Deleted'
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.owner:
-            return True
-        return False
+        return self.request.user ==  self.get_object().owner
 
 
 @login_required

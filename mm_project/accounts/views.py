@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -42,19 +43,18 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return super().form_valid(form)
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.owner:
-            return True
-        return False
+        return self.request.user == self.get_object().owner
 
 
-class AccountDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Account
     success_url = '/accounts/'
     success_message = 'Account "%(name)s" Deleted'
 
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        messages.success(self.request, self.success_message % obj.__dict__)
+        return super().delete(request, *args, **kwargs)
+
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.owner:
-            return True
-        return False
+        return self.request.user == self.get_object().owner

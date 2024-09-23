@@ -140,12 +140,11 @@ def make_homepage_context_dict(accounts, bills, expenses, username):
     """
     Get the sum of the accounts and expenses.
     
-    For bills, need to adjust for non-monthly bolls using the BILLS_CONVERTER dictionary.
-    i.e. Quarterly bills are divided by 3 to be comparable to monthly bills.
+    For bills, we divide by 30 to get an approximate monthly total
     """
     accounts_total = sum(accounts_balances)
     expenses_total = sum(expense_balances)
-    bill_total = sum([float(entry.amount) * float(BILLS_CONVERTER[entry.period]) for entry in bills])
+    bill_total = sum([float(entry.amount) * (float(entry.period) / 30) for entry in bills])
 
     """
     This is the data that will go into the homepage
