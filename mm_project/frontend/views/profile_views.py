@@ -22,17 +22,6 @@ def frontend_home(request):
 
 
 @login_required
-def refresh_graphs(request):
-    bills = Bill.objects.filter(owner=request.user)
-    accounts = Account.objects.filter(owner=request.user)
-    expenses = Expense.objects.filter(owner=request.user)
-
-    # TODO: Make the graph part
-
-    return redirect('frontend:home')
-
-
-@login_required
 def view_profile(request):
     try:
         user_obj = User.objects.filter(id=request.user.id).first()

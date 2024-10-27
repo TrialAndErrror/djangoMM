@@ -15,26 +15,7 @@
 
         <div class="col-xl-4">
             <a href="{% url 'accounts:all_accounts' %}" style="text-decoration: none;">
-                <div class="card text-white bg-primary m-3" style="max-width: 20rem;">
-                    <div class="card-header bg-primary">
-                        <h4 class="card-title">Accounts Summary</h4>
-                    </div>
-                    <div class="card-body">
-
-                        <p class="card-text">Total Assets: ${{ account_total|intcomma }}</p>
-                        <p class="card-text">Number of Accounts: {{ account_count }}</p>
-                    </div>
-
-                </div>
-
-                <div class="m-3" style="max-width: 20rem;">
-                    {% if account_count > 0 %}
-{#                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart" style="margin: auto; display: block">#}
-                        <img src="data:image/png;base64, {{ graph_a|safe }}" alt="Accounts Chart">
-                    {% else %}
-                        <p style="text-align: center">Add an Account to show your Accounts Breakdown chart here!</p>
-                    {% endif %}
-                </div>
+                {% include "frontend/home/accounts-summary-card.html" %}
             </a>
         </div>
 
@@ -45,18 +26,18 @@
                         <h4 class="card-title">Bills Summary</h4>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">Monthly Total: ${{ bill_total|intcomma }}</p>
+                        <p class="card-text">Monthly Total: $ {{ bill_total|intcomma }}</p>
                         <p class="card-text">Number of Bills: {{ bill_count }}</p>
                     </div>
-                </div>
-                <div class="p-3 m-0" style="max-width: 320px;">
-                    {% if bill_count > 0 %}
-                        <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart" style="margin: auto; display: block">
-                    {% else %}
-                        <p style="text-align: center">Add a Bill to show your Bill Breakdown chart here!</p>
-                    {% endif %}
+                    <div class="p-3 m-0" style="max-width: 320px;">
+                        {% if bill_count > 0 %}
+                            <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart"
+                                 style="margin: auto; display: block">
+                        {% else %}
+                            <p style="text-align: center">Add a Bill to show your Bill Breakdown chart here!</p>
+                        {% endif %}
 
-                </div>
+                    </div>
             </a>
         </div>
 
@@ -67,13 +48,14 @@
                         <h4 class="card-title">Expenses Summary</h4>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">Monthly Total: ${{ expense_total|intcomma }}</p>
+                        <p class="card-text">Monthly Total: $ {{ expense_total|intcomma }}</p>
                         <p class="card-text">Number of Bills: {{ expense_count }}</p>
                     </div>
                 </div>
                 <div class="m-3" style="max-width: 320px;">
                     {% if expense_count > 0 %}
-                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart" style="margin: auto; display: block">
+                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart"
+                             style="margin: auto; display: block">
                     {% else %}
                         <p class="text-black-50" style="text-align: center">Add an Expense to show your Expenses
                             Breakdown chart here!</p>
@@ -84,7 +66,5 @@
         </div>
 
     </div>
-    <div class="row mt-3">
 
-        <div>
 {% endblock %}

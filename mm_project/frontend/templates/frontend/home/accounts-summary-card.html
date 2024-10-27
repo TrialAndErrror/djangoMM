@@ -1,0 +1,20 @@
+<div class="card text-white bg-primary m-3" style="max-width: 20rem;">
+    <div class="card-header bg-primary">
+        <h4 class="card-title">Accounts Summary</h4>
+    </div>
+
+    <div class="card-body">
+
+        <p class="card-text">Total Assets: $ {{ account_total|intcomma }}</p>
+        <p class="card-text">Number of Accounts: {{ account_count }}</p>
+    </div>
+
+    <div class="m-3" style="max-width: 20rem;">
+        {% if account_count > 0 %}
+        <div id="accounts-graph"></div>
+        {% else %}
+        <p style="text-align: center">Add an Account to show your Accounts Breakdown chart here!</p>
+        {% endif %}
+    </div>
+</div>
+
