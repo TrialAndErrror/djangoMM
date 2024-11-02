@@ -13,7 +13,7 @@ services:
     volumes:
       - ./mm_project:/app
     ports:
-      - "8000:8000"
+      - 8000
     environment:
       - DJANGO_SETTINGS_MODULE=mm_project.settings.local
       - POSTGRES_NAME=postgres
