@@ -22,7 +22,7 @@
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
                     <td>{{ expense.date|date:"F d, Y" }}</td>
-                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.category.name }}</td>
                 </tr>
             {% endfor %}
             </tbody>

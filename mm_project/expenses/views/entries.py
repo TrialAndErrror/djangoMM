@@ -127,17 +127,13 @@ def view_all_expenses(request):
         else:
             messages.error(request, 'Invalid Filter Parameters')
 
-    return view_expenses_list(request, expenses, year, month)
-
-
-@login_required
-def view_expenses_list(request, expenses, year=None, month=None):
     context = {
         'user': request.user.username,
         'found': False,
         'month': month,
         'year': year
     }
+
     if month:
         context['month'] = month_name[int(month)]
         expenses = expenses.filter(date__year=year, date__month=month)

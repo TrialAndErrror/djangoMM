@@ -17,7 +17,7 @@
             <td><a href="{% url 'expenses:expense_detail' expense.id %}" class="text-info"> {{ expense.name }}</a></td>
             <td>${{ expense.amount|intcomma }}</td>
             <td>{{ expense.date|date:"F d, Y" }}</td>
-            <td class="d-none d-sm-table-cell">{{ expense.category }}</td>
+            <td class="d-none d-sm-table-cell">{{ expense.category.name }}</td>
             <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
             <td class="d-none d-md-table-cell">
                 <a class="btn btn-secondary btn-sm mt-1 mb-1"
