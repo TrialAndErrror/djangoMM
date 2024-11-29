@@ -1,5 +1,7 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Bill, Account, User
+from bills.models import Bill
+from accounts.models import Account
 
 
 class BillSerializer(serializers.ModelSerializer):

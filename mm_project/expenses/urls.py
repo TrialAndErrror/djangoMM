@@ -14,13 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import *
 
+from expenses.views import ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, \
+    view_all_expenses
 
-app_name = "frontend"
+app_name = "expenses"
 
 urlpatterns = [
-    path("", frontend_home, name="home"),
-    path("profile/", view_profile, name="profile"),
-    path("summary/", view_summary, name="summary"),
+    path("", view_all_expenses, name="all_expenses"),
+    path("add", ExpenseCreateView.as_view(), name="add_expense"),
+    path("<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
+    path("<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
+    path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
 ]

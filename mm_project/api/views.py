@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Bill, Account, User
+from bills.models import Bill
 from .serializers import BillSerializer, AccountSerializer, UserSerializer
 
 

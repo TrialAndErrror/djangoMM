@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from .base import *
 
-TESTING = False
+TESTING = True
 if TESTING:
     DEBUG = True
 

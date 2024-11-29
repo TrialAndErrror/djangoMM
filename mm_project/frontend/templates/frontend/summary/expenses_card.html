@@ -20,7 +20,7 @@
             <tbody>
             {% for expense in expenses %}
                 <tr>
-                    <td><a href="{% url 'frontend:expense_detail' expense.id %}"> {{ expense.name }}</a>
+                    <td><a href="{% url 'expenses:expense_detail' expense.id %}"> {{ expense.name }}</a>
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
                     <td>{{ expense.date|date:"F d, Y" }}</td>
@@ -37,5 +37,5 @@
     </div>
 </div>
 <div class="row m-3">
-    <a href="{% url 'frontend:all_expenses' %}"><h2 class="text-info">View All Expenses</h2></a>
+    <a href="{% url 'expenses:all_expenses' %}"><h2 class="text-info">View All Expenses</h2></a>
 </div>

@@ -20,9 +20,9 @@
             <tbody>
             {% for entry in accounts %}
                 <tr>
-                    <td><a href="{% url 'frontend:account_detail' entry.id %}">{{ entry.name }}</a></td>
+                    <td><a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.name }}</a></td>
                     <td>{{ entry.type }}</td>
-                    <td>${{ entry.balance|intcomma }}</td>
+                    <td>$ {{ entry.balance|intcomma }}</td>
                     <td>{{ entry.last_update|naturalday|capfirst }}</td>
                 </tr>
             {% endfor %}
@@ -33,6 +33,6 @@
 
 <div class="row m-3">
     <div class="col">
-        <a href="{% url 'frontend:all_accounts' %}"><h2>View All Accounts</h2></a>
+        <a href="{% url 'accounts:all_accounts' %}"><h2>View All Accounts</h2></a>
     </div>
 </div>
