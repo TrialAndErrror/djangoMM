@@ -17,6 +17,7 @@ import csv
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CSVUploadForm
+from .services import USAACsvIngest
 
 
 # Create your views here.
@@ -202,32 +203,18 @@ def upload_csv(request):
             decoded_file = file.read().decode('utf-8').splitlines()
             reader = csv.DictReader(decoded_file)
 
-            for row in reader:
-                if "-" in row['Amount']:
-                    row_amount = row['Amount'].replace('-', '')
-                else:
-                    row_amount = f"-{row['Amount']}"
+            if USAACsvIngest.is_valid(reader.fieldnames):
+                parser = USAACsvIngest(
+                    reader=reader,
+                    user=request.user,
+                    account_id=request.POST['account']
+                )
+
+                parser.process()
+                duplicate_entries.extend(parser.duplicate_entries)
 
 
-                try:
-                    Expense.objects.update_or_create(
-                        name=row['Description'],
-                        amount=row_amount,
-                        date=row['Date'],
-                        owner=request.user,
-                        account_id=request.POST['account'],
-                        defaults={
-                            "notes": row['Original Description'],
-                            "category": row['Category'],
-                        }
-                    )
-                except Expense.MultipleObjectsReturned:
-                    duplicate_entries.append(
-                        {"date": row['Date'], "description": row['Description'], "amount": row['Amount']})
-                    continue
-
-            messages.success(request, "CSV file successfully uploaded and processed.")
-
+            messages.success(request, "USAA CSV file successfully uploaded and processed.")
 
     else:
         form = CSVUploadForm()
