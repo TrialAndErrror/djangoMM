@@ -22,7 +22,7 @@
                                 <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
                                 <p class="card-text">Account: {{ object.account.name }}</p>
                                 <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-                                <p class="card-text">Category: {{ object.category }}</p>
+                                <p class="card-text">Category: {{ object.category.name }}</p>
                                 {% if object.notes %}
                                     <p class="card-text">Notes: {{ object.notes }}</p>
                                 {% endif %}
