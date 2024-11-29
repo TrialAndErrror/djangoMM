@@ -1,11 +1,12 @@
 {% load humanize %}
 
-<div class="card-header text-white bg-secondary">
-    <h3 class="text-decoration-underline">Upcoming Bills</h3>
-</div>
+<div class="card">
+    <div class="card-header text-white bg-secondary p-3">
+        <h3 class="mb-0">Upcoming Bills</h3>
+    </div>
 
-    <div class="card-body">
-        <table class="sortable table table-hover ">
+    <div class="card-body p-4">
+        <table class="sortable table table-hover">
             <thead>
             <tr>
                 <th scope="col">Bills</th>
@@ -19,7 +20,8 @@
             {% for bill in bills %}
                 <tr>
                     <td>
-                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary"> {{ bill.name }}</a></td>
+                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary"> {{ bill.name }}</a>
+                    </td>
                     {% if bill.variable %}
                         <td>${{ bill.amount }} (Variable)</td>
                     {% else %}
@@ -27,23 +29,21 @@
                     {% endif %}
                     <td>{{ bill.last_paid }}</td>
                     <td>{{ bill.next_due|naturalday }}</td>
-                <td>
-                    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">Pay Bill</a>
-                </td>
+                    <td>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">Pay
+                            Bill</a>
+                    </td>
 
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-
-        <a href="{% url 'bills:all_bills' %}">
-            <span class="btn btn-lg btn-secondary rounded">
-                View All Bills
-            </span>
-        </a>
-
     </div>
-
-<div class="row m-3">
-    <h2><a href="{% url 'bills:all_bills' %}" class="text-secondary">View All Bills</a></h2>
+    <div class="card-footer w-100 d-flex justify-content-end p-3">
+        <a href="{% url 'bills:all_bills' %}">
+            <div class="btn btn-lg btn-secondary rounded">
+                View All Bills
+            </div>
+        </a>
+    </div>
 </div>
