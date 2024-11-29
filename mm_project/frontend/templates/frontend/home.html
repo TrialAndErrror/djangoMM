@@ -2,6 +2,11 @@
 {% load humanize %}
 {% load static %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}"/>
+    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
+{% endblock %}
+
 {% block title %}Money Manager: Home{% endblock %}
 
 {% block body %}
@@ -21,12 +26,13 @@
 
         <div class="col-12 col-xl-4">
             <a href="{% url 'bills:all_bills' %}" style="text-decoration: none;">
-                {% include "frontend/home/accounts-summary-card.html" %}
+                {% include "frontend/home/bills-summary-card.html" %}
             </a>
         </div>
 
         <div class="col-12 col-xl-4">
             <a href="{% url 'expenses:all_expenses' %}" style="text-decoration: none;">
+                {% include "frontend/home/expenses-summary-card.html" %}
             </a>
         </div>
     </div>

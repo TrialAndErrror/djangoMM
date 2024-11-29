@@ -1,8 +1,10 @@
-{% extends 'frontend/utils/base.html' %}
 {% load static %}
 
-{% block head %}
+{% block extra_css %}
     <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}"/>
+{% endblock %}
+
+{% block extra_js %}
     <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
 {% endblock %}
 
