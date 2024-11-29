@@ -11,15 +11,9 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
-from expenses.models import Expense, DEFAULT_EXPENSE_CATEGORIES
-
-import csv
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import CSVUploadForm
+from expenses.models import Expense
 
 
-# Create your views here.
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expense
 
@@ -50,19 +44,10 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Expense
-    fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
-    success_message = 'Expense "%(name)s" Updated'
+    fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes']
 
-    def get_object(self):
-        obj = super().get_object()
-
-        # Get previous expense amount
-        self.data_previous_amount = obj.amount
-
-        # Get previous expense account
-        self.data_previous_account = obj.account
-
-        return obj
+    def get_success_message(self, cleaned_data):
+        return f'Expense "{cleaned_data.get('name')}" Updated'
 
     def form_valid(self, form):
         """
@@ -90,34 +75,10 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         # Update balances of old and new accounts
         account_object: Account = form.cleaned_data.get('account', None)
         if account_object:
-            if account_object == self.data_previous_account:
-                """
-                Case 1: New account is same as previous account
-                """
-                # Find difference between new and old balances, and deduct the difference from account
-                balance_diff = form.cleaned_data.get('amount', None) - self.data_previous_amount
-                account_object.balance -= balance_diff
-                account_object.save()
-            else:
-                """
-                Case 2: New account is not the same as previous account
-                """
-                # Add old amount to the previous account
-                self.data_previous_account.balance += self.data_previous_amount
-                self.data_previous_account.save()
-
-                # Remove new amount from new account
-                account_object.balance -= expense_object.amount
-                account_object.save()
-        elif self.data_previous_account:
-            """
-            Case 3:
-            Previous account exists but was removed from expense; 
-            no account listed on submitted form
-            """
-            # Add old amount to previous account
-            self.data_previous_account.balance += self.data_previous_amount
-            self.data_previous_account.save()
+            # Find difference between new and old balances, add the difference to account
+            balance_diff = form.cleaned_data.get('amount', None) - expense_object.amount
+            account_object.balance += balance_diff
+            account_object.save()
 
     def test_func(self):
         return self.request.user == self.get_object().owner
@@ -139,7 +100,9 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Expense
     success_url = '/accounts/'
-    success_message = 'Expense "%(name)s" Deleted'
+
+    def get_success_message(self, cleaned_data):
+        return f'Expense "{cleaned_data.get('name')}" Deleted'
 
     def test_func(self):
         return self.request.user == self.get_object().owner
@@ -190,46 +153,3 @@ def view_expenses_list(request, expenses, year=None, month=None):
     context['form'] = form
 
     return render(request, 'expenses/show_expenses.html', context)
-
-
-@login_required
-def upload_csv(request):
-    duplicate_entries = []
-    if request.method == 'POST':
-        form = CSVUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES['file']
-            decoded_file = file.read().decode('utf-8').splitlines()
-            reader = csv.DictReader(decoded_file)
-
-            for row in reader:
-                if "-" in row['Amount']:
-                    row_amount = row['Amount'].replace('-', '')
-                else:
-                    row_amount = f"-{row['Amount']}"
-
-
-                try:
-                    Expense.objects.update_or_create(
-                        name=row['Description'],
-                        amount=row_amount,
-                        date=row['Date'],
-                        owner=request.user,
-                        account_id=request.POST['account'],
-                        defaults={
-                            "notes": row['Original Description'],
-                            "category": row['Category'],
-                        }
-                    )
-                except Expense.MultipleObjectsReturned:
-                    duplicate_entries.append(
-                        {"date": row['Date'], "description": row['Description'], "amount": row['Amount']})
-                    continue
-
-            messages.success(request, "CSV file successfully uploaded and processed.")
-
-
-    else:
-        form = CSVUploadForm()
-        form.fields['account'].queryset = Account.objects.filter(owner=request.user)
-    return render(request, 'upload_csv.html', {'form': form, "duplicates": duplicate_entries})

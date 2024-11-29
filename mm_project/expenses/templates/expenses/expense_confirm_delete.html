@@ -3,12 +3,11 @@
 
 {% block body %}
     <div class="content-section">
-        {% if object.owner == user %}
         <form method="POST">
             {% csrf_token %}
-            <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                <div class="card-header">Expense #{{ object.id }}</div>
-                <div class="card-body">
+            <div class="card mb-3" style="max-width: 20rem;">
+                <div class="card-header bg-primary text-white">Expense #{{ object.id }}</div>
+                <div class="card-body ">
                   <h4 class="card-title">{{ object.name }}</h4>
                   <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
                   <p class="card-text mb-0">Account: {{ object.account }}</p>
@@ -30,8 +29,5 @@
                 <a class="btn btn-outline-secondary" href="{% url 'expenses:expense_detail' object.id %}">Cancel</a>
             </div>
         </form>
-        {% else %}
-            <h2 class="article-title">Error: Invalid Expense ID.</h2>
-        {% endif %}
     </div>
 {% endblock %}
