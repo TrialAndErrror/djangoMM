@@ -11,7 +11,12 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
-from expenses.models import Expense
+from expenses.models import Expense, DEFAULT_EXPENSE_CATEGORIES
+
+import csv
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import CSVUploadForm
 
 
 # Create your views here.
@@ -115,8 +120,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
             self.data_previous_account.save()
 
     def test_func(self):
-        return self.request.user ==  self.get_object().owner
-
+        return self.request.user == self.get_object().owner
 
     def get_form(self, *args, **kwargs):
         """
@@ -138,7 +142,7 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
     success_message = 'Expense "%(name)s" Deleted'
 
     def test_func(self):
-        return self.request.user ==  self.get_object().owner
+        return self.request.user == self.get_object().owner
 
 
 @login_required
@@ -160,6 +164,7 @@ def view_all_expenses(request):
     return view_expenses_list(request, expenses, year, month)
 
 
+@login_required
 def view_expenses_list(request, expenses, year=None, month=None):
     context = {
         'user': request.user.username,
@@ -176,7 +181,6 @@ def view_expenses_list(request, expenses, year=None, month=None):
     form = ExpenseFilterForm()
 
     if len(expenses) > 0:
-
         context['found'] = True
         context['expenses'] = expenses
 
@@ -186,3 +190,46 @@ def view_expenses_list(request, expenses, year=None, month=None):
     context['form'] = form
 
     return render(request, 'expenses/show_expenses.html', context)
+
+
+@login_required
+def upload_csv(request):
+    duplicate_entries = []
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            decoded_file = file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+
+            for row in reader:
+                if "-" in row['Amount']:
+                    row_amount = row['Amount'].replace('-', '')
+                else:
+                    row_amount = f"-{row['Amount']}"
+
+
+                try:
+                    Expense.objects.update_or_create(
+                        name=row['Description'],
+                        amount=row_amount,
+                        date=row['Date'],
+                        owner=request.user,
+                        account_id=request.POST['account'],
+                        defaults={
+                            "notes": row['Original Description'],
+                            "category": row['Category'],
+                        }
+                    )
+                except Expense.MultipleObjectsReturned:
+                    duplicate_entries.append(
+                        {"date": row['Date'], "description": row['Description'], "amount": row['Amount']})
+                    continue
+
+            messages.success(request, "CSV file successfully uploaded and processed.")
+
+
+    else:
+        form = CSVUploadForm()
+        form.fields['account'].queryset = Account.objects.filter(owner=request.user)
+    return render(request, 'upload_csv.html', {'form': form, "duplicates": duplicate_entries})
