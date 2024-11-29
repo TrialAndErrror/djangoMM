@@ -19,15 +19,10 @@
                             <div class="card-header text-white bg-info "><h4
                                     class="card-title m-2">{{ object.name }}</h4></div>
                             <div class="card-body bg-light">
-                                {#                                <h4 class="card-title mb-3">{{ object.name }}</h4>#}
                                 <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
                                 <p class="card-text">Account: {{ object.account.name }}</p>
                                 <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-                                {% if object.other_category %}
-                                    <p class="card-text">Category: {{ object.other_category }}</p>
-                                {% else %}
-                                    <p class="card-text">Category: {{ object.category }}</p>
-                                {% endif %}
+                                <p class="card-text">Category: {{ object.category }}</p>
                                 {% if object.notes %}
                                     <p class="card-text">Notes: {{ object.notes }}</p>
                                 {% endif %}

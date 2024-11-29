@@ -22,19 +22,14 @@
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
                     <td>{{ expense.date|date:"F d, Y" }}</td>
-                    {% if expense.other_category %}
-                        <td>{{ expense.other_category }}</td>
-                    {% else %}
-                        <td>{{ expense.category }}</td>
-                    {% endif %}
-                    <td>{{ expense.account.name }}</td>
+                    <td>{{ expense.category }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 
-        <div class="card-footer w-100 d-flex justify-content-end p-3">
+    <div class="card-footer w-100 d-flex justify-content-end p-3">
         <a href="{% url 'expenses:all_expenses' %}">
             <span class="btn btn-lg btn-info rounded">
                 View All Expenses

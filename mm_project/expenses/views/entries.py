@@ -21,7 +21,7 @@ class ExpenseDetailView(LoginRequiredMixin, DetailView):
 
 class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Expense
-    fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
+    fields = ['name', 'amount', 'date', 'category', 'notes', 'account']
     initial = {'date': datetime.date.today().strftime("%m/%d/%Y")}
 
     def get_success_message(self, cleaned_data):
@@ -47,7 +47,7 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Expense
-    fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes']
+    fields = ['name', 'amount', 'date', 'category', 'notes']
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Updated'
