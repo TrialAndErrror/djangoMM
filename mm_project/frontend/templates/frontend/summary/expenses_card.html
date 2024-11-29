@@ -1,12 +1,10 @@
 {% load humanize %}
+<div class="card">
 
-<div class="row card-header text-white bg-info">
-    <div class="col">
-        <h2 class="text-decoration-underline">Recent Expenses</h2>
+    <div class="card-header text-white bg-info">
+        <h3 class="text-decoration-underline">Recent Expenses</h3>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
+    <div class="card-body">
         <table class="sortable table table-hover border-info">
             <thead>
             <tr>
@@ -34,8 +32,11 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <a href="{% url 'expenses:all_expenses' %}">
+            <span class="btn btn-lg btn-info rounded">
+                View All Expenses
+            </span>
+        </a>
     </div>
-</div>
-<div class="row m-3">
-    <a href="{% url 'expenses:all_expenses' %}"><h2 class="text-info">View All Expenses</h2></a>
 </div>
