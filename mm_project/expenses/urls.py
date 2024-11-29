@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from expenses.views import ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, \
-    view_all_expenses, upload_csv
+from expenses.views.bulk_upload import upload_csv
+from expenses.views.entries import view_all_expenses, ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
+    ExpenseDeleteView
 
 app_name = "expenses"
 
