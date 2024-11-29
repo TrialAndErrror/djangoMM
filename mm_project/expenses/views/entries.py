@@ -102,7 +102,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
 class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Expense
-    success_url = reverse_lazy('expense:all_expenses')
+    success_url = reverse_lazy('expenses:all_expenses')
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Deleted'
