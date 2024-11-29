@@ -17,8 +17,8 @@ def frontend_home(request):
     recent_expenses = Expense.objects.filter(owner=request.user).order_by('-date')[:5]
 
     accounts_data = Account.objects.filter(owner=request.user).aggregate(total=Sum('balance', count=Count('id')))
-    bills_data = Bill.objects.filter(owner=request.user).aggregate(total=Sum('balance'), count=Count('id'))
-    expenses_data = Expense.objects.filter(owner=request.user).aggregate(total=Sum('balance'), count=Count('id'))
+    bills_data = Bill.objects.filter(owner=request.user).aggregate(total=Sum('amount'), count=Count('id'))
+    expenses_data = Expense.objects.filter(owner=request.user).aggregate(total=Sum('amount'), count=Count('id'))
 
     context = {
         # Cards Data
