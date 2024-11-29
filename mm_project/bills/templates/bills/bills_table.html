@@ -22,10 +22,10 @@
             <td class="d-none d-sm-table-cell">{{ bill.last_paid }}</td>
             <td>{{ bill.next_due }}</td>
             <td class="d-none d-sm-table-cell">
-                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">Pay Bill</a>
-                <br />
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'bills:bill_update' bill.id %}">Edit</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'bills:bill_delete' bill.id %}">Delete</a>
+                <div class="d-flex" style="gap: 1rem">
+                    <a class="btn btn-primary btn-sm" href="{% url 'bills:pay_bill' bill.id %}">Pay Bill</a>
+                    <a class="btn btn-secondary btn-sm" href="{% url 'bills:bill_update' bill.id %}">Edit</a>
+                </div>
             </td>
         </tr>
     {% endfor %}

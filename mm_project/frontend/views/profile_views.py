@@ -42,11 +42,11 @@ def frontend_home(request):
 
     context = {
         # Cards Data
-        'account_total': accounts_data['total'],
+        'account_total': accounts_data['total'] or 0,
         'account_count': accounts_data['count'],
-        'bill_total': bills_data['total'],
+        'bill_total': bills_data['total'] or 0,
         'bill_count': bills_data['count'],
-        'expense_total': expenses_data['total'],
+        'expense_total': expenses_data['total'] or 0,
         'expense_count': expenses_data['count'],
 
         # Summary Data

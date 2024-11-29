@@ -28,6 +28,8 @@ class Bill(models.Model):
 
     @property
     def next_due(self):
+        if self.last_paid is None:
+            return None
         return self.last_paid + timedelta(days=self.period)
 
     def __str__(self):

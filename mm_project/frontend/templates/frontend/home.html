@@ -2,11 +2,6 @@
 {% load humanize %}
 {% load static %}
 
-{% block head %}
-    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}"/>
-    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
-{% endblock %}
-
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}"/>
 {% endblock %}
@@ -18,14 +13,7 @@
 {% block title %}Money Manager: Home{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-xl-8">
-            <h1>Money Manager Home</h1>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-
+    <div class="row my-3">
         <div class="col-12 col-xl-4">
             <a href="{% url 'accounts:all_accounts' %}" style="text-decoration: none;">
                 {% include "frontend/home/accounts-summary-card.html" %}
@@ -45,7 +33,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-5">
         {% include "frontend/summary/overview.html" %}
     </div>
 
