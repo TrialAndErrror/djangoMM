@@ -22,5 +22,4 @@ app_name = "frontend"
 urlpatterns = [
     path("", frontend_home, name="home"),
     path("profile/", view_profile, name="profile"),
-    path("summary/", view_summary, name="summary"),
 ]

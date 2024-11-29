@@ -121,53 +121,6 @@ def sort_labels(labels, sizes, threshold=0):
     return labels, sizes
 
 
-def make_homepage_context_dict(accounts, bills, expenses, username):
-    """
-    Make context dict for the homepage.
-
-    Comprised of accounts info, bills info, and expenses info, as well as the username of the logged-in user.
-
-    :param accounts: list
-    :param bills: list
-    :param expenses: list
-    :param username: str
-    :return: dict
-    """
-
-    accounts_balances = [item.balance for item in accounts]
-    expense_balances = [item.amount for item in expenses]
-
-    """
-    Get the sum of the accounts and expenses.
-    
-    For bills, we divide by 30 to get an approximate monthly total
-    """
-    accounts_total = sum(accounts_balances)
-    expenses_total = sum(expense_balances)
-    bill_total = sum([float(entry.amount) * (float(entry.period) / 30) for entry in bills])
-
-    """
-    This is the data that will go into the homepage
-    """
-    context = {
-        'account_total': round(accounts_total, 2),
-        'account_count': accounts.aggregate(Count('id'))['id__count'],
-        'bill_total': round(bill_total, 2),
-        'bill_count': bills.aggregate(Count('id'))['id__count'],
-        'expense_total': round(expenses_total, 2),
-        'expense_count': expenses.aggregate(Count('id'))['id__count'],
-        'user': username
-    }
-
-    """
-    Adding the graphs directly to the context dictionary to be passed into the template directly.
-    """
-    # TODO: Add charts
-    # context.update(make_graphs(accounts, bills, expenses))
-
-    return context
-
-
 def new_get_graph():
     """
     Matplotlib integration with Django

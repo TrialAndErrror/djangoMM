@@ -16,13 +16,6 @@
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if request.path == '/summary/' %}
-                    <a class="nav-link active" href="{% url 'frontend:summary' %}">Overview</a>
-                    {% else %}
-                    <a class="nav-link" href="{% url 'frontend:summary' %}">Overview</a>
-                    {% endif %}
-                </li>
-                <li class="nav-item">
                     {% if 'accounts' in request.path %}
                     <a class="nav-link active" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                     {% else %}

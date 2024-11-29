@@ -21,51 +21,18 @@
 
         <div class="col-12 col-xl-4">
             <a href="{% url 'bills:all_bills' %}" style="text-decoration: none;">
-                <div class="card text-white bg-secondary m-3" style="max-width: 20rem;">
-                    <div class="card-header bg-secondary">
-                        <h4 class="card-title">Bills Summary</h4>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Monthly Total: $ {{ bill_total|intcomma }}</p>
-                        <p class="card-text">Number of Bills: {{ bill_count }}</p>
-                    </div>
-                    <div class="p-3 m-0" style="max-width: 320px;">
-                        {% if bill_count > 0 %}
-                            <img src="data:image/png;base64, {{ graph_b|safe }}" alt="Bills Chart"
-                                 style="margin: auto; display: block">
-                        {% else %}
-                            <p style="text-align: center">Add a Bill to show your Bill Breakdown chart here!</p>
-                        {% endif %}
-
-                    </div>
-                </div>
+                {% include "frontend/home/accounts-summary-card.html" %}
             </a>
         </div>
 
         <div class="col-12 col-xl-4">
             <a href="{% url 'expenses:all_expenses' %}" style="text-decoration: none;">
-                <div class="card text-white bg-info m-3" style="max-width: 20rem;">
-                    <div class="card-header bg-info">
-                        <h4 class="card-title">Expenses Summary</h4>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Monthly Total: $ {{ expense_total|intcomma }}</p>
-                        <p class="card-text">Number of Bills: {{ expense_count }}</p>
-                    </div>
-                </div>
-                <div class="m-3" style="max-width: 320px;">
-                    {% if expense_count > 0 %}
-                        <img src="data:image/png;base64, {{ graph_e|safe }}" alt="Expenses Chart"
-                             style="margin: auto; display: block">
-                    {% else %}
-                        <p class="text-black-50" style="text-align: center">Add an Expense to show your Expenses
-                            Breakdown chart here!</p>
-                    {% endif %}
-
-                </div>
             </a>
         </div>
+    </div>
 
+    <div class="row">
+        {% include "frontend/summary/overview.html" %}
     </div>
 
 {% endblock %}
