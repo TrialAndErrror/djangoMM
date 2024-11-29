@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
@@ -21,8 +22,10 @@ class ExpenseDetailView(LoginRequiredMixin, DetailView):
 class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Expense
     fields = ['name', 'amount', 'date', 'category', 'other_category', 'notes', 'account']
-    success_message = 'Expense "%(name)s" Created'
     initial = {'date': datetime.date.today().strftime("%m/%d/%Y")}
+
+    def get_success_message(self, cleaned_data):
+        return f'Expense "{cleaned_data.get('name')}" Created'
 
     def form_valid(self, form):
         # Deduct expense balance from account
@@ -99,7 +102,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
 class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Expense
-    success_url = '/accounts/'
+    success_url = reverse_lazy('expense:all_expenses')
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Deleted'
