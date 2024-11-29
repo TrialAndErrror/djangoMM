@@ -26,7 +26,7 @@ def upload_csv(request):
                 else:
                     row_amount = f"-{row['Amount']}"
 
-                category = ExpenseCategory.objects.get_or_create(name=row['Category'])
+                category, created = ExpenseCategory.objects.get_or_create(name=row['Category'])
 
                 try:
                     obj, created = Expense.objects.update_or_create(
