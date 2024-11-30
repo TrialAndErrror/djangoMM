@@ -4,30 +4,17 @@ from django.urls import reverse
 
 from accounts.models import Account
 
-# Create your models here.
-EXPENSE_CHOICES = (
-    ('Groceries', 'Groceries'),
-    ('Pets', 'Pets'),
-    ('Home', 'Home'),
-    ('Transportation', 'Transportation'),
-    ('Eating out', 'Eating out'),
-    ('Entertainment', 'Entertainment'),
-    ('Shopping', 'Shopping'),
-    ('Skills', 'Skills'),
-    ('Medical', 'Medical'),
-    ('Other', 'Other'),
-    ('Personal', 'Personal'),
-    ('Donation', 'Donation'),
-    ('Other', 'Other')
-)
+
+class ExpenseCategory(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    description = models.TextField(blank=True, null=True)
 
 
 class Expense(models.Model):
     name = models.CharField(max_length=150)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     date = models.DateField()
-    category = models.CharField(max_length=20, choices=EXPENSE_CHOICES, default='Groceries')
-    other_category = models.CharField(max_length=150, null=True, blank=True, verbose_name='If Other, please specify:')
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE, blank=True, null=True)
     notes = models.CharField(max_length=150, null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, default=None)

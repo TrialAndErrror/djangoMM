@@ -1,35 +1,8 @@
-{% extends 'frontend/utils/base.html' %}
-{% load static %}
-
-{% block head %}
-    <link rel="stylesheet" href="{% static 'frontend/sortable-main/sortable.css' %}"/>
-    <script src="{% static 'frontend/sortable-main/sortable.min.js' %}"></script>
-{% endblock %}
-
-{% block body %}
-    <div class="container">
-        <div class="row">
-
-        </div>
-        <div class="container mt-4 mb-5">
-            <h1 class="text-decoration-underline">My Accounts & Bills</h1>
-        </div>
-
-        <div class="container card col-md-10">
-            {% include 'frontend/summary/accounts_card.html' %}
-        </div>
+<div class="col-12">
+    <div class="d-flex flex-column" style="gap: 1.5rem">
+        {% include 'frontend/home/accounts_card.html' %}
+        {% include 'frontend/home/bills_card.html' %}
+        {% include 'frontend/home/expenses_card.html' %}
     </div>
+</div>
 
-    <div class="container mt-5">
-        <div class="container card col-md-10">
-            {% include 'frontend/summary/bills_card.html' %}
-        </div>
-    </div>
-
-    <div class="container mt-5 mb-5">
-        <div class="container card col-md-10">
-            {% include 'frontend/summary/expenses_card.html' %}
-        </div>
-    </div>
-
-{% endblock %}

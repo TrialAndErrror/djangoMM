@@ -1,0 +1,53 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% block title %} Money Manager: View Expenses {% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column" style="gap: 1.5rem;">
+        <div class="d-flex flex-column">
+            <h2>Upload CSV</h2>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        {% if duplicates %}
+            <div class="d-flex flex-column">
+                <h3>Duplicate Entries Found</h3>
+                <p>
+                    These entries could not be updated automatically because the corresponding entry in the database
+                    could not be found.
+                    Please look up these entries manually and adjust as required.
+                </p>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entry in duplicates %}
+                        <tr>
+                            <td>{{ entry.date }}</td>
+                            <td>{{ entry.description }}</td>
+                            <td>{{ entry.amount }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

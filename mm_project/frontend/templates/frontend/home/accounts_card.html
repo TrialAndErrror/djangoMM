@@ -1,13 +1,11 @@
 {% load humanize %}
 
-<div class="row card-header text-white bg-primary">
-    <div class="col">
-        <h2 class="text-decoration-underline">Accounts</h2>
+<div class="card">
+    <div class="card-header text-white bg-primary p-3">
+        <h3 class="mb-0">Accounts</h3>
     </div>
-</div>
 
-<div class="row">
-    <div>
+    <div class="card-body">
         <table class="sortable table table-hover">
             <thead>
             <tr>
@@ -28,11 +26,14 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-</div>
 
-<div class="row m-3">
-    <div class="col">
-        <a href="{% url 'accounts:all_accounts' %}"><h2>View All Accounts</h2></a>
+    </div>
+    <div class="card-footer w-100 d-flex justify-content-end p-3">
+        <a href="{% url 'accounts:all_accounts' %}">
+            <span class="btn btn-lg btn-primary rounded">
+                View All Accounts
+            </span>
+        </a>
+
     </div>
 </div>

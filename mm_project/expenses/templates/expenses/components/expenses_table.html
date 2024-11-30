@@ -1,7 +1,7 @@
 {% load humanize %}
 
 <table class="sortable table table-hover border-info mb-3">
-  <thead>
+    <thead>
     <tr>
         <th scope="col">Name</th>
         <th scope="col">Amount</th>
@@ -10,24 +10,22 @@
         <th scope="col" class="d-none d-sm-table-cell">Account</th>
         <th scope="col" class="d-none d-md-table-cell">Actions</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     {% for expense in expenses %}
         <tr>
             <td><a href="{% url 'expenses:expense_detail' expense.id %}" class="text-info"> {{ expense.name }}</a></td>
             <td>${{ expense.amount|intcomma }}</td>
             <td>{{ expense.date|date:"F d, Y" }}</td>
-            {% if expense.other_category %}
-                <td class="d-none d-sm-table-cell">{{ expense.other_category }}</td>
-            {% else %}
-                <td class="d-none d-sm-table-cell">{{ expense.category }}</td>
-            {% endif %}
+            <td class="d-none d-sm-table-cell">{{ expense.category.name }}</td>
             <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
             <td class="d-none d-md-table-cell">
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'expenses:expense_update' expense.id %}">Edit</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'expenses:expense_delete' expense.id %}">Delete</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                   href="{% url 'expenses:expense_update' expense.id %}">Edit</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1"
+                   href="{% url 'expenses:expense_delete' expense.id %}">Delete</a>
             </td>
         </tr>
     {% endfor %}
-  </tbody>
+    </tbody>
 </table>

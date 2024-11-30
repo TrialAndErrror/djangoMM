@@ -3,35 +3,29 @@
 
 {% block body %}
     <div class="content-section">
-        {% if object.owner == user %}
         <form method="POST">
             {% csrf_token %}
-            <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                <div class="card-header">Expense #{{ object.id }}</div>
-                <div class="card-body">
-                  <h4 class="card-title">{{ object.name }}</h4>
-                  <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
-                  <p class="card-text mb-0">Account: {{ object.account }}</p>
-                  <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-                  {% if object.other_category %}
-                    <p class="card-text">Category: {{ object.other_category }}</p>
-                  {% else %}
-                    <p class="card-text">Category: {{ object.category }}</p>
-                  {% endif %}
-                  {% if object.notes %}
-                    <p class="card-text">Notes: {{ object.notes }}</p>
-                  {% endif %}
-                  <p class="card-text">Next Due: {{ object.next_due|date:"F d, Y" }}</p>
+            <div class="card mb-3" style="max-width: 20rem;">
+                <div class="card-header bg-primary text-white">Expense #{{ object.id }}</div>
+                <div class="card-body ">
+                    <h4 class="card-title">{{ object.name }}</h4>
+                    <p class="card-text mb-0">Amount: ${{ object.amount|intcomma }}</p>
+                    <p class="card-text mb-0">Account: {{ object.account }}</p>
+                    <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
+                    {% if object.category %}
+                        <p class="card-text">Category: {{ object.category }}</p>
+                    {% endif %}
+                    {% if object.notes %}
+                        <p class="card-text">Notes: {{ object.notes }}</p>
+                    {% endif %}
+                    <p class="card-text">Next Due: {{ object.next_due|date:"F d, Y" }}</p>
                 </div>
-              </div>
+            </div>
             <div class="form-group mt-3 ">
                 <h4>Are you sure you want to delete the this Expense?</h4>
                 <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
                 <a class="btn btn-outline-secondary" href="{% url 'expenses:expense_detail' object.id %}">Cancel</a>
             </div>
         </form>
-        {% else %}
-            <h2 class="article-title">Error: Invalid Expense ID.</h2>
-        {% endif %}
     </div>
 {% endblock %}

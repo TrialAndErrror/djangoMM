@@ -9,34 +9,36 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container card">
-        <div class="row card-header text-white bg-info">
-            <div class="col">
-                {% include 'expenses/components/expense_header.html' %}
-            </div>
-        </div>
+    <div class="d-flex my-3" style="gap: 1rem">
+        <a href="{% url 'expenses:add_expense' %}">
+            <div class="btn btn-info">Add New Expense</div>
+        </a>
 
-        <div class="row">
-            <div class="col">
-                {% include 'expenses/components/expenses_search.html' %}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col p-0 p-lg-2">
-                {% if found %}
-                  {% include 'expenses/components/expenses_table.html' %}
-                {% else %}
-                    {% include 'expenses/components/no_expenses_found.html' %}
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="row m-3">
-            <div class="col">
-                <a href="{% url 'expenses:add_expense' %}"><h2 class="text-info">Add New Expense</h2></a>
-            </div>
-        </div>
+        <a href="{% url 'expenses:upload_csv' %}">
+            <div class="btn btn-info">Bulk Upload CSV</div>
+        </a>
     </div>
+
+    <div class="card">
+        <div class="card-header text-white bg-info">
+            {% if month %}
+                <h1>{{ month }} {{ year }} Expenses</h1>
+            {% elif year %}
+                <h1>{{ year }} Expenses</h1>
+            {% else %}
+                <h1>Expenses</h1>
+            {% endif %}
+        </div>
+
+        {% include 'expenses/components/expenses_search.html' %}
+
+        {% if found %}
+            {% include 'expenses/components/expenses_table.html' %}
+        {% else %}
+            {% include 'expenses/components/no_expenses_found.html' %}
+        {% endif %}
+
+    </div>
+
 
 {% endblock %}
