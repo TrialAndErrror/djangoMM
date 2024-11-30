@@ -76,8 +76,9 @@ def pay_bill(request, pk):
             date_paid = form.cleaned_data.get("date_paid")
 
             if amount_paid > bill.account.balance:
-                messages.warning(request,
-                                 f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
+                messages.warning(
+                    request,
+                    f'Error: Not enough money in {bill.account.name} to pay bill. (Current Balance: {bill.account.balance})')
             else:
                 bill.last_paid = date_paid
                 bill.account.balance -= amount_paid

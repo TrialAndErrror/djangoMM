@@ -41,13 +41,15 @@
                                 <p class="card-text">Period: {{ object.period }}</p>
                                 <p class="card-text">Next Due: {{ object.next_due|date:"F d, Y" }}</p>
                                 <p class="card-text">Account: {{ object.account }}</p>
+                                <input hidden="hidden" id="account-id" name="account_id" value="{{ object.account_id }}" />
                             </div>
                         </div>
-                        <div class="mt-2">
+                        <div class="my-2">
                             <div class="form-group m-2">
-                                <form action="" method="post">
+                                <form method="post">
                                     {% csrf_token %}
                                     {{ form.as_p }}
+                                    <div id="new-balance"></div>
                                     <input type="submit" value="Pay Bill" class="m-2">
                                 </form>
                             </div>
