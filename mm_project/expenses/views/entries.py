@@ -113,7 +113,7 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
 
 @login_required
 def view_all_expenses(request):
-    expenses = Expense.objects.filter(owner=request.user).order_by("date")
+    expenses = Expense.objects.filter(owner=request.user).order_by("-date")
     month = None
     year = None
 
