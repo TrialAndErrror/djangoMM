@@ -20,7 +20,7 @@
             {% for bill in bills %}
                 <tr>
                     <td>
-                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary"> {{ bill.name[:10] }}{% if bill.name|length > 10 %}...{% endif %}</a>
+                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary">{{ bill.get_short_name }}</a>
                     </td>
                     {% if bill.variable %}
                         <td>~${{ bill.amount }}</td>

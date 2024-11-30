@@ -18,12 +18,15 @@
             <tbody>
             {% for expense in expenses %}
                 <tr>
-                    <td><a href="{% url 'expenses:expense_detail' expense.id %}"> {{ expense.name }}</a>
+                    <td>
+                        <a href="{% url 'expenses:expense_detail' expense.id %}">
+                            {{ expense.get_short_name }}
+                        </a>
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
                     <td>{{ expense.date|date:"F d, Y" }}</td>
-                    <td class="d-none d-lg-table-cell">{{ expense.category.name }}</td>
-                    <td class="d-none d-lg-table-cell">{{ expense.account.name }}</td>
+                    <td class="d-none d-lg-table-cell">{{ expense.category.get_short_name }}</td>
+                    <td class="d-none d-lg-table-cell">{{ expense.account.get_short_name}}</td>
                 </tr>
             {% endfor %}
             </tbody>
