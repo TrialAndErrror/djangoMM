@@ -24,7 +24,8 @@
                         </a>
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
-                    <td>{{ expense.date|date:"F d, Y" }}</td>
+                    <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
+                    <td class="d-table-cell d-none">{{ expense.date|date:"%m/%d/%y" }}</td>
                     <td class="d-none d-lg-table-cell">{{ expense.category.get_short_name }}</td>
                     <td class="d-none d-lg-table-cell">{{ expense.account.get_short_name}}</td>
                 </tr>
