@@ -19,7 +19,7 @@
             {% for entry in accounts %}
                 <tr>
                     <td><a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.name }}</a></td>
-                    <td>{{ entry.type }}</td>
+                    <td class="d-none d-lg-table-cell">{{ entry.type }}</td>
                     <td>$ {{ entry.balance|intcomma }}</td>
                     <td>{{ entry.last_update|naturalday|capfirst }}</td>
                 </tr>
