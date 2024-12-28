@@ -46,9 +46,11 @@
             <table class="sortable table table-hover border-info mb-3">
                 <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Name</th>
+                    <th scope="col" class="d-table-cell d-sm-none">Name</th>
                     <th scope="col">Amount</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Date</th>
+                    <th scope="col" class="d-table-cell d-sm-none">Date</th>
                     <th scope="col" class="d-none d-sm-table-cell">Category</th>
                     <th scope="col" class="d-none d-sm-table-cell">Account</th>
                     <th scope="col" class="d-none d-md-table-cell">Actions</th>
@@ -57,10 +59,21 @@
                 <tbody>
                 {% for expense in expenses %}
                     <tr>
-                        <td class="d-none d-sm-table-cell"><a href="{% url 'expenses:expense_detail' expense.id %}"
-                                                              class="text-info"> {{ expense.name }}</a></td>
-                        <td class="d-table-cell d-sm-none"><a href="{% url 'expenses:expense_detail' expense.id %}"
-                                                              class="text-info"> {{ expense.get_short_name }}</a></td>
+                        <td class="d-none d-sm-table-cell">
+                            <a
+                                    href="{% url 'expenses:expense_detail' expense.id %}"
+                                    class="text-info">
+                                {{ expense.name }}
+                            </a>
+                        </td>
+                        <td
+                                class="d-table-cell d-sm-none"
+                        >
+                            <a href="{% url 'expenses:expense_detail' expense.id %}"
+                               class="text-info">
+                                {{ expense.get_short_name }}
+                            </a>
+                        </td>
                         <td>${{ expense.amount|intcomma }}</td>
                         <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
                         <td class="d-table-cell d-sm-none">{{ expense.date|date:"m/d/y" }}</td>
@@ -81,7 +94,6 @@
                 </tbody>
             </table>
         </div>
-
 
 
     </div>

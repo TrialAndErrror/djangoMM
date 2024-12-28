@@ -68,6 +68,7 @@ class BudgetCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_choices'] = ExpenseCategory.objects.values_list('id', 'name')
+        context['matching_expenses'] = Expense.objects.filter(category=self.kwargs.get('category_id'))
         return context
 
     def get_success_message(self, cleaned_data):
@@ -97,6 +98,7 @@ class BudgetUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_choices'] = ExpenseCategory.objects.values_list('id', 'name')
+        context['matching_expenses'] = Expense.objects.filter(category=self.object.category)
         return context
 
     def get_success_message(self, cleaned_data):
