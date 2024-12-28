@@ -1,0 +1,21 @@
+<form
+        hx-target="this"
+        hx-swap="outerHTML"
+>
+    {% csrf_token %}
+    <select
+            class="form-control"
+            hx-trigger="blur"
+            hx-post="{% url 'expenses:expense_edit_inline' expense_id=expense_id %}"
+            name="category"
+    >
+        {% for category in choices %}
+            <option
+                    {% if category.id == selected_id %}selected{% endif %}
+                    value="{{ category.id }}"
+            >
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>

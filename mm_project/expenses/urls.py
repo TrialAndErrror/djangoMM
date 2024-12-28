@@ -15,21 +15,27 @@ Including another URLconf
 """
 from django.urls import path
 
-from expenses.views.budgets import ViewBudgetStatus
+from expenses.views.budgets import ViewBudgetStatus, BudgetUpdateView, BudgetCreateView, BudgetMergeView, \
+    BudgetDetailView
 from expenses.views.bulk_upload import upload_csv
-from expenses.views.entries import view_all_expenses, ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
-    ExpenseDeleteView
+from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
+    ExpenseDeleteView, ViewExpensesList, edit_category_inline
 
 app_name = "expenses"
 
 urlpatterns = [
-    path("", view_all_expenses, name="all_expenses"),
+    path("", ViewExpensesList.as_view(), name="all_expenses"),
     path("add", ExpenseCreateView.as_view(), name="add_expense"),
     path("<int:pk>", ExpenseDetailView.as_view(), name="expense_detail"),
     path("<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
     path('upload-csv/', upload_csv, name='upload_csv'),
+    path('edit-inline/<int:expense_id>/', edit_category_inline, name='expense_edit_inline'),
 
     path('budget/', ViewBudgetStatus.as_view(), name='budget_list'),
+    path('budget/create/<int:category_id>/', BudgetCreateView.as_view(), name='budget_create'),
+    path('budget/edit/<int:pk>/', BudgetUpdateView.as_view(), name='budget_edit'),
+    path('budget/view/<int:pk>/', BudgetDetailView.as_view(), name='budget_view'),
+    path('budget/merge/', BudgetMergeView.as_view(), name='budget_merge'),
 
 ]

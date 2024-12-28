@@ -38,5 +38,18 @@ class Expense(models.Model):
 
 
 class CategoryBudget(models.Model):
-    category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        try:
+            return self.category.name
+        except AttributeError:
+            return 'None'
+
+    def __repr__(self):
+        try:
+            return self.category.name
+        except AttributeError:
+            return 'None'

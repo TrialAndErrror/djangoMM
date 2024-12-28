@@ -6,13 +6,15 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
-from expenses.models import Expense
+from expenses.forms import MonthYearForm
+from expenses.models import Expense, ExpenseCategory
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
@@ -111,44 +113,63 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return self.request.user == self.get_object().owner
 
 
-@login_required
-def view_all_expenses(request):
-    expenses = Expense.objects.filter(owner=request.user).order_by("-date")
-    month = None
-    year = None
+class ViewExpensesList(LoginRequiredMixin, FormView):
+    template_name = "expenses/show_expenses.html"
+    model = Expense
+    form_class = MonthYearForm
+
+    def get_initial(self):
+        """Prefill the form with the current month and year."""
+        current_date = datetime.datetime.now()
+        return {
+            'month': current_date.month,
+            'year': current_date.year,
+        }
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests to render the form."""
+        initial_data = self.get_initial()
+        expenses = Expense.objects.filter(
+            date__month=initial_data['month'],
+            date__year=initial_data['year']
+        ).all()
+        form = self.get_form()
+        form.set_target_url(reverse_lazy('expenses:all_expenses'))
+
+        return render(request, self.template_name, {'form': form, 'expenses': expenses})
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests to process the form."""
+        form_class = self.get_form_class()
+        form = form_class(data=request.POST)
+        form.set_target_url(reverse_lazy('expenses:all_expenses'))
+        context = {'form': form, 'expenses': []}
+        if form.is_valid():
+            context['expenses'] = Expense.objects.filter(
+                date__month=form.cleaned_data['month'],
+                date__year=form.cleaned_data['year']
+            ).all()
+            return render(request, self.template_name, context)
+
+        return render(request, self.template_name, context, status=400)
+
+
+def edit_category_inline(request, expense_id):
+    expense = Expense.objects.get(id=expense_id)
 
     if request.method == 'POST':
-        form = ExpenseFilterForm(request.POST)
+        new_category = request.POST.get('category')
+        expense.category_id = new_category
+        expense.save()
+        context = {'expense': expense}
+        return  render(request, 'expenses/components/editable-category.html', context)
 
-        if form.is_valid():
-            month = form.cleaned_data.get('month', None)
-            year = form.cleaned_data.get('year', None)
-
-        else:
-            messages.error(request, 'Invalid Filter Parameters')
+    all_categories = ExpenseCategory.objects.filter(expense__owner=request.user).distinct().all()
 
     context = {
-        'user': request.user.username,
-        'found': False,
-        'month': month,
-        'year': year
+        'choices': all_categories,
+        'selected_id': expense.category_id,
+        'expense_id': expense_id,
     }
 
-    if month:
-        context['month'] = month_name[int(month)]
-        expenses = expenses.filter(date__year=year, date__month=month)
-    if year:
-        expenses = expenses.filter(date__year=year)
-
-    form = ExpenseFilterForm()
-
-    if len(expenses) > 0:
-        context['found'] = True
-        context['expenses'] = expenses
-
-        form.year = year
-        form.month = month
-
-    context['form'] = form
-
-    return render(request, 'expenses/show_expenses.html', context)
+    return render(request, 'expenses/components/edit-category-inline.html', context)
