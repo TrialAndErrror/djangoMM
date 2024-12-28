@@ -1,0 +1,10 @@
+{{ expense.category.name }}
+<div
+        hx-trigger="click"
+        hx-get="{% url 'expenses:expense_edit_inline' expense_id=expense.id %}"
+        hx-target="#category-container-{{ expense.id }}"
+        hx-swap="innerHTML"
+        style="height: 1.5rem"
+>
+    {% include 'icons/edit.svg' %}
+</div>

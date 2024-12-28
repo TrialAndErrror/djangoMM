@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
 from rest_framework.reverse import reverse_lazy
@@ -13,7 +14,7 @@ from rest_framework.reverse import reverse_lazy
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
 from expenses.forms import MonthYearForm
-from expenses.models import Expense
+from expenses.models import Expense, ExpenseCategory
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
@@ -151,3 +152,24 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
             return render(request, self.template_name, context)
 
         return render(request, self.template_name, context, status=400)
+
+
+def edit_category_inline(request, expense_id):
+    expense = Expense.objects.get(id=expense_id)
+
+    if request.method == 'POST':
+        new_category = request.POST.get('category')
+        expense.category_id = new_category
+        expense.save()
+        context = {'expense': expense}
+        return  render(request, 'expenses/components/editable-category.html', context)
+
+    all_categories = ExpenseCategory.objects.filter(expense__owner=request.user).distinct().all()
+
+    context = {
+        'choices': all_categories,
+        'selected_id': expense.category_id,
+        'expense_id': expense_id,
+    }
+
+    return render(request, 'expenses/components/edit-category-inline.html', context)

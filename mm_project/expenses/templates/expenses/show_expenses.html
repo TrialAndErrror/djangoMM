@@ -64,13 +64,17 @@
                         <td>${{ expense.amount|intcomma }}</td>
                         <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
                         <td class="d-table-cell d-sm-none">{{ expense.date|date:"m/d/y" }}</td>
-                        <td class="d-none d-sm-table-cell">{{ expense.category.name }}</td>
+                        <td class="d-none d-sm-table-cell">
+                            <div class="d-flex" style="gap: 1rem" id="category-container-{{ expense.id }}">
+                                {% include 'expenses/components/editable-category.html' %}
+                            </div>
+                        </td>
                         <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
                         <td class="d-none d-md-table-cell">
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
-                               href="{% url 'expenses:expense_update' expense.id %}">Edit</a>
-                            <a class="btn btn-danger btn-sm mt-1 mb-1"
-                               href="{% url 'expenses:expense_delete' expense.id %}">Delete</a>
+                            <div style="min-width: max-content">
+                                <a class="btn btn-danger btn-sm mt-1 mb-1"
+                                   href="{% url 'expenses:expense_delete' expense.id %}">Delete</a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

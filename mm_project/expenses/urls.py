@@ -19,7 +19,7 @@ from expenses.views.budgets import ViewBudgetStatus, BudgetUpdateView, BudgetCre
     BudgetDetailView
 from expenses.views.bulk_upload import upload_csv
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
-    ExpenseDeleteView, ViewExpensesList
+    ExpenseDeleteView, ViewExpensesList, edit_category_inline
 
 app_name = "expenses"
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path("<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
     path('upload-csv/', upload_csv, name='upload_csv'),
+    path('edit-inline/<int:expense_id>/', edit_category_inline, name='expense_edit_inline'),
 
     path('budget/', ViewBudgetStatus.as_view(), name='budget_list'),
     path('budget/create/<int:category_id>/', BudgetCreateView.as_view(), name='budget_create'),
