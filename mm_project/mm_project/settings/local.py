@@ -12,7 +12,7 @@ config_data = load_config_data(CONFIG_PATH)
 
 SECRET_KEY = config_data.get('SECRET_KEY')
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['moneymanager.greenfamily.cc', 'https://moneymanager.greenfamily.cc']
 
 # Application definition
 
@@ -135,6 +135,11 @@ MEDIA_URL = 'media/'
 
 
 # HTTPS Settings
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://moneymanager.greenfamily.cc',
+]
+
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 SECURE_SSL_REDIRECT = False
