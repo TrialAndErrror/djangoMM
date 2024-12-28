@@ -1,0 +1,13 @@
+<div>
+    <input
+        type="text"
+        name="{{ widget.name }}"
+        id="{{ widget.attrs.id }}"
+        value="{{ widget.value|default:'' }}"
+        hx-get="{{ endpoint_url }}"
+        hx-target="#new-balance"
+        hx-trigger="load, keyup"
+        hx-include="this,#account-id"
+        {% include 'django/forms/widgets/attrs.html' %}
+    />
+</div>

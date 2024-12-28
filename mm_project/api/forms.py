@@ -2,7 +2,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from datetime import datetime
-from .widgets import FengyuanChenDatePickerInput
+
+from rest_framework.reverse import reverse_lazy
+
+from .widgets import FengyuanChenDatePickerInput, BalanceWidget
 from bills.models import PERIOD_CHOICES, Bill
 from accounts.models import Account
 from api.tools import get_next_date
@@ -29,7 +32,9 @@ class ExpenseFilterForm(forms.Form):
 
 
 class BillPayForm(forms.Form):
-    amount = forms.DecimalField()
+    amount = forms.DecimalField(
+        widget = BalanceWidget(endpoint_url=reverse_lazy("accounts:get_balance")),
+    )
     date_paid = forms.DateField(
         widget=FengyuanChenDatePickerInput()
     )

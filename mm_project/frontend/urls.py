@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from .views import *
-
+from .views.home import frontend_home
 
 app_name = "frontend"
 

@@ -1,3 +1,6 @@
+import decimal
+from django.http import HttpResponse
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -58,3 +61,28 @@ class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user == self.get_object().owner
+
+
+def htmx_get_balance(request):
+    account_id = request.GET.get('account_id')
+    if not account_id:
+        return HttpResponse("")
+
+    try:
+        account_object = Account.objects.get(pk=account_id)
+    except Account.DoesNotExist:
+        return HttpResponse("Error: Account Doesn't Exist")
+
+    balance = account_object.balance
+    if expense_amount := request.GET.get('amount'):
+        try:
+            print(expense_amount)
+            balance -= decimal.Decimal(expense_amount)
+        except ValueError:
+            pass
+
+    context = {
+        "balance": balance,
+    }
+
+    return render(request, "accounts/htmx/account-balance.html", context)

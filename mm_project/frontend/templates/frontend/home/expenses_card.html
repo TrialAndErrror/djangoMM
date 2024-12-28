@@ -8,21 +8,26 @@
         <table class="sortable table table-hover border-info">
             <thead>
             <tr>
-                <th scope="col">Expense Name</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Date</th>
-                <th scope="col">Category</th>
-                <th scope="col">Account</th>
+                <th>Expense Name</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th class="d-none d-lg-table-cell">Category</th>
+                <th class="d-none d-lg-table-cell">Account</th>
             </tr>
             </thead>
             <tbody>
             {% for expense in expenses %}
                 <tr>
-                    <td><a href="{% url 'expenses:expense_detail' expense.id %}"> {{ expense.name }}</a>
+                    <td>
+                        <a href="{% url 'expenses:expense_detail' expense.id %}">
+                            {{ expense.get_short_name }}
+                        </a>
                     </td>
                     <td>${{ expense.amount|intcomma }}</td>
-                    <td>{{ expense.date|date:"F d, Y" }}</td>
-                    <td>{{ expense.category.name }}</td>
+                    <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
+                    <td class="d-table-cell d-sm-none">{{ expense.date|date:"m/d/y" }}</td>
+                    <td class="d-none d-lg-table-cell">{{ expense.category.get_short_name }}</td>
+                    <td class="d-none d-lg-table-cell">{{ expense.account.get_short_name}}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from accounts.views import view_all_accounts, AccountDetailView, AccountCreateView, AccountUpdateView, \
-    AccountDeleteView
+    AccountDeleteView, htmx_get_balance
 
 app_name = "accounts"
 
@@ -26,4 +26,6 @@ urlpatterns = [
     path("<int:pk>", AccountDetailView.as_view(), name="account_detail"),
     path("<int:pk>/update/", AccountUpdateView.as_view(), name="account_update"),
     path("<int:pk>/delete/", AccountDeleteView.as_view(), name="account_delete"),
+    path("htmx/get-balance/", htmx_get_balance, name="get_balance"),
+
 ]

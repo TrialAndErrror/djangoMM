@@ -6,32 +6,33 @@
     </div>
 
     <div class="card-body p-4">
-        <table class="sortable table table-hover">
+        <table class="sortable table">
             <thead>
             <tr>
-                <th scope="col">Bills</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Last Paid</th>
-                <th scope="col">Next Due</th>
-                <th>Actions</th>
+                <th>Bills</th>
+                <th>Amount</th>
+                <th class="d-none d-lg-table-cell">Last Paid</th>
+                <th>Next Due</th>
+                <th class="d-none d-lg-table-cell">Actions</th>
             </tr>
             </thead>
             <tbody>
             {% for bill in bills %}
                 <tr>
                     <td>
-                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary"> {{ bill.name }}</a>
+                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary">{{ bill.get_short_name }}</a>
                     </td>
                     {% if bill.variable %}
-                        <td>${{ bill.amount }} (Variable)</td>
+                        <td>~${{ bill.amount }}</td>
                     {% else %}
                         <td>${{ bill.amount }}</td>
                     {% endif %}
-                    <td>{{ bill.last_paid }}</td>
+                    <td class="d-none d-lg-table-cell">{{ bill.last_paid }}</td>
                     <td>{{ bill.next_due|naturalday }}</td>
-                    <td>
-                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">Pay
-                            Bill</a>
+                    <td class="d-none d-lg-table-cell">
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">
+                            Pay Bill
+                        </a>
                     </td>
 
                 </tr>

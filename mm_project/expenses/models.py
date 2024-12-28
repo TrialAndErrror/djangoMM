@@ -24,3 +24,8 @@ class Expense(models.Model):
 
     def get_absolute_url(self):
         return reverse('expenses:expense_detail', kwargs={'pk': self.pk})
+
+    def get_short_name(self):
+        if len(self.name) > 13:
+            return f'{self.name[:10]}...'
+        return self.name

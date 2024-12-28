@@ -10,7 +10,7 @@
             <thead>
             <tr>
                 <th scope="col">Account</th>
-                <th scope="col">Type</th>
+                <th class="d-none d-lg-table-cell">Type</th>
                 <th scope="col">Balance</th>
                 <th scope="col">Last Updated</th>
             </tr>
@@ -18,8 +18,8 @@
             <tbody>
             {% for entry in accounts %}
                 <tr>
-                    <td><a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.name }}</a></td>
-                    <td>{{ entry.type }}</td>
+                    <td><a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.get_short_name }}</a></td>
+                    <td class="d-none d-lg-table-cell">{{ entry.type }}</td>
                     <td>$ {{ entry.balance|intcomma }}</td>
                     <td>{{ entry.last_update|naturalday|capfirst }}</td>
                 </tr>

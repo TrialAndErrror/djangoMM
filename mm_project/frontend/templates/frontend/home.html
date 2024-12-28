@@ -14,27 +14,27 @@
 
 {% block body %}
     <div class="row my-3">
-        <div class="col-12 col-xl-4">
-            <a href="{% url 'accounts:all_accounts' %}" style="text-decoration: none;">
+            <a href="{% url 'accounts:all_accounts' %}"  class="col-12 col-xl-4" style="text-decoration: none;">
                 {% include "frontend/home/accounts-summary-card.html" %}
             </a>
-        </div>
 
-        <div class="col-12 col-xl-4">
-            <a href="{% url 'bills:all_bills' %}" style="text-decoration: none;">
+            <a href="{% url 'bills:all_bills' %}" class="col-12 col-xl-4" style="text-decoration: none;">
                 {% include "frontend/home/bills-summary-card.html" %}
             </a>
-        </div>
 
-        <div class="col-12 col-xl-4">
-            <a href="{% url 'expenses:all_expenses' %}" style="text-decoration: none;">
+            <a href="{% url 'expenses:all_expenses' %}" class="col-12 col-xl-4" style="text-decoration: none;">
                 {% include "frontend/home/expenses-summary-card.html" %}
             </a>
-        </div>
     </div>
 
     <div class="row mb-5">
-        {% include "frontend/summary/overview.html" %}
+        <div class="col-12">
+            <div class="d-flex flex-column" style="gap: 1.5rem">
+                {% include 'frontend/home/accounts_card.html' %}
+                {% include 'frontend/home/bills_card.html' %}
+                {% include 'frontend/home/expenses_card.html' %}
+            </div>
+        </div>
     </div>
 
 {% endblock %}
