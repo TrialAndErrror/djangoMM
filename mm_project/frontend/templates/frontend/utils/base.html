@@ -23,6 +23,7 @@
         {% block body %}
         {% endblock %}
     </div>
+{% csrf_token %}
 </div>
 
 {% block extra_js %}{% endblock %}
@@ -31,6 +32,12 @@
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-
+<script>
+    document.addEventListener('htmx:configRequest', (event) => {
+        if (event.detail.verb !== 'GET') {
+            event.detail.headers['X-CSRFToken'] = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+    });
+</script>
 </body>
 </html>
