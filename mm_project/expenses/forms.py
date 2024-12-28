@@ -41,8 +41,11 @@ class MonthYearForm(forms.Form):
         widget=forms.Select(
             attrs={
                 'hx-trigger': 'change',
-                'hx-post': reverse_lazy('expenses:budget_list'),
                 'class': 'form-control'
             }
         ),
     )
+
+    def set_target_url(self, url):
+        self.fields['month'].widget.attrs['hx-post'] = url
+        self.fields['year'].widget.attrs['hx-post'] = url

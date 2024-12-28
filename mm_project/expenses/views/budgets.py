@@ -32,13 +32,15 @@ class ViewBudgetStatus(LoginRequiredMixin, FormView):
             target_month=initial_data['month'],
         )
         form = self.get_form()
+        form.set_target_url(reverse_lazy('expenses:budget_list'))
         return render(request, self.template_name, {'form': form, 'categories': categories})
 
     def post(self, request, *args, **kwargs):
         """Handle POST requests to process the form."""
         form_class = self.get_form_class()
         form = form_class(data=request.POST)
-        context = {'form': form, 'budgets': [], 'uncategorized_expenses': []}
+        form.set_target_url(reverse_lazy('expenses:budget_list'))
+        context = {'form': form, 'budgets': []}
         if form.is_valid():
             context['categories'] = get_annotated_budget_categories(
                 target_year=form.cleaned_data['year'],
