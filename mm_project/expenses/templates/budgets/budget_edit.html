@@ -32,4 +32,27 @@
             </div>
         </form>
     </div>
+    <div class="content-section mt-5">
+        <h2>Matching Expenses</h2>
+        <table class="table sortable border-primary">
+            <thead>
+            <tr>
+                <th>Expense</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Account</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for expense in matching_expenses %}
+                <tr>
+                    <th>{{ expense.name }}</th>
+                    <th>{{ expense.amount }}</th>
+                    <th>{{ expense.date }}</th>
+                    <th>{{ expense.account.name }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
