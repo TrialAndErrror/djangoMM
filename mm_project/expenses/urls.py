@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
+from expenses.views.budgets import ViewBudgetStatus
 from expenses.views.bulk_upload import upload_csv
 from expenses.views.entries import view_all_expenses, ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
     ExpenseDeleteView
@@ -28,5 +29,7 @@ urlpatterns = [
     path("<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
     path('upload-csv/', upload_csv, name='upload_csv'),
+
+    path('budget/', ViewBudgetStatus.as_view(), name='budget_list'),
 
 ]

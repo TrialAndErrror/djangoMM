@@ -16,34 +16,21 @@
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if 'accounts' in request.path %}
-                    <a class="nav-link active" href="{% url 'accounts:all_accounts' %}">Accounts</a>
-                    {% else %}
                     <a class="nav-link" href="{% url 'accounts:all_accounts' %}">Accounts</a>
-                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if 'bills' in request.path %}
-                    <a class="nav-link active" href="{% url 'bills:all_bills' %}">Bills</a>
-                    {% else %}
                     <a class="nav-link" href="{% url 'bills:all_bills' %}">Bills</a>
-                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    {% if 'expenses' in request.path %}
-                    <a class="nav-link active" href="{% url 'expenses:all_expenses' %}">Expenses</a>
-                    {% else %}
                     <a class="nav-link" href="{% url 'expenses:all_expenses' %}">Expenses</a>
-                    {% endif %}
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'expenses:budget_list' %}">Budgets</a>
                 </li>
                 <li class="nav-item dropdown">
-                    {% if 'profile' in request.path %}
-                    <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
-                       aria-haspopup="true" aria-expanded="false" id="download">{{ user.username }}</a>
-                    {% else %}
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                        aria-haspopup="true" aria-expanded="false" id="download">{{ user }}</a>
-                    {% endif %}
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
                         <div class="dropdown-divider"></div>

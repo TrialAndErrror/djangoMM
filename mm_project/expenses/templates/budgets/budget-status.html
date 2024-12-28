@@ -1,0 +1,27 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% load static %}
+
+{% block title %} Money Manager: View Budgets {% endblock %}
+
+{% block head %}
+    {% include 'frontend/utils/table_sort_header.html' %}
+{% endblock %}
+
+{% block body %}
+    <div id="budget-content">
+        <form id="month-year-form" hx-post="{% url 'expenses:budget_list' %}" hx-select="#budget-content" hx-target="#budget-content" hx-swap="outerHTML">
+            {% csrf_token %}
+            {{ form.month.label_tag }} {{ form.month }}
+            {{ form.year.label_tag }} {{ form.year }}
+            <button type="submit" class="btn btn-lg btn-primary">Update</button>
+        </form>
+
+        <div class="card">
+            {% for budget in budgets %}
+                {{ budget }}
+            {% endfor %}
+            uncategorized: {{ uncategorized_expenses }}
+        </div>
+    </div>
+{% endblock %}

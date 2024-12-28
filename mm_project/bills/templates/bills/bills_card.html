@@ -1,0 +1,49 @@
+{% load humanize %}
+
+<div class="card">
+    <div class="card-header text-white bg-secondary p-3">
+        <h3 class="mb-0">Upcoming Bills</h3>
+    </div>
+
+    <div class="card-body p-4">
+        <table class="sortable table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Bills</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Last Paid</th>
+                <th scope="col">Next Due</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for bill in bills %}
+                <tr>
+                    <td>
+                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary"> {{ bill.name }}</a>
+                    </td>
+                    {% if bill.variable %}
+                        <td>${{ bill.amount }} (Variable)</td>
+                    {% else %}
+                        <td>${{ bill.amount }}</td>
+                    {% endif %}
+                    <td>{{ bill.last_paid }}</td>
+                    <td>{{ bill.next_due|naturalday }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">Pay
+                            Bill</a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer w-100 d-flex justify-content-end p-3">
+        <a href="{% url 'bills:all_bills' %}">
+            <div class="btn btn-lg btn-secondary rounded">
+                View All Bills
+            </div>
+        </a>
+    </div>
+</div>

@@ -47,7 +47,7 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Expense
-    fields = ['name', 'amount', 'date', 'category', 'notes']
+    fields = ['name', 'amount', 'date', 'category', 'notes', 'account']
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Updated'
