@@ -25,13 +25,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block extra_js %}
-   <script src="{% static 'dateSelect.js' %}" type="application/javascript"></script>
-    <script defer>
-        document.addEventListener('DOMContentLoaded', () => {
-            fillMonthSelect('month-select')
-            fillYearSelect('year-select')
-        })
-    </script>
-{% endblock %}

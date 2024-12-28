@@ -21,16 +21,8 @@
 
     <div class="card">
         <div class="card-header text-white bg-info">
-            {% if month %}
-                <h1>{{ month }} {{ year }} Expenses</h1>
-            {% elif year %}
-                <h1>{{ year }} Expenses</h1>
-            {% else %}
-                <h1>Expenses</h1>
-            {% endif %}
+            <h1>Expenses</h1>
         </div>
-
-        {% include 'expenses/components/expenses_search.html' %}
 
         {% if found %}
             {% include 'expenses/components/expenses_table.html' %}
