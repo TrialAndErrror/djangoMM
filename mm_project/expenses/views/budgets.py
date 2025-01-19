@@ -67,7 +67,7 @@ class BudgetCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category_choices'] = ExpenseCategory.objects.values_list('id', 'name')
+        context['category_choices'] = ExpenseCategory.objects.order_by('name').values_list('id', 'name')
         context['matching_expenses'] = Expense.objects.filter(category=self.kwargs.get('category_id'))
         return context
 
@@ -80,6 +80,8 @@ class BudgetCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         selected_category = self.kwargs.get('category_id')
         if selected_category:
             form.fields['category'].initial = selected_category
+
+        print(form.fields['category'].initial)
 
         form.fields['owner'].initial = self.request.user
         form.fields['owner'].widget.attrs.update({
@@ -119,9 +121,12 @@ class BudgetMergeView(FormView):
             expense.category_id = new_category_id
             expense.save()
 
-        budget_obj = CategoryBudget.objects.get(category_id=selected_category_id)
-        if budget_obj:
-            budget_obj.delete()
+        try:
+            budget_obj = CategoryBudget.objects.get(category_id=selected_category_id)
+            if budget_obj:
+                budget_obj.delete()
+        except CategoryBudget.DoesNotExist:
+            pass
 
         return redirect(reverse_lazy('expenses:budget_list'))
 

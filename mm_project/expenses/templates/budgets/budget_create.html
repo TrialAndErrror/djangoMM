@@ -20,7 +20,7 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">... Or Merge with Existing Budget</legend>
-                    <input name="selected-category" hidden="hidden" value="{{ form.category.data }}">
+                    <input name="selected-category" hidden="hidden" value="{{ form.fields.category.initial}}">
                     <select class="form-control" name="target-category">
                         {% for id, name in category_choices %}
                             <option value="{{ id }}">{{ name }}</option>

@@ -14,23 +14,23 @@
 
             <div class="row mt-3">
                 <div class="col ml-5">
-                        <div class="card mb-3" style="max-width: 20rem;">
-                            <div class="card-header text-white bg-info "><h4
-                                    class="card-title m-2">{{ object.name }}</h4></div>
-                            <div class="card-body bg-light">
-                                <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
-                                <p class="card-text">Account: {{ object.account.name }}</p>
-                                <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-                                <p class="card-text">Category: {{ object.category.name }}</p>
-                                {% if object.notes %}
-                                    <p class="card-text">Notes: {{ object.notes }}</p>
-                                {% endif %}
-                            </div>
+                    <div class="card mb-3" style="max-width: 20rem;">
+                        <div class="card-header text-white bg-info "><h4
+                                class="card-title m-2">{{ object.name }}</h4></div>
+                        <div class="card-body bg-light">
+                            <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
+                            <p class="card-text">Account: {{ object.account.name }}</p>
+                            <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
+                            <p class="card-text">Category: {{ object.category.name }}</p>
+                            {% if object.notes %}
+                                <p class="card-text">Notes: {{ object.notes }}</p>
+                            {% endif %}
                         </div>
-                        <div class="mt-2">
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
-                               href="{% url 'expenses:budget_edit' object.id %}">Edit</a>
-                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                           href="{% url 'expenses:budget_edit' object.id %}">Edit</a>
+                    </div>
                 </div>
             </div>
 
