@@ -46,7 +46,9 @@
             <tbody>
             {% for expense in matching_expenses %}
                 <tr>
-                    <th>{{ expense.name }}</th>
+                    <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
+                        {{ expense.name }}
+                    </a>
                     <th>{{ expense.amount }}</th>
                     <th>{{ expense.date }}</th>
                     <th>{{ expense.account.name }}</th>
