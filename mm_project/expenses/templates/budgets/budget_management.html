@@ -1,6 +1,20 @@
 {% extends "frontend/utils/base.html" %}
 
 {% block body %}
+    <div id="app">
+
+        <div class="drag-container">
+            <div v-for="budget in budgets" :key="budget.id" class="budget-card">
+                <h3>[[ budget.name ]]</h3>
+                <div class="expense-list" :id="'budget-' + budget.id">
+                    <div v-for="expense in budget.expenses" :key="expense.id" class="expense-bubble">
+                        [[ expense.name ]]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <table>
         <thead>
         <tr>
@@ -9,17 +23,97 @@
             <th>Budget Amount</th>
         </tr>
         </thead>
-    <tbody>
-    {% for category in expenses %}
-        <tr>
-            <td>{{ category.name }}</td>
-            <td>{{ category.total_expenses }}</td>
-            <td>{{ category.budget_amt }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
+        <tbody>
+        {% for category in expenses %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.total_expenses }}</td>
+                <td>{{ category.budget_amt }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
 {% endblock %}
 
+{% block extra_css %}
+    <style>
+        .budget-card {
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px;
+            background-color: #f4f4f4;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .expense-bubble {
+            border-radius: 50%;
+            background-color: #ffcc00;
+            padding: 15px;
+            text-align: center;
+            margin: 5px;
+            cursor: grab;
+            display: inline-block;
+        }
+
+        .drag-container {
+            display: flex;
+            gap: 20px;
+        }
+    </style>
+{% endblock %}
+
 {% block extra_js %}
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+            "sortablejs": "https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"
+          }
+        }
+    </script>
+
+    <script type="module">
+        import {createApp} from 'vue'
+        import Sortable from 'sortablejs';
+
+        const app = createApp({
+            data() {
+                return {
+                    budgets: [
+                        {
+                            id: 1,
+                            name: 'Housing',
+                            expenses: [
+                                {id: 101, name: 'Rent'},
+                                {id: 102, name: 'Utilities'}
+                            ]
+                        },
+                        {
+                            id: 2,
+                            name: 'Food',
+                            expenses: [
+                                {id: 201, name: 'Groceries'},
+                                {id: 202, name: 'Dining Out'}
+                            ]
+                        }
+                    ]
+                };
+            },
+            mounted() {
+                this.budgets.forEach(budget => {
+                    Sortable.create(document.getElementById('budget-' + budget.id), {
+                        group: 'expenses',
+                        animation: 150,
+                        onEnd: (evt) => {
+                            console.log('Moved:', evt.item.innerText);
+                        }
+                    });
+                });
+            }
+        });
+        app.config.compilerOptions.delimiters = ['[[', ']]']
+
+        app.mount('#app');
+    </script>
 {% endblock %}
