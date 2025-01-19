@@ -11,58 +11,35 @@
 {% block body %}
     <div id="budget-content">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 <h2 class="mb-0">Budgets</h2>
+                <a href="{% url 'expenses:budget_create' %}">
+                    <button class="btn btn-warning rounded">
+                        Create Budget
+                    </button>
+                </a>
             </div>
             <div class="card-body">
 
-                <form id="month-year-form"
-                      hx-post="{% url 'expenses:budget_list' %}"
-                      hx-select="#budget-content"
-                      hx-target="#budget-content"
-                      hx-swap="outerHTML"
-                      class="my-3"
-                >
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-6">
-                            {{ form.month.label_tag }} {{ form.month }}
-                        </div>
-                        <div class="col-6">
-                            {{ form.year.label_tag }} {{ form.year }}
-                        </div>
-                    </div>
-                </form>
+
                 <table class="sortable table table-hover border-primary">
                     <thead>
                     <tr>
-                        <th scope="col">Category</th>
-                        <th scope="col">Budget</th>
-                        <th scope="col">Total Expenses</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Amount</th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    {% for category in categories %}
-                    <tr
-                            {% if category.total_expenses > category.budget_amt %}
-                                class="table-warning"
-                            {% endif %}
-                    >
-                        <td>
-                            {% if category.budget_id %}
-                                <a href="{% url 'expenses:budget_edit' pk=category.budget_id %}">
-                                    {{ category.name }}
+                    {% for budget in budgets %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'expenses:budget_view' pk=budget.pk %}">
+                                    {{ budget.name }}
                                 </a>
-                            {% else %}
-                                <a href="{% url 'expenses:budget_create' category_id=category.id %}">
-                                    {{ category.name }}
-                                </a>
-                            {% endif %}
-                        </td>
-                        <td>{% if category.budget_id %}{{ category.budget_amt }}{% endif %}</td>
-                        <td>{{ category.total_expenses }}</td>
-                    </tr>
+                            </td>
+                            <td>{{ budget.amount }}</td>
+                        </tr>
                     {% endfor %}
 
                     </tbody>

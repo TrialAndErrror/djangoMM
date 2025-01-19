@@ -1,0 +1,74 @@
+<div class="modal fade" id="expense-category-modal" tabindex="-1" role="dialog" aria-labelledby="expense-category-modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expense-category-modal-label">Add Expense Category</h5>
+                <button type="button" class="close btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                <select
+                        class="form-control"
+                        name="category_id"
+                        id="modal-category-select"
+                        hx-trigger="change"
+                        hx-target="#matching-expenses-table"
+                        hx-select="#matching-expenses-table"
+                        hx-swap="outerHTML"
+                        hx-get="#"
+                >
+                    {% for id, name in category_choices %}
+                        <option value="{{ id }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <div id="matching-expenses-table">
+                    {% if matching_expenses %}
+                        <h2>Matching Expenses</h2>
+                        <table class="table sortable border-primary">
+                            <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Account</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for expense in matching_expenses %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
+                                            {{ expense.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ expense.amount }}</td>
+                                    <td>{{ expense.date }}</td>
+                                    <td>{{ expense.account.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% elif category %}
+                        This category does not have any active expenses
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button
+                        class="btn btn-outline-info"
+                        type="submit"
+                        hx-post="#"
+                        hx-target="#budget-data-card"
+                        hx-select="#budget-data-card"
+                        hx-trigger="click"
+                        hx-include="#modal-category-select"
+                        data-bs-dismiss="modal"
+                >Add Category</button>
+            </div>
+        </div>
+    </div>
+</div>

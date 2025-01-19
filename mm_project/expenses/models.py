@@ -4,17 +4,34 @@ from django.urls import reverse
 
 from accounts.models import Account
 
+class Budget(models.Model):
+    name = models.CharField(max_length=150)
+    amount = models.DecimalField(decimal_places=2, max_digits=10)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        try:
+            return self.name
+        except AttributeError:
+            return 'None'
+
+    def __repr__(self):
+        try:
+            return self.name
+        except AttributeError:
+            return 'None'
+
 
 class ExpenseCategory(models.Model):
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True, null=True)
+    budget_category = models.ForeignKey(Budget, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return self.name
-
 
 class Expense(models.Model):
     name = models.CharField(max_length=150)
@@ -36,20 +53,3 @@ class Expense(models.Model):
             return f'{self.name[:10]}...'
         return self.name
 
-
-class CategoryBudget(models.Model):
-    category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE)
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        try:
-            return self.category.name
-        except AttributeError:
-            return 'None'
-
-    def __repr__(self):
-        try:
-            return self.category.name
-        except AttributeError:
-            return 'None'
