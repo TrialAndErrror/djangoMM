@@ -1,7 +1,7 @@
 **/db.sqlite3
 venv/
 **/settings.ini
-**/config_data.json
+**/config.yml
 **/media/
 **/staticfiles/
 **/__pycache__/

@@ -15,7 +15,7 @@ services:
     ports:
       - "18000:8000"
     environment:
-      - DJANGO_SETTINGS_MODULE=mm_project.settings.local
+      - DJANGO_SETTINGS_MODULE=mm_project.settings.default
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
