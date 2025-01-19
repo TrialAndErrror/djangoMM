@@ -3,13 +3,30 @@ from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
-from django.views.generic import FormView, DetailView, CreateView, UpdateView
+from django.views.generic import FormView, DetailView, CreateView, UpdateView, TemplateView
 from rest_framework.reverse import reverse_lazy
 
 from expenses.forms import MonthYearForm
-from expenses.lookups import get_annotated_budget_categories, get_uncategorized_expenses
+from expenses.lookups import get_annotated_budget_categories, get_all_annotated_expenses
 from expenses.models import CategoryBudget, ExpenseCategory, Expense
 
+
+class BudgetManagementView(LoginRequiredMixin, TemplateView):
+    template_name = "budgets/budget_management.html"
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests to render the form."""
+
+        all_expenses = get_all_annotated_expenses()
+
+        context = {
+            "expenses": all_expenses,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context, status=400)
 
 class ViewBudgetStatus(LoginRequiredMixin, FormView):
     template_name = "budgets/budget-status.html"

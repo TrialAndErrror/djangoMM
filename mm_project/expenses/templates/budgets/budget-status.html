@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block body %}
+    <a href="{% url 'expenses:budget_manage' %}">
+        <button class="btn rounded-lg btn-primary">
+            Manage Budget
+        </button>
+    </a>
     <div id="budget-content">
         <div class="card">
             <div class="card-header">

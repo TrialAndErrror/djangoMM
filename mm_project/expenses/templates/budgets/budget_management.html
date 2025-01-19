@@ -1,0 +1,25 @@
+{% extends "frontend/utils/base.html" %}
+
+{% block body %}
+    <table>
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Total Expenses</th>
+            <th>Budget Amount</th>
+        </tr>
+        </thead>
+    <tbody>
+    {% for category in expenses %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.total_expenses }}</td>
+            <td>{{ category.budget_amt }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

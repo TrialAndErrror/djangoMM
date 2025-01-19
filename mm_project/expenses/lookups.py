@@ -5,6 +5,24 @@ from django.db.models.functions import Coalesce, Cast
 
 from expenses.models import Expense, CategoryBudget, ExpenseCategory
 
+def get_all_annotated_expenses():
+    budget_amt_subquery = CategoryBudget.objects.filter(
+        category=OuterRef('id')
+    ).values('amount')[:1]
+
+    budget_id_subquery = CategoryBudget.objects.filter(
+        category=OuterRef('id')
+    ).values('id')[:1]
+
+    return ExpenseCategory.objects.annotate(
+        total_expenses=Coalesce(
+            Sum('expense__amount'),
+            0,
+            output_field=DecimalField()
+        ),
+        budget_amt=Coalesce(Subquery(budget_amt_subquery), Decimal(0)),
+        budget_id=Subquery(budget_id_subquery),
+    )
 
 def get_annotated_budget_categories(target_year: int, target_month: int):
     budget_amt_subquery = CategoryBudget.objects.filter(
@@ -27,7 +45,6 @@ def get_annotated_budget_categories(target_year: int, target_month: int):
         ),
         budget_amt=Coalesce(Subquery(budget_amt_subquery), Decimal(0)),
         budget_id=Subquery(budget_id_subquery),
-
     )
 
 

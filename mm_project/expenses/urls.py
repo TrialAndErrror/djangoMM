@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 
 from expenses.views.budgets import ViewBudgetStatus, BudgetUpdateView, BudgetCreateView, BudgetMergeView, \
-    BudgetDetailView
+    BudgetDetailView, BudgetManagementView
 from expenses.views.bulk_upload import upload_csv
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
     ExpenseDeleteView, ViewExpensesList, edit_category_inline
@@ -37,5 +37,6 @@ urlpatterns = [
     path('budget/edit/<int:pk>/', BudgetUpdateView.as_view(), name='budget_edit'),
     path('budget/view/<int:pk>/', BudgetDetailView.as_view(), name='budget_view'),
     path('budget/merge/', BudgetMergeView.as_view(), name='budget_merge'),
+    path('budget/manage/', BudgetManagementView.as_view(), name='budget_manage'),
 
 ]
