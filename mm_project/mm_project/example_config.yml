@@ -12,6 +12,8 @@ admins:
 allowed_hosts:
   - "*"
 
+csrf_trusted_origins: []
+
 https_settings:
   session_cookie_secure: true
   csrf_cookie_secure: true

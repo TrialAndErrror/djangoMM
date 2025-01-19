@@ -16,6 +16,7 @@ if config_data is None:
 SECRET_KEY = config_data.secret_key
 DEBUG = config_data.debug
 ALLOWED_HOSTS = config_data.allowed_hosts
+CSRF_TRUSTED_ORIGINS = config_data.csrf_trusted_origins
 
 # Application definition
 

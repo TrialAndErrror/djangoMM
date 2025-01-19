@@ -59,6 +59,7 @@ class Config:
     secret_key: str
     debug: bool
     allowed_hosts: list[str, ...]
+    csrf_trusted_origins: list[str, ...]
     admins: list[list[str, str]]
 
     db_settings: DBSettings
@@ -80,6 +81,7 @@ class Config:
             obj.debug = data['debug']
             obj.admins = data['admins']
             obj.allowed_hosts = data['allowed_hosts']
+            obj.csrf_trusted_origins = data['csrf_trusted_origins']
 
             obj.db_settings = DBSettings.from_dict(data['db_settings'])
 
