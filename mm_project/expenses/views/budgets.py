@@ -19,7 +19,7 @@ class BudgetDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category_choices'] = ExpenseCategory.objects.filter(budget_category_id__isnull=True).values_list('id', 'name')
+        context['category_choices'] = ExpenseCategory.objects.filter(budget_category_id__isnull=True).order_by('name').values_list('id', 'name')
         if category := kwargs.get('category_id'):
             context['category'] = category
             context['matching_expenses'] = Expense.objects.filter(category_id=category)
