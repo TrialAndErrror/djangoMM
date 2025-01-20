@@ -27,8 +27,10 @@ class MonthYearForm(forms.Form):
         label="Month",
         widget=forms.Select(
             attrs={
-                'hx-trigger': 'change',
-                'hx-post': reverse_lazy('expenses:budget_list'),
+                'hx-trigger': 'load,change',
+                'hx-target': '#budget-content',
+                'hx-select': '#budget-content',
+                'hx-post': reverse_lazy('expenses:reports_monthly'),
                 'class': 'form-control'
             }
         ),
@@ -41,6 +43,7 @@ class MonthYearForm(forms.Form):
         widget=forms.Select(
             attrs={
                 'hx-trigger': 'change',
+                'hx-post': reverse_lazy('expenses:reports_monthly'),
                 'class': 'form-control'
             }
         ),

@@ -5,6 +5,7 @@ from expenses.views.budgets import BudgetUpdateView, BudgetCreateView, BudgetDet
 from expenses.views.bulk_upload import upload_csv
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
     ExpenseDeleteView, ViewExpensesList, edit_category_inline
+from expenses.views.reports import MonthlyExpenseReportView
 
 app_name = "expenses"
 
@@ -21,5 +22,7 @@ urlpatterns = [
     path('budget/create/', BudgetCreateView.as_view(), name='budget_create'),
     path('budget/edit/<int:pk>/', BudgetUpdateView.as_view(), name='budget_edit'),
     path('budget/view/<int:pk>/', BudgetDetailView.as_view(), name='budget_view'),
+
+    path('reports/monthly/', MonthlyExpenseReportView.as_view(), name='reports_monthly'),
 
 ]

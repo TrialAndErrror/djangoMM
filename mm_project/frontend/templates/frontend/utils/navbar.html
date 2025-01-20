@@ -10,9 +10,9 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     {% if request.path == '' %}
-                    <a class="nav-link active" href="{% url 'frontend:home' %}">Home</a>
+                        <a class="nav-link active" href="{% url 'frontend:home' %}">Home</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'frontend:home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'frontend:home' %}">Home</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
@@ -25,12 +25,29 @@
                     <a class="nav-link" href="{% url 'expenses:all_expenses' %}">Expenses</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'expenses:budget_list' %}">Budgets</a>
+                <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Budgets</a>
+
+                        <div class="dropdown-menu">
+                            <a class="nav-link" href="{% url 'expenses:budget_list' %}">List</a>
+                            <a class="nav-link" href="{% url 'expenses:budget_create' %}">Create</a>
+                        </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Reports</a>
+
+                    <div class="dropdown-menu">
+                        <a class="nav-link" href="{% url 'expenses:reports_monthly' %}">Monthly</a>
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                       aria-haspopup="true" aria-expanded="false" id="download">{{ user }}</a>
+                       aria-haspopup="true" aria-expanded="false" id="nav-profile">{{ user }}</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
                         <div class="dropdown-divider"></div>
