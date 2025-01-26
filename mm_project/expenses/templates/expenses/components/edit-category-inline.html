@@ -6,7 +6,7 @@
     <select
             class="form-control"
             hx-trigger="blur"
-            hx-post="{% url 'expenses:expense_edit_inline' expense_id=expense_id %}"
+            hx-post="{% url 'expenses:expense_field_edit' expense_id=expense_id field="category" %}"
             name="category"
     >
         {% for category in choices %}

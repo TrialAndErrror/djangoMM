@@ -1,7 +1,7 @@
 {{ expense.category.name }}
 <div
         hx-trigger="click"
-        hx-get="{% url 'expenses:expense_edit_inline' expense_id=expense.id %}"
+        hx-get="{% url 'expenses:expense_field_edit' expense_id=expense.id field="category" %}"
         hx-target="#category-container-{{ expense.id }}"
         hx-swap="innerHTML"
         style="height: 1.5rem"

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
 from rest_framework.reverse import reverse_lazy
@@ -14,7 +14,8 @@ from rest_framework.reverse import reverse_lazy
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
 from expenses.forms import MonthYearForm
-from expenses.models import Expense, ExpenseCategory
+from expenses.models import Expense, ExpenseCategory, Budget
+from mm_project.log_utils import write_error_log, write_log
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
@@ -154,22 +155,51 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
         return render(request, self.template_name, context, status=400)
 
 
-def edit_category_inline(request, expense_id):
-    expense = Expense.objects.get(id=expense_id)
 
+def handle_category_edit(request, expense):
     if request.method == 'POST':
         new_category = request.POST.get('category')
         expense.category_id = new_category
         expense.save()
         context = {'expense': expense}
-        return  render(request, 'expenses/components/editable-category.html', context)
+        return render(request, 'expenses/components/editable-category.html', context)
 
     all_categories = ExpenseCategory.objects.filter(expense__owner=request.user).distinct().all()
 
     context = {
         'choices': all_categories,
         'selected_id': expense.category_id,
-        'expense_id': expense_id,
+        'expense_id': expense.id,
     }
 
     return render(request, 'expenses/components/edit-category-inline.html', context)
+
+
+def handle_budget_edit(request, expense):
+    if request.method == 'POST':
+        new_budget = request.POST.get('budget')
+        write_log("budget_id", new_budget)
+        expense.category.budget_category_id = new_budget
+        expense.category.save()
+        context = {'expense': expense}
+        return render(request, 'expenses/components/editable-budget.html', context)
+
+    all_budgets = Budget.objects.filter(owner=request.user).distinct().all()
+
+    context = {
+        'choices': all_budgets,
+        'selected_id': expense.category.budget_category_id,
+        'expense_id': expense.id,
+    }
+
+    return render(request, 'expenses/components/edit-budget-inline.html', context)
+
+def edit_field_inline(request, expense_id, field):
+    expense = Expense.objects.get(id=expense_id)
+
+    if field == "category":
+        return handle_category_edit(request, expense)
+    if field == "budget":
+        return handle_budget_edit(request, expense)
+
+    return HttpResponseBadRequest()
