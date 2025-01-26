@@ -9,6 +9,7 @@
             hx-post="{% url 'expenses:expense_field_edit' expense_id=expense_id field="budget" %}"
             name="budget"
     >
+        <option value="">None</option>
         {% for budget in choices %}
             <option
                     {% if budget.id == selected_id %}selected{% endif %}

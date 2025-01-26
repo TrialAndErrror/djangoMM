@@ -159,12 +159,13 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
 def handle_category_edit(request, expense):
     if request.method == 'POST':
         new_category = request.POST.get('category')
-        expense.category_id = new_category
-        expense.save()
+        if new_category:
+            expense.category_id = new_category
+            expense.save()
         context = {'expense': expense}
         return render(request, 'expenses/components/editable-category.html', context)
 
-    all_categories = ExpenseCategory.objects.filter(expense__owner=request.user).distinct().all()
+    all_categories = ExpenseCategory.objects.filter(owner=request.user).all()
 
     context = {
         'choices': all_categories,
@@ -178,9 +179,9 @@ def handle_category_edit(request, expense):
 def handle_budget_edit(request, expense):
     if request.method == 'POST':
         new_budget = request.POST.get('budget')
-        write_log("budget_id", new_budget)
-        expense.category.budget_category_id = new_budget
-        expense.category.save()
+        if new_budget:
+            expense.category.budget_category_id = new_budget
+            expense.category.save()
         context = {'expense': expense}
         return render(request, 'expenses/components/editable-budget.html', context)
 

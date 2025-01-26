@@ -6,6 +6,8 @@ from django.views.generic import FormView
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_budgets_with_expense_totals, get_uncategorized_expenses_for_user, \
     get_monthly_total_expenses_for_user
+from expenses.models import ExpenseCategory, Budget
+from mm_project.log_utils import write_error_log, write_log
 
 
 class MonthlyExpenseReportView(FormView):
@@ -56,7 +58,22 @@ class MonthlyExpenseReportView(FormView):
 
         return context
 
-    def post(self, request, *args, **kwargs):
-        year = request.POST.get('year')
-        month = request.POST.get('month')
+    def post(self, *args, **kwargs):
+        category_name = self.request.POST.get('category_name')
+        budget_id = self.request.POST.get('budget')
+        if category_name and budget_id:
+            try:
+                category = ExpenseCategory.objects.get(name=category_name, owner=self.request.user)
+                budget = Budget.objects.get(id=budget_id, owner=self.request.user)
+            except (
+                    ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
+                    Budget.DoesNotExist,
+            )as e:
+                write_error_log("Monthly Report", f"Cannot assign {category_name} to budget {budget}; {e}")
+            else:
+                category.budget_category_id = budget
+                category.save()
+
+        year = self.request.POST.get('year')
+        month = self.request.POST.get('month')
         return self.render_to_response(self.get_context_data(year=year, month=month))
