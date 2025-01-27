@@ -26,7 +26,7 @@ def get_budgets_with_expense_totals(user: User, month: int, year: int):
             0,  # If no related expenses, default to 0
             output_field=DecimalField()
         )
-    )
+    ).order_by('total_spent')
 
 
 def get_monthly_total_expenses_for_user(user: User, month: int, year: int):

@@ -22,7 +22,7 @@ class BudgetDetailView(LoginRequiredMixin, DetailView):
         context['category_choices'] = ExpenseCategory.objects.filter(budget_category_id__isnull=True, owner=self.request.user).order_by('name').values_list('id', 'name')
         if category := kwargs.get('category_id'):
             context['category'] = category
-            context['matching_expenses'] = Expense.objects.filter(category_id=category)
+            context['matching_expenses'] = Expense.objects.filter(category_id=category).order_by("date")
         return context
 
     def post(self, request, *args, **kwargs):

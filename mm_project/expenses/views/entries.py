@@ -100,7 +100,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         """
         form = super(ExpenseUpdateView, self).get_form(*args, **kwargs)
         # Only include Accounts in the Account dropdown that are associated with the current user
-        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user).order_by("name")
         return form
 
 
@@ -134,7 +134,7 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
         expenses = Expense.objects.filter(
             date__month=initial_data['month'],
             date__year=initial_data['year']
-        ).all()
+        ).order_by("date").all()
         form = self.get_form()
         form.set_target_url(reverse_lazy('expenses:all_expenses'))
 
@@ -186,7 +186,7 @@ def handle_budget_edit(request, expense):
         context = {'expense': expense}
         return render(request, 'expenses/components/editable-budget.html', context)
 
-    all_budgets = Budget.objects.filter(owner=request.user).distinct().all()
+    all_budgets = Budget.objects.filter(owner=request.user).order_by("name").all()
 
     context = {
         'choices': all_budgets,

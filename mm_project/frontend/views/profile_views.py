@@ -20,7 +20,7 @@ def frontend_home(request):
         .aggregate(
             total=Sum('balance'),
             count=Count('id'),
-        )
+        ).order_by('-total')
     )
 
     bills_data = (
