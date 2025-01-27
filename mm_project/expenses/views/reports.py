@@ -1,6 +1,8 @@
 import datetime
 
 from django.db.models import Sum
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render
 from django.views.generic import FormView
 
 from expenses.forms import MonthYearForm
@@ -44,8 +46,6 @@ class MonthlyExpenseReportView(FormView):
             year=year
         )
 
-        context['expense_categories'] = get_expense_categories_for_user(self.request.user)
-
         # Month Choices
         context['month_choices'] = [(str(i), datetime.datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
         context['selected_month'] = str(month)
@@ -62,7 +62,6 @@ class MonthlyExpenseReportView(FormView):
 
     def post(self, *args, **kwargs):
         form_type = self.request.POST.get('form_type')
-
 
         match form_type:
             case "budget":
@@ -97,3 +96,19 @@ class MonthlyExpenseReportView(FormView):
         year = self.request.POST.get('year')
         month = self.request.POST.get('month')
         return self.render_to_response(self.get_context_data(year=year, month=month))
+
+
+def get_expense_category_form(request, expense_id):
+    try:
+        expense_obj = Expense.objects.filter(owner=request.user).get(id=expense_id)
+    except (Expense.DoesNotExist, Expense.MultipleObjectsReturned) as e:
+        write_error_log("Report Expense Category Edit Inline", f"Cannot lookup expense object {expense_id}; {e}")
+        return HttpResponseBadRequest()
+
+    context = {
+        "expense": expense_obj,
+        "category_id": expense_obj.category_id,
+        "expense_categories":  get_expense_categories_for_user(request.user)
+    }
+
+    return render(request, 'reports/components/category-edit-inline.html', context)

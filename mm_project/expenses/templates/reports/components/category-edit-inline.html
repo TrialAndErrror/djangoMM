@@ -1,0 +1,28 @@
+<form
+        hx-target="this"
+        hx-swap="outerHTML"
+>
+    <input hidden name="expense_id" value="{{ expense.id }}"/>
+    <input hidden name="form_type" value="category"/>
+    {% csrf_token %}
+    <select
+            class="form-control"
+            hx-trigger="change"
+            hx-post="{% url 'expenses:reports_monthly' %}"
+            hx-include="#month-year-form"
+            hx-target="#uncategorized-expenses-{{ expense.id }}"
+            hx-select="#uncategorized-expenses-{{ expense.id }}"
+            hx-swap="outerHTML"
+            name="category_update"
+    >
+        <option value="">None</option>
+        {% for category in expense_categories %}
+            <option
+                    {% if expense.category.id == category.id %}selected{% endif %}
+                    value="{{ category.id }}"
+            >
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
