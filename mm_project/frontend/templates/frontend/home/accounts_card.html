@@ -1,11 +1,15 @@
 {% load humanize %}
 
 <div class="card">
-    <div class="card-header text-white bg-primary p-3">
-        <h3 class="mb-0">Accounts</h3>
-    </div>
+    <a data-bs-toggle="collapse" href="#accounts-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="accounts-card">
+        <div class="card-header bg-primary text-white">
+            <h1 class="card-title">Accounts</h1>
+        </div>
+    </a>
 
-    <div class="card-body">
+
+    <div class="collapse p-4" id="accounts-card">
         <table class="sortable table table-hover">
             <thead>
             <tr>
@@ -18,7 +22,9 @@
             <tbody>
             {% for entry in accounts %}
                 <tr>
-                    <td><a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.get_short_name }}</a></td>
+                    <td>
+                        <a href="{% url 'accounts:account_detail' entry.id %}">{{ entry.get_short_name }}</a>
+                    </td>
                     <td class="d-none d-lg-table-cell">{{ entry.type }}</td>
                     <td>$ {{ entry.balance|intcomma }}</td>
                     <td>{{ entry.last_update|naturalday|capfirst }}</td>
@@ -27,13 +33,20 @@
             </tbody>
         </table>
 
-    </div>
-    <div class="card-footer w-100 d-flex justify-content-end p-3">
-        <a href="{% url 'accounts:all_accounts' %}">
-            <span class="btn btn-lg btn-primary rounded">
+        <div class="d-flex justify-content-end">
+
+            <a class="btn btn-lg btn-primary rounded" href="{% url 'accounts:all_accounts' %}">
                 View All Accounts
-            </span>
-        </a>
+            </a>
+        </div>
 
     </div>
+
+    <a data-bs-toggle="collapse" href="#accounts-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="accounts-card">
+        <div class="card-footer bg-primary d-flex justify-content-between text-white">
+            <p class="card-text">Total Assets: $ {{ account_total|intcomma }}</p>
+            <p class="card-text">Number of Accounts: {{ account_count }}</p>
+        </div>
+    </a>
 </div>

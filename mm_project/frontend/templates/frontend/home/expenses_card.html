@@ -1,11 +1,16 @@
 {% load humanize %}
-<div class="card">
 
-    <div class="card-header text-white bg-info p-3">
-        <h3 class="mb-0">Recent Expenses</h3>
-    </div>
-    <div class="card-body p-4">
-        <table class="sortable table table-hover border-info">
+<div class="card">
+    <a data-bs-toggle="collapse" href="#expenses-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="expenses-card">
+        <div class="card-header bg-info text-white">
+            <h1 class="card-title">Expenses</h1>
+        </div>
+    </a>
+
+
+    <div class="collapse p-4" id="expenses-card">
+        <table class="sortable table table-hover">
             <thead>
             <tr>
                 <th>Expense Name</th>
@@ -14,6 +19,7 @@
                 <th class="d-none d-lg-table-cell">Category</th>
                 <th class="d-none d-lg-table-cell">Account</th>
             </tr>
+
             </thead>
             <tbody>
             {% for expense in expenses %}
@@ -27,18 +33,25 @@
                     <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
                     <td class="d-table-cell d-sm-none">{{ expense.date|date:"m/d/y" }}</td>
                     <td class="d-none d-lg-table-cell">{{ expense.category.get_short_name }}</td>
-                    <td class="d-none d-lg-table-cell">{{ expense.account.get_short_name}}</td>
+                    <td class="d-none d-lg-table-cell">{{ expense.account.get_short_name }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-lg btn-info rounded" href="{% url 'expenses:all_expenses' %}">
+                View All Expenses
+            </a>
+        </div>
+
     </div>
 
-    <div class="card-footer w-100 d-flex justify-content-end p-3">
-        <a href="{% url 'expenses:all_expenses' %}">
-            <span class="btn btn-lg btn-info rounded">
-                View All Expenses
-            </span>
-        </a>
-    </div>
+    <a data-bs-toggle="collapse" href="#expenses-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="expenses-card">
+        <div class="card-footer bg-info d-flex justify-content-between text-white">
+            <p class="card-text">Monthly Total: $ {{ expense_total|intcomma }}</p>
+            <p class="card-text">Number of Expenses: {{ expense_count }}</p>
+        </div>
+    </a>
 </div>

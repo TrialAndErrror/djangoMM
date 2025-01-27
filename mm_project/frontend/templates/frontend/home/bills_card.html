@@ -1,12 +1,15 @@
 {% load humanize %}
 
 <div class="card">
-    <div class="card-header text-white bg-secondary p-3">
-        <h3 class="mb-0">Upcoming Bills</h3>
-    </div>
+    <a data-bs-toggle="collapse" href="#bills-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="bills-card">
+        <div class="card-header bg-secondary text-white">
+            <h1 class="card-title">Bills</h1>
+        </div>
+    </a>
 
-    <div class="card-body p-4">
-        <table class="sortable table">
+    <div class="collapse p-4" id="bills-card">
+        <table class="sortable table table-hover">
             <thead>
             <tr>
                 <th>Bills</th>
@@ -17,10 +20,12 @@
             </tr>
             </thead>
             <tbody>
+
             {% for bill in bills %}
                 <tr>
                     <td>
-                        <a href="{% url 'bills:bill_detail' pk=bill.id %}" class="text-secondary">{{ bill.get_short_name }}</a>
+                        <a href="{% url 'bills:bill_detail' pk=bill.id %}"
+                           class="text-secondary">{{ bill.get_short_name }}</a>
                     </td>
                     {% if bill.variable %}
                         <td>~${{ bill.amount }}</td>
@@ -30,7 +35,7 @@
                     <td class="d-none d-lg-table-cell">{{ bill.last_paid }}</td>
                     <td>{{ bill.next_due|naturalday }}</td>
                     <td class="d-none d-lg-table-cell">
-                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'bills:pay_bill' bill.id %}">
                             Pay Bill
                         </a>
                     </td>
@@ -39,12 +44,22 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-    <div class="card-footer w-100 d-flex justify-content-end p-3">
-        <a href="{% url 'bills:all_bills' %}">
-            <div class="btn btn-lg btn-secondary rounded">
+
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-lg btn-secondary rounded" href="{% url 'bills:all_bills' %}">
                 View All Bills
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
+
+    <a data-bs-toggle="collapse" href="#bills-card" style="text-decoration: none" aria-expanded="false"
+       aria-controls="bills-card">
+        <div class="card-footer bg-secondary d-flex justify-content-between text-white">
+
+            <p class="card-text">Monthly Total: $ {{ bill_total|intcomma }}</p>
+            <p class="card-text">Number of Bills: {{ bill_count }}</p>
+        </div>
+    </a>
+
+
 </div>
