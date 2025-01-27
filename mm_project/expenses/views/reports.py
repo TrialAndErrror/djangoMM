@@ -44,6 +44,8 @@ class MonthlyExpenseReportView(FormView):
             year=year
         )
 
+        context['expense_categories'] = ExpenseCategory.objects.filter(owner=self.request.user)
+
         # Month Choices
         context['month_choices'] = [(str(i), datetime.datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
         context['selected_month'] = str(month)
