@@ -14,6 +14,7 @@ from rest_framework.reverse import reverse_lazy
 from accounts.models import Account
 from api.forms import ExpenseFilterForm
 from expenses.forms import MonthYearForm
+from expenses.lookups import get_expense_categories_for_user
 from expenses.models import Expense, ExpenseCategory, Budget
 from mm_project.log_utils import write_error_log, write_log
 
@@ -165,7 +166,7 @@ def handle_category_edit(request, expense):
         context = {'expense': expense}
         return render(request, 'expenses/components/editable-category.html', context)
 
-    all_categories = ExpenseCategory.objects.filter(owner=request.user).all()
+    all_categories = get_expense_categories_for_user(request.user)
 
     context = {
         'choices': all_categories,

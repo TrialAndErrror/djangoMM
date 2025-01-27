@@ -5,7 +5,7 @@ from django.views.generic import FormView
 
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_budgets_with_expense_totals, get_uncategorized_expenses_for_user, \
-    get_monthly_total_expenses_for_user
+    get_monthly_total_expenses_for_user, get_expense_categories_for_user
 from expenses.models import ExpenseCategory, Budget, Expense
 from mm_project.log_utils import write_error_log, write_log
 
@@ -44,7 +44,7 @@ class MonthlyExpenseReportView(FormView):
             year=year
         )
 
-        context['expense_categories'] = ExpenseCategory.objects.filter(owner=self.request.user)
+        context['expense_categories'] = get_expense_categories_for_user(self.request.user)
 
         # Month Choices
         context['month_choices'] = [(str(i), datetime.datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]

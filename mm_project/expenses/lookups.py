@@ -6,7 +6,7 @@ from django.db.models.functions import Coalesce
 from django.db.models import DecimalField
 
 from bills.models import Bill
-from expenses.models import Budget, Expense
+from expenses.models import Budget, Expense, ExpenseCategory
 from mm_project.log_utils import write_log
 
 
@@ -66,3 +66,7 @@ def get_unpaid_bills_for_user(user: User):
                 and bill.next_due.day > today.day
         )
     ])
+
+
+def get_expense_categories_for_user(user: User):
+    return ExpenseCategory.objects.filter(owner=user).order_by('name')
