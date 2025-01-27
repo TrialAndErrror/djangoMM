@@ -112,3 +112,20 @@ def get_expense_category_form(request, expense_id):
     }
 
     return render(request, 'reports/components/category-edit-inline.html', context)
+
+
+def get_expenses_for_budget(request, budget_id):
+
+    month = request.POST.get("month")
+    year = request.POST.get("year")
+
+
+    all_expenses = Expense.objects.filter(owner=request.user, category__budget_category_id=budget_id, date__month=month, date__year=year).order_by('date')
+    return render(
+        request,
+        "reports/components/budget-expenses-table.html",
+        {
+            "all_expenses": all_expenses,
+        }
+
+    )

@@ -86,31 +86,56 @@
                     <h2>Budgets</h2>
                     <div class="row">
 
-                    {% for budget in budgets %}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <div class="card">
-                                <div class="card-header">
-                                    {{ budget.name }}
-                                </div>
-                                <div class="card-body d-flex flex-column">
-                                    <p
-                                            {% if budget.total_spent > budget.amount %}
-                                                class="text-danger"
-                                            {% else %}
-                                                class="text-success"
-                                            {% endif %}
-                                                style="font-size: 2rem"
+                        {% for budget in budgets %}
 
-                                    >
-                                        $ {{ budget.total_spent }}
-                                    </p>
-                                    <p>
-                                        / $ {{ budget.amount }}
-                                    </p>
+                            <div class="col-6 col-md-3 col-lg-2 mb-3">
+                                <a data-bs-toggle="modal" data-bs-target="#collapse-{{ budget.id }}">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            {{ budget.name }}
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <p
+                                                    {% if budget.total_spent > budget.amount %}
+                                                        class="text-danger"
+                                                    {% else %}
+                                                        class="text-success"
+                                                    {% endif %}
+                                                        style="font-size: 2rem"
+
+                                            >
+                                                $ {{ budget.total_spent }}
+                                            </p>
+                                            <p>
+                                                / $ {{ budget.amount }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="modal" tabindex="-1" id="collapse-{{ budget.id }}">
+                                <div class="modal-dialog" style="max-width: 75%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ budget.name }} Expenses</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div
+                                                 hx-trigger="load"
+                                                 hx-post="{% url "expenses:reports_budget-expenses" budget_id=budget.id %}"
+                                                 hx-include="#month-year-form"
+                                                 hx-swap="innerHTML"
+                                            >
+                                                Loading Expenses
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+
+                        {% endfor %}
 
                     </div>
                 </div>
@@ -146,7 +171,7 @@
                                     </td>
                                     <td>
                                         <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
-                                        {{ expense.name }}
+                                            {{ expense.name }}
                                         </a>
                                     </td>
                                     <td>{{ expense.amount }}</td>
@@ -158,7 +183,7 @@
                                                     hx-swap="outerHTML"
                                             >
                                                 {% csrf_token %}
-                                                <input hidden name="category" value="{{ expense.category.id}}"/>
+                                                <input hidden name="category" value="{{ expense.category.id }}"/>
                                                 <input hidden name="form_type" value="budget"/>
                                                 <select
                                                         class="form-control"
