@@ -12,6 +12,31 @@ from expenses.models import ExpenseCategory, Budget, Expense
 from mm_project.log_utils import write_error_log, write_log
 
 
+def handle_calendar_scroll(action, month, year):
+    try:
+        year_int = int(year)
+        month_int = int(month)
+
+        if action == "previous":
+            if month == "1":
+                return "12", str(year_int - 1)
+            else:
+                return str(month_int - 1), year
+
+        elif action == "next":
+            if month == "12":
+                return "1", str(year_int + 1)
+            else:
+                return str(month_int + 1), year
+        else:
+            write_error_log("Calendar Scroll", f"Could not scroll calendar {action} for {month}/{year}; invalid action")
+            return month, year
+
+    except ValueError as e:
+        write_error_log("Calendar Scroll", f"Could not scroll calendar {action} for {month}/{year}; {e}")
+        return month, year
+
+
 class MonthlyExpenseReportView(FormView):
     template_name = "reports/monthly.html"
     form_class = MonthYearForm
@@ -95,6 +120,10 @@ class MonthlyExpenseReportView(FormView):
 
         year = self.request.POST.get('year')
         month = self.request.POST.get('month')
+
+        if action := self.request.POST.get("scroll"):
+            month, year = handle_calendar_scroll(action, month, year)
+
         return self.render_to_response(self.get_context_data(year=year, month=month))
 
 

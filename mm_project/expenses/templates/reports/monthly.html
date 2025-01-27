@@ -24,17 +24,36 @@
                 <div class="col-12">
                     <form id="month-year-form"
                           class="my-3"
+
+                          hx-target="#monthly-report-card"
+                          hx-select="#monthly-report-card"
+                          hx-swap="outerHTML"
                     >
                         {% csrf_token %}
+
                         <div class="row">
-                            <div class="col-6">
+
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button
+                                        class="btn btn-primary btn-lg"
+                                        type="button"
+                                        hx-trigger="click"
+                                        hx-post="#"
+                                        name="scroll"
+                                        value="previous"
+                                >
+                                    < Prev
+                                </button>
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </div>
+                            <div class="col-3">
                                 <label for="id_month">Month:</label>
                                 <select name="month"
                                         hx-trigger="change"
                                         hx-post="#"
 
-                                        hx-target="monthly-report-card"
-                                        hx-select="monthly-report-card"
+                                        hx-target="#monthly-report-card"
+                                        hx-select="#monthly-report-card"
                                         hx-swap="outerHTML"
                                         class="form-control" id="id_month">
                                     {% for idx, month in month_choices %}
@@ -46,14 +65,14 @@
 
                                 </select>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3">
                                 <label for="id_year">Year:</label>
                                 <select name="year"
                                         hx-trigger="change"
                                         hx-post="#"
 
-                                        hx-target="monthly-report-card"
-                                        hx-select="monthly-report-card"
+                                        hx-target="#monthly-report-card"
+                                        hx-select="#monthly-report-card"
                                         hx-swap="outerHTML"
                                         class="form-control"
                                         id="id_year">
@@ -64,6 +83,19 @@
                                         >{{ year }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button
+                                        class="btn btn-primary btn-lg"
+                                        type="button"
+                                        hx-trigger="click"
+                                        hx-post="#"
+                                        name="scroll"
+                                        value="next"
+                                >
+                                    Next >
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -123,10 +155,10 @@
                                         </div>
                                         <div class="modal-body">
                                             <div
-                                                 hx-trigger="load"
-                                                 hx-post="{% url "expenses:reports_budget-expenses" budget_id=budget.id %}"
-                                                 hx-include="#month-year-form"
-                                                 hx-swap="innerHTML"
+                                                    hx-trigger="load"
+                                                    hx-post="{% url "expenses:reports_budget-expenses" budget_id=budget.id %}"
+                                                    hx-include="#month-year-form"
+                                                    hx-swap="innerHTML"
                                             >
                                                 Loading Expenses
                                             </div>
