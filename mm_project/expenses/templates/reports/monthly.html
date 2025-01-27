@@ -150,7 +150,7 @@
                                                     <option value="">None</option>
                                                     {% for category in expense_categories %}
                                                         <option
-                                                                {% if expense.category.id == selected_id %}selected{% endif %}
+                                                                {% if expense.category.id == category.id %}selected{% endif %}
                                                                 value="{{ category.id }}"
                                                         >
                                                             {{ category.name }}
