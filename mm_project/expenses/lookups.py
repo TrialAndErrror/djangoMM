@@ -29,6 +29,10 @@ def get_budgets_with_expense_totals(user: User, month: int, year: int):
     ).order_by('-total_spent')
 
 
+def get_budgets(user: User):
+    return Budget.objects.filter(owner=user).order_by('name')
+
+
 def get_monthly_total_expenses_for_user(user: User, month: int, year: int):
     query =  Expense.objects.filter(
         date__year=year,

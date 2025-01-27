@@ -227,7 +227,7 @@
                                                         name="budget"
                                                 >
                                                     <option value="">None</option>
-                                                    {% for budget in budgets %}
+                                                    {% for budget in budget_choices %}
                                                         <option
                                                                 {% if budget.id == selected_id %}selected{% endif %}
                                                                 value="{{ budget.id }}"
