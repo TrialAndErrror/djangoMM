@@ -8,8 +8,13 @@ from accounts.models import Account
 
 
 class CSVUploadForm(forms.Form):
-    file = forms.FileField()
-    account = forms.ModelChoiceField(queryset=Account.objects.all())
+    file = forms.FileField(
+        widget=forms.FileInput(attrs={'class': 'form-control'}),
+    )
+    account = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        queryset=Account.objects.all()
+    )
 
 
 class MonthYearForm(forms.Form):

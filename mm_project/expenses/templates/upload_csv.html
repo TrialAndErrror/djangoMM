@@ -1,52 +1,62 @@
 {% extends 'frontend/utils/base.html' %}
 
-{% block title %} Money Manager: View Expenses {% endblock %}
+{% block title %} Money Manager: Bulk Expenses Upload{% endblock %}
 
 {% block body %}
-    <div class="d-flex flex-column" style="gap: 1.5rem;">
-        <div class="d-flex flex-column">
-            <h2>Upload CSV</h2>
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Upload</button>
-            </form>
+    <div class="d-flex flex-column mt-5" style="gap: 1.5rem; min-height: 75vh">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h1>Upload Expenses CSV</h1>
+            </div>
+            <div class="card-body d-flex flex-column">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-lg btn-info rounded" type="submit">Upload</button>
+                </form>
+            </div>
+
         </div>
+
         {% if duplicates %}
-            <div class="d-flex flex-column">
-                <h3>Duplicate Entries Found</h3>
-                <p>
-                    These entries could not be updated automatically because the corresponding entry in the database
-                    could not be found.
-                    Please look up these entries manually and adjust as required.
-                </p>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>
-                            Date
-                        </th>
-                        <th>
-                            Description
-                        </th>
-                        <th>
-                            Amount
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for entry in duplicates %}
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h1>Duplicate Entries Found</h1>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p>
+                        These entries could not be updated automatically because the corresponding entry in the database
+                        could not be found.
+                        Please look up these entries manually and adjust as required.
+                    </p>
+                    <table class="table table-striped">
+                        <thead>
                         <tr>
-                            <td>{{ entry.date }}</td>
-                            <td>{{ entry.description }}</td>
-                            <td>{{ entry.amount }}</td>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Amount
+                            </th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for entry in duplicates %}
+                            <tr>
+                                <td>{{ entry.date }}</td>
+                                <td>{{ entry.description }}</td>
+                                <td>{{ entry.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         {% endif %}
     </div>
