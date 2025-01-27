@@ -86,7 +86,6 @@
                     <h2>Budgets</h2>
                     <div class="row">
 
-                    </div>
                     {% for budget in budgets %}
                         <div class="col-6 col-md-3 col-lg-2">
                             <div class="card">
@@ -112,6 +111,8 @@
                             </div>
                         </div>
                     {% endfor %}
+
+                    </div>
                 </div>
                 {% if uncategorized_expenses %}
                     <div class="col-12">
@@ -130,11 +131,39 @@
                             {% for expense in uncategorized_expenses %}
                                 <tr>
                                     <td>
+                                        <form
+                                                    hx-target="this"
+                                                    hx-swap="outerHTML"
+                                            >
+                                                <input hidden name="expense_id" value="{{ expense.id }}"/>
+                                                <input hidden name="form_type" value="category"/>
+                                                {% csrf_token %}
+                                                <select
+                                                        class="form-control"
+                                                        hx-trigger="change"
+                                                        hx-post="{% url 'expenses:reports_monthly' %}"
+                                                        hx-include="#month-year-form"
+                                                        hx-target="#monthly-report-card"
+                                                        hx-select="#monthly-report-card"
+                                                        name="category_update"
+                                                >
+                                                    <option value="">None</option>
+                                                    {% for category in expense_categories %}
+                                                        <option
+                                                                {% if expense.category.id == selected_id %}selected{% endif %}
+                                                                value="{{ category.id }}"
+                                                        >
+                                                            {{ category.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </form>
+                                    </td>
+                                    <td>
                                         <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
-                                            {{ expense.category.name }}
+                                        {{ expense.name }}
                                         </a>
                                     </td>
-                                    <td>{{ expense.name }}</td>
                                     <td>{{ expense.amount }}</td>
                                     <td>
                                         <div class="d-flex" style="gap: 1rem">
@@ -144,7 +173,8 @@
                                                     hx-swap="outerHTML"
                                             >
                                                 {% csrf_token %}
-                                                <input hidden name="category_name" value="{{ expense.category.name }}"/>
+                                                <input hidden name="category" value="{{ expense.category.id}}"/>
+                                                <input hidden name="form_type" value="budget"/>
                                                 <select
                                                         class="form-control"
                                                         hx-trigger="change"

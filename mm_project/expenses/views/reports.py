@@ -6,7 +6,7 @@ from django.views.generic import FormView
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_budgets_with_expense_totals, get_uncategorized_expenses_for_user, \
     get_monthly_total_expenses_for_user
-from expenses.models import ExpenseCategory, Budget
+from expenses.models import ExpenseCategory, Budget, Expense
 from mm_project.log_utils import write_error_log, write_log
 
 
@@ -59,20 +59,38 @@ class MonthlyExpenseReportView(FormView):
         return context
 
     def post(self, *args, **kwargs):
-        category_name = self.request.POST.get('category_name')
-        budget_id = self.request.POST.get('budget')
-        if category_name and budget_id:
-            try:
-                category = ExpenseCategory.objects.get(name=category_name, owner=self.request.user)
-                budget = Budget.objects.get(id=budget_id, owner=self.request.user)
-            except (
-                    ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
-                    Budget.DoesNotExist,
-            )as e:
-                write_error_log("Monthly Report", f"Cannot assign {category_name} to budget {budget}; {e}")
-            else:
-                category.budget_category_id = budget
-                category.save()
+        form_type = self.request.POST.get('form_type')
+
+
+        match form_type:
+            case "budget":
+                category = self.request.POST.get('category')
+                budget_id = self.request.POST.get('budget')
+                try:
+                    category = ExpenseCategory.objects.get(id=category, owner=self.request.user)
+                    budget = Budget.objects.get(id=budget_id, owner=self.request.user)
+                except (
+                        ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
+                        Budget.DoesNotExist, Budget.MultipleObjectsReturned,
+                ) as e:
+                    write_error_log("Monthly Report", f"Cannot assign {category_name} to budget {budget}; {e}")
+                else:
+                    category.budget_category_id = budget
+                    category.save()
+            case "category":
+                category = self.request.POST.get('category_update')
+                expense_id = self.request.POST.get('expense_id')
+                try:
+                    category = ExpenseCategory.objects.get(id=category, owner=self.request.user)
+                    expense = Expense.objects.get(id=expense_id)
+                except (
+                        ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
+                        Expense.DoesNotExist, Expense.MultipleObjectsReturned,
+                ) as e:
+                    write_error_log("Monthly Report", f"Cannot assign expense {expense_id} to category {category}; {e}")
+                else:
+                    expense.category_id = category
+                    expense.save()
 
         year = self.request.POST.get('year')
         month = self.request.POST.get('month')

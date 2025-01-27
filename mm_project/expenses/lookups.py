@@ -7,6 +7,7 @@ from django.db.models import DecimalField
 
 from bills.models import Bill
 from expenses.models import Budget, Expense
+from mm_project.log_utils import write_log
 
 
 def get_budgets_with_expense_totals(user: User, month: int, year: int):
@@ -29,12 +30,14 @@ def get_budgets_with_expense_totals(user: User, month: int, year: int):
 
 
 def get_monthly_total_expenses_for_user(user: User, month: int, year: int):
-    return Expense.objects.filter(
+    query =  Expense.objects.filter(
         date__year=year,
         date__month=month,
         owner=user,
         amount__gt=0,
     ).aggregate(total=Sum('amount'))['total']
+    write_log("Monthly total expenses:", query)
+    return query
 
 
 def get_uncategorized_expenses_for_user(user: User, month: int, year: int):
