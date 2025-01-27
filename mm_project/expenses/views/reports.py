@@ -37,7 +37,7 @@ class MonthlyExpenseReportView(FormView):
         )
 
         context['uncategorized_expenses'] = uncategorized_expenses
-        non_budget_total = uncategorized_expenses.aggregate(total=Sum('amount'))['total']
+        non_budget_total = uncategorized_expenses.aggregate(total=Sum('amount'))['total'] or 0
         context['non_budget_total'] = non_budget_total
 
         context['budgets'] = get_budgets_with_expense_totals(
