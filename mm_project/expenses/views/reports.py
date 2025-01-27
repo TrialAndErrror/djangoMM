@@ -7,7 +7,7 @@ from django.views.generic import FormView
 
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_budgets_with_expense_totals, get_uncategorized_expenses_for_user, \
-    get_monthly_total_expenses_for_user, get_expense_categories_for_user, get_budgets_, get_budgets
+    get_monthly_total_expenses_for_user, get_expense_categories_for_user, get_budgets
 from expenses.models import ExpenseCategory, Budget, Expense
 from mm_project.log_utils import write_error_log, write_log
 
