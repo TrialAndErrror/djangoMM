@@ -27,12 +27,14 @@ class BudgetDetailView(LoginRequiredMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         category_id = request.POST.get('category_id')
-        print(category_id)
-
         category = ExpenseCategory.objects.get(id=category_id, owner=self.request.user)
-        category.budget_category_id = self.get_object().id
-        category.save()
 
+        if self.request.POST.get("action") == "remove":
+            category.budget_category_id = None
+        else:
+            category.budget_category_id = self.get_object().id
+
+        category.save()
         return self.get(request, *args, **kwargs)
 
 

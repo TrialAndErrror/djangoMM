@@ -58,8 +58,23 @@
                             <div class="card-container">
                                 {% for category in object.expensecategory_set.all %}
                                     <div class="card">
-                                        <div class="card-header">
+                                        <div class="card-header d-flex justify-content-between">
                                             {{ category.name }}
+                                            <form>
+                                                <input hidden name="category_id" value="{{ category.id }}" />
+                                                <input hidden name="action" value="remove" />
+
+                                                <button
+                                                    type="button"
+                                                    hx-post="{% url "expenses:budget_view" %}"
+                                                    hx-swap="outerHTML"
+                                                    hx-target="#budget-data-card"
+                                                    hx-select="#budget-data-card"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </form>
+                                            
                                         </div>
                                         <div class="card-body">
                                             <table class="table">

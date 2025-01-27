@@ -99,7 +99,7 @@ class MonthlyExpenseReportView(FormView):
                         ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
                         Budget.DoesNotExist, Budget.MultipleObjectsReturned,
                 ) as e:
-                    write_error_log("Monthly Report", f"Cannot assign {category_name} to budget {budget}; {e}")
+                    write_error_log("Monthly Report", f"Cannot assign {category} to budget {budget}; {e}")
                 else:
                     category.budget_category_id = budget
                     category.save()
