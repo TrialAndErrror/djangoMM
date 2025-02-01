@@ -6,3 +6,7 @@
 .nav-link {
     color: #000000 !important;
 }
+
+.dropdown-menu {
+    box-sizing: content-box;
+}
