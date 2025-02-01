@@ -49,7 +49,6 @@ def upload_csv(request):
                 if created:
                     obj.notes = row['Original Description']
 
-                obj.category = category
                 obj.save()
 
         messages.success(request, "CSV file successfully uploaded and processed.")
