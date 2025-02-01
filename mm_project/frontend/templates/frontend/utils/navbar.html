@@ -19,12 +19,30 @@
                     <a class="nav-link" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bills:all_bills' %}">Bills</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'expenses:all_expenses' %}">Expenses</a>
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Bills</a>
+
+                    <div class="dropdown-menu">
+                        <a class="nav-link" href="{% url 'bills:all_bills' %}">View Bills</a>
+                        <a class="nav-link" href="{% url 'bills:add_bill' %}">Create Bill</a>
+                    </div>
                 </li>
 
+               <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Expenses</a>
+
+                        <div class="dropdown-menu">
+                            <a class="nav-link" href="{% url 'expenses:all_expenses' %}">View Expenses</a>
+                            <a class="nav-link" href="{% url 'expenses:add_expense' %}">Create Expense</a>
+                            <a class="nav-link" href="{% url 'expenses:upload_csv' %}">Expense Import</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="{% url 'expenses:expense_category_list' %}">Expense Categories</a>
+                            <a class="nav-link" href="{% url 'expenses:expense_category_create' %}">Create Category</a>
+                        </div>
+                </li>
                 <li class="nav-item dropdown">
                     <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
                        role="button"

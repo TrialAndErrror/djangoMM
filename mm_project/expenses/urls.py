@@ -3,6 +3,8 @@ from django.urls import path
 from expenses.views.budgets import BudgetUpdateView, BudgetCreateView, BudgetDetailView, \
     BudgetListView
 from expenses.views.bulk_upload import upload_csv
+from expenses.views.categories import ViewExpenseCategoriesList, ExpenseCategoryCreateView, ExpenseCategoryDetailView, \
+    ExpenseCategoryUpdateView, ExpenseCategoryDeleteView
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
     ExpenseDeleteView, ViewExpensesList, edit_field_inline
 from expenses.views.reports import MonthlyExpenseReportView, get_expense_category_form, get_expenses_for_budget
@@ -17,6 +19,12 @@ urlpatterns = [
     path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
     path('upload-csv/', upload_csv, name='upload_csv'),
     path('edit-inline/<int:expense_id>/<field>', edit_field_inline, name='expense_field_edit'),
+
+    path("category/all", ViewExpenseCategoriesList.as_view(), name="expense_category_list"),
+    path("category/add", ExpenseCategoryCreateView.as_view(), name="expense_category_create"),
+    path("category/<int:pk>/", ExpenseCategoryDetailView.as_view(), name="expense_category_view"),
+    path("category/<int:pk>/edit", ExpenseCategoryUpdateView.as_view(), name="expense_category_edit"),
+    path("category/<int:pk>/delete", ExpenseCategoryDeleteView.as_view(), name="expense_category_delete"),
 
     path('budget/', BudgetListView.as_view(), name='budget_list'),
     path('budget/create/', BudgetCreateView.as_view(), name='budget_create'),

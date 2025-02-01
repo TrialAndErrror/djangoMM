@@ -1,0 +1,48 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block title %} Money Manager: View Expense Categories {% endblock %}
+
+{% block head %}
+    {% include 'frontend/utils/table_sort_header.html' %}
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex my-3" style="gap: 1rem">
+        <a href="{% url 'expenses:expense_category_create' %}">
+            <div class="btn btn-info">Add New Expense Category</div>
+        </a>
+    </div>
+
+    <div class="card" id="expenses-content">
+        <div class="card-header text-white bg-info">
+            <h1>Expense Categories</h1>
+        </div>
+        <div class="card-body">
+            <table class="sortable table table-hover border-info mb-3">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Budget</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for expense in expense_categories %}
+                    <tr>
+                        <td>
+                            {{ expense.name }}
+                        </td>
+                        <td>
+                            {% if expense.description %}{{ expense.description }}{% endif %}
+                        </td>
+                        <td>{% if expense.budget_category %}{{ expense.budget_category.name }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
