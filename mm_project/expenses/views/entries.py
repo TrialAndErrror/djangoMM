@@ -4,13 +4,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_expense_categories_for_user
 from expenses.models import Expense, Budget
+from services.calendar import handle_calendar_scroll, get_month_choices, get_year_choices
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
@@ -109,10 +110,8 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return self.request.user == self.get_object().owner
 
 
-class ViewExpensesList(LoginRequiredMixin, FormView):
+class ViewExpensesList(LoginRequiredMixin, TemplateView):
     template_name = "expenses/show_expenses.html"
-    model = Expense
-    form_class = MonthYearForm
 
     def get_initial(self):
         """Prefill the form with the current month and year."""
@@ -122,33 +121,38 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
             'year': current_date.year,
         }
 
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests to render the form."""
-        initial_data = self.get_initial()
-        expenses = Expense.objects.filter(
-            date__month=initial_data['month'],
-            date__year=initial_data['year']
-        ).order_by("date").all()
-        form = self.get_form()
-        form.set_target_url(reverse_lazy('expenses:all_expenses'))
+    def get_context_data(self, **kwargs):
+        today = datetime.date.today()
+        month = kwargs.pop('month', today.month)
+        year = kwargs.pop('year', today.year)
 
-        return render(request, self.template_name, {'form': form, 'expenses': expenses})
+        context = super().get_context_data(**kwargs)
+
+        context['month_choices'] = get_month_choices()
+        context['year_choices'] = get_year_choices(today=today)
+
+        context['selected_month'] = str(month)
+        context['selected_year'] = str(year)
+
+        context['expenses'] = Expense.objects.filter(
+            date__month=month,
+            date__year=year,
+        ).order_by('date').all()
+        return context
 
     def post(self, request, *args, **kwargs):
         """Handle POST requests to process the form."""
-        form_class = self.get_form_class()
-        form = form_class(data=request.POST)
-        form.set_target_url(reverse_lazy('expenses:all_expenses'))
-        context = {'form': form, 'expenses': []}
-        if form.is_valid():
-            context['expenses'] = Expense.objects.filter(
-                date__month=form.cleaned_data['month'],
-                date__year=form.cleaned_data['year']
-            ).all()
-            return render(request, self.template_name, context)
 
-        return render(request, self.template_name, context, status=400)
+        year = self.request.POST.get('year')
+        month = self.request.POST.get('month')
+        if scroll_action := self.request.POST.get("scroll"):
+            month, year = handle_calendar_scroll(
+                scroll_action,
+                year=year,
+                month=month,
+            )
 
+        return self.render_to_response(self.get_context_data(year=year, month=month))
 
 
 def handle_category_edit(request, expense):

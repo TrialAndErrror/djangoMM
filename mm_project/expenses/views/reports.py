@@ -11,30 +11,7 @@ from expenses.lookups import get_budgets_with_expense_totals, get_uncategorized_
 from expenses.models import ExpenseCategory, Budget, Expense
 from mm_project.log_utils import write_error_log, write_log
 
-
-def handle_calendar_scroll(action, month, year):
-    try:
-        year_int = int(year)
-        month_int = int(month)
-
-        if action == "previous":
-            if month == "1":
-                return "12", str(year_int - 1)
-            else:
-                return str(month_int - 1), year
-
-        elif action == "next":
-            if month == "12":
-                return "1", str(year_int + 1)
-            else:
-                return str(month_int + 1), year
-        else:
-            write_error_log("Calendar Scroll", f"Could not scroll calendar {action} for {month}/{year}; invalid action")
-            return month, year
-
-    except ValueError as e:
-        write_error_log("Calendar Scroll", f"Could not scroll calendar {action} for {month}/{year}; {e}")
-        return month, year
+from services.calendar import handle_calendar_scroll, get_year_choices, get_month_choices
 
 
 class MonthlyExpenseReportView(FormView):
@@ -71,11 +48,10 @@ class MonthlyExpenseReportView(FormView):
             year=year
         )
 
-        # Month Choices
-        context['month_choices'] = [(str(i), datetime.datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
+        context['month_choices'] = get_month_choices()
+        context['year_choices'] = get_year_choices(today=today)
+
         context['selected_month'] = str(month)
-        # Year Choices (current year +/- 10 years)
-        context['year_choices'] = [(str(year), year) for year in range(today.year - 10, today.year + 11)]
         context['selected_year'] = str(year)
 
         context['show_summary'] = any([
