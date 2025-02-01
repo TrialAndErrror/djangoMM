@@ -63,16 +63,18 @@
                         <a class="nav-link" href="{% url 'expenses:reports_monthly' %}">Monthly</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                       aria-haspopup="true" aria-expanded="false" id="nav-profile">{{ user }}</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
-                    </div>
-                </li>
+
             </ul>
+
+            <div class="nav-item dropdown ml-auto">
+                <a class="nav-link dropdown-toggle mx-0" data-bs-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false" id="nav-profile">{{ user }}</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
