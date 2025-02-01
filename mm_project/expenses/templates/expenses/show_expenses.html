@@ -10,16 +10,6 @@
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex my-3" style="gap: 1rem">
-        <a href="{% url 'expenses:add_expense' %}">
-            <div class="btn btn-info">Add New Expense</div>
-        </a>
-
-        <a href="{% url 'expenses:upload_csv' %}">
-            <div class="btn btn-info">Bulk Upload CSV</div>
-        </a>
-    </div>
-
     <div class="card" id="expenses-content">
         <div class="card-header text-white bg-info">
             <h1>Expenses</h1>

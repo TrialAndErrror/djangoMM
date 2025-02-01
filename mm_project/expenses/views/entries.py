@@ -1,22 +1,16 @@
 import datetime
-from calendar import month_name
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
-from api.forms import ExpenseFilterForm
 from expenses.forms import MonthYearForm
 from expenses.lookups import get_expense_categories_for_user
-from expenses.models import Expense, ExpenseCategory, Budget
-from mm_project.log_utils import write_error_log, write_log
+from expenses.models import Expense, Budget
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
