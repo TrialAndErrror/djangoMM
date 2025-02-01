@@ -8,7 +8,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView,
 from rest_framework.reverse import reverse_lazy
 
 from expenses.forms import MonthYearForm
-from expenses.models import ExpenseCategory
+from expenses.models import ExpenseCategory, Budget
 
 
 class ExpenseCategoryDetailView(LoginRequiredMixin, DetailView):
@@ -80,3 +80,26 @@ class ViewExpenseCategoriesList(LoginRequiredMixin, FormView):
         form.set_target_url(reverse_lazy('expenses:all_expense_categories'))
 
         return render(request, self.template_name, {'form': form, 'expense_categories': expenses})
+
+
+def htmx_list_update_budget(request, category_id):
+    category = ExpenseCategory.objects.get(id=category_id)
+    if request.method == 'POST':
+        new_budget = request.POST.get('budget')
+        if new_budget:
+            category.budget_category_id = new_budget
+        else:
+            category.budget_category_id = None
+        category.save()
+        context = {'category': category}
+        return render(request, 'expense_categories/components/editable-category-row.html', context)
+
+    all_budgets = Budget.objects.filter(owner=request.user).order_by("name").all()
+
+    context = {
+        'choices': all_budgets,
+        'selected_id': category.budget_category_id,
+        'category': category,
+    }
+
+    return render(request, 'expense_categories/components/edit-category-row-inline.html', context)

@@ -10,12 +10,6 @@
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex my-3" style="gap: 1rem">
-        <a href="{% url 'expenses:expense_category_create' %}">
-            <div class="btn btn-info">Add New Expense Category</div>
-        </a>
-    </div>
-
     <div class="card" id="expenses-content">
         <div class="card-header text-white bg-info">
             <h1>Expense Categories</h1>
@@ -30,16 +24,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for expense in expense_categories %}
-                    <tr>
-                        <td>
-                            {{ expense.name }}
-                        </td>
-                        <td>
-                            {% if expense.description %}{{ expense.description }}{% endif %}
-                        </td>
-                        <td>{% if expense.budget_category %}{{ expense.budget_category.name }}{% endif %}</td>
-                    </tr>
+                {% for category in expense_categories %}
+                    {% include "expense_categories/components/editable-category-row.html" %}
                 {% endfor %}
                 </tbody>
             </table>

@@ -4,7 +4,7 @@ from expenses.views.budgets import BudgetUpdateView, BudgetCreateView, BudgetDet
     BudgetListView
 from expenses.views.bulk_upload import upload_csv
 from expenses.views.categories import ViewExpenseCategoriesList, ExpenseCategoryCreateView, ExpenseCategoryDetailView, \
-    ExpenseCategoryUpdateView, ExpenseCategoryDeleteView
+    ExpenseCategoryUpdateView, ExpenseCategoryDeleteView, htmx_list_update_budget
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
     ExpenseDeleteView, ViewExpensesList, edit_field_inline
 from expenses.views.reports import MonthlyExpenseReportView, get_expense_category_form, get_expenses_for_budget
@@ -25,6 +25,7 @@ urlpatterns = [
     path("category/<int:pk>/", ExpenseCategoryDetailView.as_view(), name="expense_category_view"),
     path("category/<int:pk>/edit", ExpenseCategoryUpdateView.as_view(), name="expense_category_edit"),
     path("category/<int:pk>/delete", ExpenseCategoryDeleteView.as_view(), name="expense_category_delete"),
+    path('category/all/edit-inline/<int:category_id>/', htmx_list_update_budget, name='expense_category_list_update_budget'),
 
     path('budget/', BudgetListView.as_view(), name='budget_list'),
     path('budget/create/', BudgetCreateView.as_view(), name='budget_create'),

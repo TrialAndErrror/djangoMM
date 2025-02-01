@@ -1,0 +1,23 @@
+<tr id="expense-category-{{ category.id }}">
+    <td>
+        {{ category.name }}
+    </td>
+    <td>
+        {% if category.description %}{{ category.description }}{% endif %}
+    </td>
+    <td>
+        <div class="d-flex w-100">
+            {% if category.budget_category %}{{ category.budget_category.name }}{% endif %}
+            <div
+                    hx-trigger="click"
+                    hx-get="{% url 'expenses:expense_category_list_update_budget' category_id=category.id %}"
+                    hx-target="#expense-category-{{ category.id }}"
+                    hx-swap="outerHTML"
+                    style="height: 1.5rem"
+                    class="ms-auto"
+            >
+                {% include 'icons/edit.svg' %}
+            </div>
+        </div>
+    </td>
+</tr>
