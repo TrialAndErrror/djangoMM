@@ -12,3 +12,8 @@
 .dropdown-menu {
     box-sizing: content-box;
 }
+
+.button-right {
+    width: auto;
+    margin-left: auto;
+}
