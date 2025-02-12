@@ -1,0 +1,22 @@
+<form
+        hx-target="this"
+        hx-swap="outerHTML"
+>
+    {% csrf_token %}
+    <select
+            class="form-control"
+            hx-trigger="blur"
+            hx-post="{% url 'expenses:expense_field_edit' expense_id=expense_id field="budget" %}"
+            name="budget"
+    >
+        <option value="">None</option>
+        {% for budget in choices %}
+            <option
+                    {% if budget.id == selected_id %}selected{% endif %}
+                    value="{{ budget.id }}"
+            >
+                {{ budget.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>

@@ -6,11 +6,11 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Edit Bill Details:</legend>
+                <legend class="border-bottom mb-4">Edit Bill Details</legend>
                 {{ form|crispy }}
             </fieldset>
-            <div class="form-group mt-3">
-                <button class="btn btn-outline-info" type="submit">Save Bill</button>
+            <div class="form-group mt-3 d-flex">
+                <button class="btn btn-secondary button-right btn-lg" type="submit">Save Bill</button>
             </div>
         </form>
     </div>

@@ -1,43 +1,76 @@
-from decimal import Decimal
+import datetime
 
-from django.db.models import Q, Subquery, Sum, OuterRef, DecimalField, Value, When, Case, F, CharField
-from django.db.models.functions import Coalesce, Cast
+from django.contrib.auth.models import User
+from django.db.models import Subquery, OuterRef, Sum, Q
+from django.db.models.functions import Coalesce
+from django.db.models import DecimalField
 
-from expenses.models import Expense, CategoryBudget, ExpenseCategory
+from bills.models import Bill
+from expenses.models import Budget, Expense, ExpenseCategory
+from mm_project.log_utils import write_log
 
 
-def get_annotated_budget_categories(target_year: int, target_month: int):
-    budget_amt_subquery = CategoryBudget.objects.filter(
-        category=OuterRef('id')
-    ).values('amount')[:1]
-
-    budget_id_subquery = CategoryBudget.objects.filter(
-        category=OuterRef('id')
-    ).values('id')[:1]
-
-    return ExpenseCategory.objects.annotate(
-        total_expenses=Coalesce(
-            Sum(
-                'expense__amount',
-                filter=Q(expense__date__year=target_year) &
-                       Q(expense__date__month=target_month)
+def get_budgets_with_expense_totals(user: User, month: int, year: int):
+    return Budget.objects.filter(owner=user).annotate(
+        total_spent=Coalesce(
+            Subquery(
+                Expense.objects.filter(
+                    category__budget_category=OuterRef('pk'),
+                    date__year=year,
+                    date__month=month,
+                ).values('category__budget_category')
+                .annotate(total=Sum('amount'))
+                .values('total')[:1],  # Subquery needs to return a single value
+                output_field=DecimalField()
             ),
-            0,
+            0,  # If no related expenses, default to 0
             output_field=DecimalField()
-        ),
-        budget_amt=Coalesce(Subquery(budget_amt_subquery), Decimal(0)),
-        budget_id=Subquery(budget_id_subquery),
+        )
+    ).order_by('-total_spent')
 
+
+def get_budgets(user: User):
+    return Budget.objects.filter(owner=user).order_by('name')
+
+
+def get_monthly_total_expenses_for_user(user: User, month: int, year: int):
+    query =  Expense.objects.filter(
+        date__year=year,
+        date__month=month,
+        owner=user,
+        amount__gt=0,
+    ).aggregate(total=Sum('amount'))['total']
+    write_log("Monthly total expenses:", query)
+    return query
+
+
+def get_uncategorized_expenses_for_user(user: User, month: int, year: int):
+    return (
+        Expense.objects.filter(
+            Q(category__budget_category__isnull=True),
+            date__year=year,
+            date__month=month,
+            owner=user,
+            amount__gt=0,
+        )
+        .order_by("category__name")
+        .all()
     )
 
 
-def get_uncategorized_expenses(target_year: int, target_month: int):
-    budgeted_categories = CategoryBudget.objects.values('category')
+def get_unpaid_bills_for_user(user: User):
+    all_bills = Bill.objects.filter(owner=user).all()
 
-    # Get all uncategorized expenses filtered by the target month and year
-    uncategorized_expenses = Expense.objects.filter(
-        Q(category__isnull=True) | ~Q(category__in=Subquery(budgeted_categories)),
-        date__year=target_year,
-        date__month=target_month
-    ).aggregate(total=Sum('amount'))['total']
-    return uncategorized_expenses
+    today = datetime.date.today()
+    return sum([
+        bill.amount
+        for bill in all_bills
+        if (
+                bill.next_due.month == today.month
+                and bill.next_due.day > today.day
+        )
+    ])
+
+
+def get_expense_categories_for_user(user: User):
+    return ExpenseCategory.objects.filter(owner=user).order_by('name')

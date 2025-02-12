@@ -1,25 +1,13 @@
-"""mm_project URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.urls import path
 
-from expenses.views.budgets import ViewBudgetStatus, BudgetUpdateView, BudgetCreateView, BudgetMergeView, \
-    BudgetDetailView
+from expenses.views.budgets import BudgetUpdateView, BudgetCreateView, BudgetDetailView, \
+    BudgetListView
 from expenses.views.bulk_upload import upload_csv
+from expenses.views.categories import ViewExpenseCategoriesList, ExpenseCategoryCreateView, ExpenseCategoryDetailView, \
+    ExpenseCategoryUpdateView, ExpenseCategoryDeleteView, htmx_list_update_budget
 from expenses.views.entries import ExpenseCreateView, ExpenseDetailView, ExpenseUpdateView, \
-    ExpenseDeleteView, ViewExpensesList, edit_category_inline
+    ExpenseDeleteView, ViewExpensesList, edit_field_inline
+from expenses.views.reports import MonthlyExpenseReportView, get_expense_category_form, get_expenses_for_budget
 
 app_name = "expenses"
 
@@ -30,12 +18,22 @@ urlpatterns = [
     path("<int:pk>/update/", ExpenseUpdateView.as_view(), name="expense_update"),
     path("<int:pk>/delete/", ExpenseDeleteView.as_view(), name="expense_delete"),
     path('upload-csv/', upload_csv, name='upload_csv'),
-    path('edit-inline/<int:expense_id>/', edit_category_inline, name='expense_edit_inline'),
+    path('edit-inline/<int:expense_id>/<field>', edit_field_inline, name='expense_field_edit'),
 
-    path('budget/', ViewBudgetStatus.as_view(), name='budget_list'),
-    path('budget/create/<int:category_id>/', BudgetCreateView.as_view(), name='budget_create'),
+    path("category/all", ViewExpenseCategoriesList.as_view(), name="expense_category_list"),
+    path("category/add", ExpenseCategoryCreateView.as_view(), name="expense_category_create"),
+    path("category/<int:pk>/", ExpenseCategoryDetailView.as_view(), name="expense_category_view"),
+    path("category/<int:pk>/edit", ExpenseCategoryUpdateView.as_view(), name="expense_category_edit"),
+    path("category/<int:pk>/delete", ExpenseCategoryDeleteView.as_view(), name="expense_category_delete"),
+    path('category/all/edit-inline/<int:category_id>/', htmx_list_update_budget, name='expense_category_list_update_budget'),
+
+    path('budget/', BudgetListView.as_view(), name='budget_list'),
+    path('budget/create/', BudgetCreateView.as_view(), name='budget_create'),
     path('budget/edit/<int:pk>/', BudgetUpdateView.as_view(), name='budget_edit'),
     path('budget/view/<int:pk>/', BudgetDetailView.as_view(), name='budget_view'),
-    path('budget/merge/', BudgetMergeView.as_view(), name='budget_merge'),
+
+    path('reports/monthly/', MonthlyExpenseReportView.as_view(), name='reports_monthly'),
+    path('reports/<int:expense_id>/category-inline/', get_expense_category_form, name='reports_category-inline'),
+    path('reports/<int:budget_id>/expenses/', get_expenses_for_budget, name='reports_budget-expenses'),
 
 ]

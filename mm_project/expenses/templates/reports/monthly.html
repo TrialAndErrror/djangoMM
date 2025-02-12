@@ -1,0 +1,251 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% load static %}
+
+{% block title %} Money Manager: Monthly Report{% endblock %}
+
+{% block head %}
+    {% include 'frontend/utils/table_sort_header.html' %}
+{% endblock %}
+
+{% block extra_css %}
+
+    <style>
+        .money-large {
+            font-size: 2rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="card" id="monthly-report-card">
+        <div class="card-body">
+            <h2>Budgets</h2>
+            <div class="row">
+                <div class="col-12">
+                    <form id="month-year-form"
+                          class="my-3"
+
+                          hx-target="#monthly-report-card"
+                          hx-select="#monthly-report-card"
+                          hx-swap="outerHTML"
+                    >
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button
+                                        class="btn btn-primary btn-lg"
+                                        type="button"
+                                        hx-trigger="click"
+                                        hx-post="#"
+                                        name="scroll"
+                                        value="previous"
+                                >
+                                    < Prev
+                                </button>
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </div>
+                            <div class="col-3">
+                                <label for="id_month">Month:</label>
+                                <select name="month"
+                                        hx-trigger="change"
+                                        hx-post="#"
+
+                                        hx-target="#monthly-report-card"
+                                        hx-select="#monthly-report-card"
+                                        hx-swap="outerHTML"
+                                        class="form-control" id="id_month">
+                                    {% for idx, month in month_choices %}
+                                        <option
+                                                value="{{ idx }}"
+                                                {% if idx == selected_month %}selected{% endif %}
+                                        >{{ month }}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="id_year">Year:</label>
+                                <select name="year"
+                                        hx-trigger="change"
+                                        hx-post="#"
+
+                                        hx-target="#monthly-report-card"
+                                        hx-select="#monthly-report-card"
+                                        hx-swap="outerHTML"
+                                        class="form-control"
+                                        id="id_year">
+                                    {% for idx, year in year_choices %}
+                                        <option
+                                                value="{{ idx }}"
+                                                {% if idx == selected_year %}selected{% endif %}
+                                        >{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button
+                                        class="btn btn-primary btn-lg"
+                                        type="button"
+                                        hx-trigger="click"
+                                        hx-post="#"
+                                        name="scroll"
+                                        value="next"
+                                >
+                                    Next >
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row" id="budget-content">
+                {% if show_summary %}
+                    <div class="col-12 d-flex mb-4 justify-content-between">
+                        <div>
+                            <p class="money-large">$ {{ monthly_total }}</p>
+                            Total Monthly Spending
+                        </div>
+                        <div>
+                            <p class="money-large">$ {{ non_budget_total }}</p>
+                            Unbudgeted Spending
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="col-12 mb-4">
+                    <div class="row">
+
+                        {% for budget in budgets %}
+
+                            <div class="col-6 col-md-3 mb-3">
+                                <a data-bs-toggle="modal" data-bs-target="#collapse-{{ budget.id }}">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            {{ budget.name }}
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <p
+                                                    {% if budget.total_spent > budget.amount %}
+                                                        class="text-danger"
+                                                    {% else %}
+                                                        class="text-success"
+                                                    {% endif %}
+                                                        style="font-size: 2rem"
+
+                                            >
+                                                $ {{ budget.total_spent }}
+                                            </p>
+                                            <p>
+                                                / $ {{ budget.amount }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="modal" tabindex="-1" id="collapse-{{ budget.id }}">
+                                <div class="modal-dialog" style="max-width: 75%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ budget.name }} Expenses</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div
+                                                    hx-trigger="load"
+                                                    hx-post="{% url "expenses:reports_budget-expenses" budget_id=budget.id %}"
+                                                    hx-include="#month-year-form"
+                                                    hx-swap="innerHTML"
+                                            >
+                                                Loading Expenses
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                {% if uncategorized_expenses %}
+                    <div class="col-12">
+                        <h2>Uncategorized Expenses</h2>
+                        <table class="sortable table table-hover border-primary">
+                            <thead>
+                            <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Assign Budget</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for expense in uncategorized_expenses %}
+                                <tr>
+                                    <td id="uncategorized-expenses-{{ expense.id }}">
+                                        <div class="d-flex justify-content-between">
+                                            {{ expense.category.name }}
+                                            <div
+                                                    hx-get="{% url "expenses:reports_category-inline" expense_id=expense.id %}"
+                                                    hx-trigger="click"
+                                                    hx-target="#uncategorized-expenses-{{ expense.id }}"
+                                                    hx-swap="innerHTML"
+                                                    style="height: 20px"
+                                            >
+                                                {% include 'icons/edit.svg' %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
+                                            {{ expense.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ expense.amount }}</td>
+                                    <td>
+                                        <div class="d-flex" style="gap: 1rem">
+
+                                            <form
+                                                    hx-target="this"
+                                                    hx-swap="outerHTML"
+                                            >
+                                                {% csrf_token %}
+                                                <input hidden name="category" value="{{ expense.category.id }}"/>
+                                                <input hidden name="form_type" value="budget"/>
+                                                <select
+                                                        class="form-control"
+                                                        hx-trigger="change"
+                                                        hx-post="{% url 'expenses:reports_monthly' %}"
+                                                        hx-include="#month-year-form"
+                                                        hx-target="#monthly-report-card"
+                                                        hx-select="#monthly-report-card"
+                                                        name="budget"
+                                                >
+                                                    <option value="">None</option>
+                                                    {% for budget in budget_choices %}
+                                                        <option
+                                                                {% if budget.id == selected_id %}selected{% endif %}
+                                                                value="{{ budget.id }}"
+                                                        >
+                                                            {{ budget.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

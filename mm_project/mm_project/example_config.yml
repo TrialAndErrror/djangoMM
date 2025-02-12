@@ -1,0 +1,65 @@
+secret_key: "No Secrets on Github"
+debug: true
+
+db_settings:
+  name: "DB_NAME"
+  user: "DB_USER"
+  password: "DB_PASS"
+
+admins:
+  - [ 'name', 'email' ]
+
+allowed_hosts:
+  - "*"
+
+csrf_trusted_origins: []
+
+https_settings:
+  session_cookie_secure: true
+  csrf_cookie_secure: true
+  secure_ssl_redirect: true
+  secure_browser_xss_filter: true
+  session_cookie_samesite: 'Strict'
+
+  secure_hsts_seconds: 15768000
+  secure_hsts_include_subdomains: true
+  secure_hsts_preload: true
+
+  secure_content_type_nosniff: true
+  x_frame_options: 'DENY'
+
+  csp_default_src:
+    - "'none'"
+
+  csp_script_src:
+    - "https://cdn.jsdelivr.net/"
+    - "'self'"
+
+  csp_style_src:
+    - "'self'"
+
+  csp_img_src:
+    - "'self'"
+
+  csp_frame_src:
+    - "'none'"
+
+  secure_referrer_policy: "same-origin"
+
+  permissions_policy:
+    accelerometer: [ ]
+    ambient-light-sensor: [ ]
+    autoplay: [ ]
+    camera: [ ]
+    display-capture: [ ]
+    document-domain: [ ]
+    encrypted-media: [ ]
+    fullscreen: [ ]
+    geolocation: [ ]
+    gyroscope: [ ]
+    interest-cohort: [ ]
+    magnetometer: [ ]
+    microphone: [ ]
+    midi: [ ]
+    payment: [ ]
+    usb: [ ]

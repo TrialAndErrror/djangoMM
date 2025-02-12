@@ -1,0 +1,34 @@
+{% extends 'frontend/utils/base.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block title %} Money Manager: View Expense Categories {% endblock %}
+
+{% block head %}
+    {% include 'frontend/utils/table_sort_header.html' %}
+{% endblock %}
+
+{% block body %}
+    <div class="card" id="expenses-content">
+        <div class="card-header text-white bg-info">
+            <h1>Expense Categories</h1>
+        </div>
+        <div class="card-body">
+            <table class="sortable table table-hover border-info mb-3">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Budget</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in expense_categories %}
+                    {% include "expense_categories/components/editable-category-row.html" %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

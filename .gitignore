@@ -1,10 +1,11 @@
 **/db.sqlite3
 venv/
 **/settings.ini
-**/config_data.json
+**/config.yml
 **/media/
 **/staticfiles/
 **/__pycache__/
 /mm_project/mm_project/static/
 /.idea/
 **/migrations/
+mm_project/mm_project/settings/config_data.json

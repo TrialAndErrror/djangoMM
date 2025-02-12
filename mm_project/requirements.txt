@@ -8,3 +8,5 @@ whitenoise
 django-permissions-policy
 crispy-bootstrap5
 django-extensions
+pyyaml
+terminology

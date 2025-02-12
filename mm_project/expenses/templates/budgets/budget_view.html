@@ -1,37 +1,117 @@
 {% extends "frontend/utils/base.html" %}
 {% load humanize %}
 
+{% block extra_css %}
+    <style>
+        .card {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+        @media (min-width: 1000px) {
+            .card-container {
+                columns: 2;
+                column-gap: 10px;
+                padding: 1rem 0;
+            }
+
+
+        }
+
+        .card-header {
+            font-size: larger;
+            text-align: center;
+            font-weight: 600;
+            color: black;
+        }
+    </style>
+
+
+{% endblock %}
+
 {% block body %}
     <article class="media content-section">
         <div class="container">
             {% include 'api/messages.html' %}
 
             <div class="row">
-                <div class="col">
-                    <h1>View Budget: {{ object.category }}</h1>
+                <div class="col-12">
+                    <h1>View Budget: {{ object.name }}</h1>
+                </div>
+                <div class="col-12" id="budget-data-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column" style="gap: 1rem">
+                                <h3>Budget Amount: $ {{ object.amount }}</h3>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button"
+                                            class="btn btn-primary btn-lg"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#expense-category-modal">
+                                        Add Category
+                                    </button>
+                                    {% include "budgets/add-category-modal.html" %}
+                                    <a class="btn btn-secondary btn-lg"
+                                       href="{% url 'expenses:budget_edit' object.id %}">Edit</a>
+                                </div>
+                            </div>
+
+                            <div class="card-container">
+                                {% for category in object.expensecategory_set.all %}
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between">
+                                            {{ category.name }}
+                                            <form>
+                                                <input hidden name="category_id" value="{{ category.id }}" />
+                                                <input hidden name="action" value="remove" />
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-danger"
+                                                    hx-post="#"
+                                                    hx-swap="outerHTML"
+                                                    hx-target="#budget-data-card"
+                                                    hx-select="#budget-data-card"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </form>
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Name</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for expense in category.expense_set.all %}
+                                                    <tr>
+                                                        <td>{{ expense.date }}</td>
+                                                        <td>{{ expense.name }}</td>
+                                                        <td>{{ expense.amount }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row mt-3">
-                <div class="col ml-5">
-                        <div class="card mb-3" style="max-width: 20rem;">
-                            <div class="card-header text-white bg-info "><h4
-                                    class="card-title m-2">{{ object.name }}</h4></div>
-                            <div class="card-body bg-light">
-                                <p class="card-text">Amount: ${{ object.amount|intcomma }}</p>
-                                <p class="card-text">Account: {{ object.account.name }}</p>
-                                <p class="card-text">Date: {{ object.date|date:"F d, Y" }}</p>
-                                <p class="card-text">Category: {{ object.category.name }}</p>
-                                {% if object.notes %}
-                                    <p class="card-text">Notes: {{ object.notes }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
-                               href="{% url 'expenses:budget_edit' object.id %}">Edit</a>
-                        </div>
-                </div>
+            <div class="mt-2">
+
             </div>
 
             <div class="row mt-3">

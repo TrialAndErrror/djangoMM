@@ -26,7 +26,7 @@ def upload_csv(request):
                 else:
                     row_amount = f"-{row['Amount']}"
 
-                category, created = ExpenseCategory.objects.get_or_create(name=row['Category'])
+                category, created = ExpenseCategory.objects.get_or_create(name=row['Category'], owner=request.user)
                 if created:
                     print(f'Creating category {category.name}')
 
@@ -49,7 +49,6 @@ def upload_csv(request):
                 if created:
                     obj.notes = row['Original Description']
 
-                obj.category = category
                 obj.save()
 
         messages.success(request, "CSV file successfully uploaded and processed.")

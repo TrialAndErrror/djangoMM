@@ -1,20 +1,17 @@
 import datetime
-from calendar import month_name
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
-from api.forms import ExpenseFilterForm
-from expenses.forms import MonthYearForm
-from expenses.models import Expense, ExpenseCategory
+from expenses.forms import MonthYearForm, ExpenseUpdateForm
+from expenses.lookups import get_expense_categories_for_user
+from expenses.models import Expense, Budget
+from services.calendar import handle_calendar_scroll, get_month_choices, get_year_choices
 
 
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
@@ -48,8 +45,8 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    form_class = ExpenseUpdateForm
     model = Expense
-    fields = ['name', 'amount', 'date', 'category', 'notes', 'account']
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Updated'
@@ -98,7 +95,7 @@ class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         """
         form = super(ExpenseUpdateView, self).get_form(*args, **kwargs)
         # Only include Accounts in the Account dropdown that are associated with the current user
-        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user).order_by("name")
         return form
 
 
@@ -113,10 +110,8 @@ class ExpenseDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestM
         return self.request.user == self.get_object().owner
 
 
-class ViewExpensesList(LoginRequiredMixin, FormView):
+class ViewExpensesList(LoginRequiredMixin, TemplateView):
     template_name = "expenses/show_expenses.html"
-    model = Expense
-    form_class = MonthYearForm
 
     def get_initial(self):
         """Prefill the form with the current month and year."""
@@ -126,50 +121,85 @@ class ViewExpensesList(LoginRequiredMixin, FormView):
             'year': current_date.year,
         }
 
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests to render the form."""
-        initial_data = self.get_initial()
-        expenses = Expense.objects.filter(
-            date__month=initial_data['month'],
-            date__year=initial_data['year']
-        ).all()
-        form = self.get_form()
-        form.set_target_url(reverse_lazy('expenses:all_expenses'))
+    def get_context_data(self, **kwargs):
+        today = datetime.date.today()
+        month = kwargs.pop('month', today.month)
+        year = kwargs.pop('year', today.year)
 
-        return render(request, self.template_name, {'form': form, 'expenses': expenses})
+        context = super().get_context_data(**kwargs)
+
+        context['month_choices'] = get_month_choices()
+        context['year_choices'] = get_year_choices(today=today)
+
+        context['selected_month'] = str(month)
+        context['selected_year'] = str(year)
+
+        context['expenses'] = Expense.objects.filter(
+            date__month=month,
+            date__year=year,
+        ).order_by('date').all()
+        return context
 
     def post(self, request, *args, **kwargs):
         """Handle POST requests to process the form."""
-        form_class = self.get_form_class()
-        form = form_class(data=request.POST)
-        form.set_target_url(reverse_lazy('expenses:all_expenses'))
-        context = {'form': form, 'expenses': []}
-        if form.is_valid():
-            context['expenses'] = Expense.objects.filter(
-                date__month=form.cleaned_data['month'],
-                date__year=form.cleaned_data['year']
-            ).all()
-            return render(request, self.template_name, context)
 
-        return render(request, self.template_name, context, status=400)
+        year = self.request.POST.get('year')
+        month = self.request.POST.get('month')
+        if scroll_action := self.request.POST.get("scroll"):
+            month, year = handle_calendar_scroll(
+                scroll_action,
+                year=year,
+                month=month,
+            )
+
+        return self.render_to_response(self.get_context_data(year=year, month=month))
 
 
-def edit_category_inline(request, expense_id):
-    expense = Expense.objects.get(id=expense_id)
-
+def handle_category_edit(request, expense):
     if request.method == 'POST':
         new_category = request.POST.get('category')
-        expense.category_id = new_category
-        expense.save()
+        if new_category:
+            expense.category_id = new_category
+            expense.save()
         context = {'expense': expense}
-        return  render(request, 'expenses/components/editable-category.html', context)
+        return render(request, 'expenses/components/editable-category.html', context)
 
-    all_categories = ExpenseCategory.objects.filter(expense__owner=request.user).distinct().all()
+    all_categories = get_expense_categories_for_user(request.user)
 
     context = {
         'choices': all_categories,
         'selected_id': expense.category_id,
-        'expense_id': expense_id,
+        'expense_id': expense.id,
     }
 
     return render(request, 'expenses/components/edit-category-inline.html', context)
+
+
+def handle_budget_edit(request, expense):
+    if request.method == 'POST':
+        new_budget = request.POST.get('budget')
+        if new_budget:
+            expense.category.budget_category_id = new_budget
+            expense.category.save()
+        context = {'expense': expense}
+        return render(request, 'expenses/components/editable-budget.html', context)
+
+    all_budgets = Budget.objects.filter(owner=request.user).order_by("name").all()
+
+    context = {
+        'choices': all_budgets,
+        'selected_id': expense.category.budget_category_id,
+        'expense_id': expense.id,
+    }
+
+    return render(request, 'expenses/components/edit-budget-inline.html', context)
+
+def edit_field_inline(request, expense_id, field):
+    expense = Expense.objects.get(id=expense_id)
+
+    if field == "category":
+        return handle_category_edit(request, expense)
+    if field == "budget":
+        return handle_budget_edit(request, expense)
+
+    return HttpResponseBadRequest()

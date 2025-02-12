@@ -76,7 +76,7 @@ class BillUpdateForm(forms.ModelForm):
         :param kwargs: **kwargs
         """
         super(BillUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['account'].queryset = Account.objects.filter(owner=user)
+        self.fields['account'].queryset = Account.objects.filter(owner=user).order_by("name")
 
     def form_valid(self, form):
         """

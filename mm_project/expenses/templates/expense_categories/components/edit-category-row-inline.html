@@ -1,0 +1,31 @@
+<tr id="expense-category-{{ category.id }}">
+    <td>
+        {{ category.name }}
+    </td>
+    <td>
+        {% if category.description %}{{ category.description }}{% endif %}
+    </td>
+    <td>
+        <form>
+            {% csrf_token %}
+            <select
+                    class="form-control"
+                    hx-trigger="blur"
+                    hx-target="#expense-category-{{ category.id }}"
+                    hx-post="{% url 'expenses:expense_category_list_update_budget' category_id=category.id %}"
+                    hx-swap="outerHTML"
+                    name="budget"
+            >
+                <option value="">None</option>
+                {% for budget in choices %}
+                    <option
+                            {% if budget.id == selected_id %}selected{% endif %}
+                            value="{{ budget.id }}"
+                    >
+                        {{ budget.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </td>
+</tr>

@@ -10,34 +10,71 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     {% if request.path == '' %}
-                    <a class="nav-link active" href="{% url 'frontend:home' %}">Home</a>
+                        <a class="nav-link active" href="{% url 'frontend:home' %}">Home</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'frontend:home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'frontend:home' %}">Home</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bills:all_bills' %}">Bills</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'expenses:all_expenses' %}">Expenses</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'expenses:budget_list' %}">Budgets</a>
-                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                       aria-haspopup="true" aria-expanded="false" id="download">{{ user }}</a>
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Bills</a>
+
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+                        <a class="nav-link" href="{% url 'bills:all_bills' %}">View Bills</a>
+                        <a class="nav-link" href="{% url 'bills:add_bill' %}">Create Bill</a>
                     </div>
                 </li>
+
+               <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Expenses</a>
+
+                        <div class="dropdown-menu">
+                            <a class="nav-link" href="{% url 'expenses:all_expenses' %}">View Expenses</a>
+                            <a class="nav-link" href="{% url 'expenses:add_expense' %}">Create Expense</a>
+                            <a class="nav-link" href="{% url 'expenses:upload_csv' %}">Expense Import</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="{% url 'expenses:expense_category_list' %}">Expense Categories</a>
+                            <a class="nav-link" href="{% url 'expenses:expense_category_create' %}">Create Category</a>
+                        </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Budgets</a>
+
+                        <div class="dropdown-menu">
+                            <a class="nav-link" href="{% url 'expenses:budget_list' %}">List</a>
+                            <a class="nav-link" href="{% url 'expenses:budget_create' %}">Create</a>
+                        </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       role="button"
+                       aria-haspopup="true" aria-expanded="false">Reports</a>
+
+                    <div class="dropdown-menu">
+                        <a class="nav-link" href="{% url 'expenses:reports_monthly' %}">Monthly</a>
+                    </div>
+                </li>
+
             </ul>
+
+            <div class="nav-item dropdown ml-auto">
+                <a class="nav-link dropdown-toggle mx-0" data-bs-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false" id="nav-profile">{{ user }}</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'frontend:profile' %}">My Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

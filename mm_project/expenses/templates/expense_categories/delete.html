@@ -1,0 +1,67 @@
+{% extends "frontend/utils/base.html" %}
+
+{% load crispy_forms_tags %}
+{% block body %}
+    <div class="content-section">
+    <h2>Delete Expense Category: {{ object.name }}</h2>
+        {% if object.expenses_set %}
+            <table class="sortable table table-hover border-info mb-3">
+                <thead>
+                <tr>
+                    <th scope="col" class="d-none d-sm-table-cell">Name</th>
+                    <th scope="col" class="d-table-cell d-sm-none">Name</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Date</th>
+                    <th scope="col" class="d-table-cell d-sm-none">Date</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Category</th>
+                    <th scope="col" class="d-none d-md-table-cell">Budget</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Account</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for expense in object.expense_set.all %}
+                    <tr>
+                        <td class="d-none d-sm-table-cell">
+                            <a
+                                    href="{% url 'expenses:expense_detail' expense.id %}"
+                                    class="text-info">
+                                {{ expense.name }}
+                            </a>
+                        </td>
+                        <td
+                                class="d-table-cell d-sm-none"
+                        >
+                            <a href="{% url 'expenses:expense_detail' expense.id %}"
+                               class="text-info">
+                                {{ expense.get_short_name }}
+                            </a>
+                        </td>
+                        <td>${{ expense.amount|intcomma }}</td>
+                        <td class="d-none d-sm-table-cell">{{ expense.date|date:"F d, Y" }}</td>
+                        <td class="d-table-cell d-sm-none">{{ expense.date|date:"m/d/y" }}</td>
+                        <td class="d-none d-sm-table-cell">
+                            <div class="d-flex" style="gap: 1rem" id="category-container-{{ expense.id }}">
+                                {% include 'expenses/components/editable-category.html' %}
+                            </div>
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                            <div class="d-flex" style="gap: 1rem" id="budget-container-{{ expense.id }}">
+                                {% include 'expenses/components/editable-budget.html' %}
+                            </div>
+                        </td>
+                        <td class="d-none d-sm-table-cell">{{ expense.account.name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
+        <form method="POST">
+            {% csrf_token %}
+            <p>Are you sure you'd like to delete this Expense Category?</p>
+            <div class="form-group mt-3">
+                <button class="btn btn-primary" type="submit">Delete</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

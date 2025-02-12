@@ -6,9 +6,10 @@
     <select
             class="form-control"
             hx-trigger="blur"
-            hx-post="{% url 'expenses:expense_edit_inline' expense_id=expense_id %}"
+            hx-post="{% url 'expenses:expense_field_edit' expense_id=expense_id field="category" %}"
             name="category"
     >
+        <option value="">None</option>
         {% for category in choices %}
             <option
                     {% if category.id == selected_id %}selected{% endif %}

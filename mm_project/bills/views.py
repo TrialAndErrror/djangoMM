@@ -111,7 +111,7 @@ class BillCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def get_form(self, **kwargs):
         form = super().get_form(form_class=kwargs.get('form_class'))
-        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user)
+        form.fields['account'].queryset = Account.objects.filter(owner=self.request.user).order_by("name")
         return form
 
     def form_valid(self, form):

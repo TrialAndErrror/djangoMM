@@ -1,0 +1,10 @@
+{{ expense.category.budget_category.name }}
+<div
+        hx-trigger="click"
+        hx-get="{% url 'expenses:expense_field_edit' expense_id=expense.id field='budget' %}"
+        hx-target="#budget-container-{{ expense.id }}"
+        hx-swap="innerHTML"
+        style="height: 1.5rem"
+>
+    {% include 'icons/edit.svg' %}
+</div>

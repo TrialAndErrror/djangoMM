@@ -5,4 +5,15 @@
 
 .nav-link {
     color: #000000 !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.dropdown-menu {
+    box-sizing: content-box;
+}
+
+.button-right {
+    width: auto;
+    margin-left: auto;
 }
