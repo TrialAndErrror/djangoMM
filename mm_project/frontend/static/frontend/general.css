@@ -5,6 +5,8 @@
 
 .nav-link {
     color: #000000 !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .dropdown-menu {
