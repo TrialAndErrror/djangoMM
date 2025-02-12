@@ -46,6 +46,7 @@ class ExpenseCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
 class ExpenseUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = ExpenseUpdateForm
+    model = Expense
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Updated'
