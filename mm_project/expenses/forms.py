@@ -5,6 +5,7 @@ from datetime import datetime
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
+from expenses.models import Expense, ExpenseCategory
 
 
 class CSVUploadForm(forms.Form):
@@ -57,3 +58,13 @@ class MonthYearForm(forms.Form):
     def set_target_url(self, url):
         self.fields['month'].widget.attrs['hx-post'] = url
         self.fields['year'].widget.attrs['hx-post'] = url
+
+
+class ExpenseUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ['name', 'amount', 'date', 'category', 'notes', 'account']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = ExpenseCategory.objects.order_by('name')
