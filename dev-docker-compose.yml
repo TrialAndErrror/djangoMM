@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
   web:
     build: ./mm_project
-    command: ["gunicorn", "--bind", "0.0.0.0:80", "--worker-class", "gevent", "mm_project.wsgi:application"]
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./mm_project:/app
     ports:
@@ -21,6 +21,3 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
-
-volumes:
-  postgres_data:

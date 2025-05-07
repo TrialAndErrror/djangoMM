@@ -10,3 +10,5 @@ crispy-bootstrap5
 django-extensions
 pyyaml
 terminology
+gunicorn
+gevent
