@@ -133,6 +133,7 @@ if config_data.https_settings:
     SECURE_BROWSER_XSS_FILTER = https_settings.secure_browser_xss_filter
     SESSION_COOKIE_SAMESITE = https_settings.session_cookie_samesite
 
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_HSTS_SECONDS = https_settings.secure_hsts_seconds
     SECURE_HSTS_INCLUDE_SUBDOMAINS = https_settings.secure_hsts_include_subdomains
     SECURE_HSTS_PRELOAD = https_settings.secure_hsts_preload
