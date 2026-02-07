@@ -34,6 +34,9 @@ class ExpenseCategory(models.Model):
     def __repr__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('expenses:expense_category_view', kwargs={'pk': self.pk})
+
 class Expense(models.Model):
     name = models.CharField(max_length=150)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
