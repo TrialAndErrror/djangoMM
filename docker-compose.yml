@@ -3,22 +3,19 @@ services:
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env
   web:
     build: ./mm_project
     command: ["gunicorn", "--bind", "0.0.0.0:80", "--worker-class", "gevent", "mm_project.wsgi:application"]
     volumes:
       - ./mm_project:/app
     ports:
-      - "13000:80"
+      - "${DJANGO_PORT}:80"
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=mm_project.settings.default
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
 
