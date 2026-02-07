@@ -28,6 +28,9 @@ class ExpenseCategory(models.Model):
     budget_category = models.ForeignKey(Budget, blank=True, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
