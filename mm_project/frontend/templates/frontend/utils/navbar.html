@@ -19,7 +19,7 @@
                     <a class="nav-link" href="{% url 'accounts:all_accounts' %}">Accounts</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                    <a id="nav-bills" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
                        role="button"
                        aria-haspopup="true" aria-expanded="false">Bills</a>
 
@@ -30,7 +30,7 @@
                 </li>
 
                <li class="nav-item dropdown">
-                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                    <a id="nav-expenses" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
                        role="button"
                        aria-haspopup="true" aria-expanded="false">Expenses</a>
 
@@ -44,7 +44,7 @@
                         </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                    <a id="nav-budgets" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
                        role="button"
                        aria-haspopup="true" aria-expanded="false">Budgets</a>
 
@@ -54,14 +54,8 @@
                         </div>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a id="nav-reports" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                       role="button"
-                       aria-haspopup="true" aria-expanded="false">Reports</a>
-
-                    <div class="dropdown-menu">
-                        <a class="nav-link" href="{% url 'expenses:reports_monthly' %}">Monthly</a>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'expenses:reports_monthly' %}">Monthly Reports</a>
                 </li>
 
             </ul>
