@@ -18,6 +18,3 @@ services:
       - DJANGO_SETTINGS_MODULE=mm_project.settings.default
     depends_on:
       - db
-
-volumes:
-  postgres_data:
