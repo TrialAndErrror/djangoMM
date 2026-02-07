@@ -1,7 +1,7 @@
 import datetime
 
 from django.db.models import Sum
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import FormView
 
@@ -82,19 +82,30 @@ class MonthlyExpenseReportView(FormView):
                     category.budget_category_id = budget
                     category.save()
             case "category":
-                category = self.request.POST.get('category_update')
+                category_id = self.request.POST.get('category_update')
                 expense_id = self.request.POST.get('expense_id')
                 try:
-                    category = ExpenseCategory.objects.get(id=category, owner=self.request.user)
-                    expense = Expense.objects.get(id=expense_id)
+                    category = ExpenseCategory.objects.get(id=category_id, owner=self.request.user)
+                    expense = Expense.objects.get(id=expense_id, owner=self.request.user)
                 except (
                         ExpenseCategory.DoesNotExist, ExpenseCategory.MultipleObjectsReturned,
                         Expense.DoesNotExist, Expense.MultipleObjectsReturned,
                 ) as e:
-                    write_error_log("Monthly Report", f"Cannot assign expense {expense_id} to category {category}; {e}")
+                    write_error_log("Monthly Report", f"Cannot assign expense {expense_id} to category {category_id}; {e}")
                 else:
-                    expense.category_id = category
+                    expense.category = category
                     expense.save()
+
+                    # If the new category has a budget, remove the row (return empty response)
+                    if category.budget_category_id is not None:
+                        return HttpResponse("")
+
+                    # Otherwise, return the updated row with the new category name
+                    context = {
+                        'expense': expense,
+                        'budget_choices': get_budgets(user=self.request.user)
+                    }
+                    return render(self.request, 'reports/components/uncategorized-expense-row.html', context)
 
         year = self.request.POST.get('year')
         month = self.request.POST.get('month')

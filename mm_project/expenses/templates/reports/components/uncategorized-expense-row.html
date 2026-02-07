@@ -1,0 +1,56 @@
+{% load humanize %}
+<tr id="uncategorized-expenses-row-{{ expense.id }}">
+    <td id="uncategorized-expenses-{{ expense.id }}">
+        <div class="d-flex justify-content-between">
+            {{ expense.category.name }}
+            <div
+                    hx-get="{% url "expenses:reports_category-inline" expense_id=expense.id %}"
+                    hx-trigger="click"
+                    hx-target="#uncategorized-expenses-{{ expense.id }}"
+                    hx-swap="innerHTML"
+                    style="height: 20px"
+            >
+                {% include 'icons/edit.svg' %}
+            </div>
+        </div>
+    </td>
+    <td>
+        <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
+            {{ expense.name }}
+        </a>
+    </td>
+    <td>{{ expense.amount }}</td>
+    <td>
+        <div class="d-flex" style="gap: 1rem">
+
+            <form
+                    hx-target="this"
+                    hx-swap="outerHTML"
+            >
+                {% csrf_token %}
+                <input hidden name="category" value="{{ expense.category.id }}"/>
+                <input hidden name="form_type" value="budget"/>
+                <select
+                        class="form-control"
+                        hx-trigger="change"
+                        hx-post="{% url 'expenses:reports_monthly' %}"
+                        hx-include="#month-year-form"
+                        hx-target="#monthly-report-card"
+                        hx-select="#monthly-report-card"
+                        name="budget"
+                >
+                    <option value="">None</option>
+                    {% for budget in budget_choices %}
+                        <option
+                                {% if budget.id == selected_id %}selected{% endif %}
+                                value="{{ budget.id }}"
+                        >
+                            {{ budget.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </td>
+</tr>
+
