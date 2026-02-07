@@ -186,8 +186,8 @@
                             <tbody>
 
                             {% for expense in uncategorized_expenses %}
-                                <tr id="uncategorized-expenses-{{ expense.id }}">
-                                    <td>
+                                <tr id="uncategorized-expenses-row-{{ expense.id }}">
+                                    <td  id="uncategorized-expenses-{{ expense.id }}">
                                         <div class="d-flex justify-content-between">
                                             {{ expense.category.name }}
                                             <div
