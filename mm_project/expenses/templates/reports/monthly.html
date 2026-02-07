@@ -1,6 +1,7 @@
 {% extends 'frontend/utils/base.html' %}
 
 {% load static %}
+{% load humanize %}
 
 {% block title %} Money Manager: Monthly Report{% endblock %}
 
@@ -118,11 +119,11 @@
                 {% if show_summary %}
                     <div class="col-12 d-flex mb-4 justify-content-between">
                         <div>
-                            <p class="money-large">$ {{ monthly_total }}</p>
+                            <p class="money-large">$ {{ monthly_total|intcomma }}</p>
                             Total Monthly Spending
                         </div>
                         <div>
-                            <p class="money-large">$ {{ non_budget_total }}</p>
+                            <p class="money-large">$ {{ non_budget_total|intcomma }}</p>
                             Unbudgeted Spending
                         </div>
                     </div>
