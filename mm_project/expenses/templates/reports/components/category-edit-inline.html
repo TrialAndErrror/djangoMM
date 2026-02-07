@@ -11,7 +11,7 @@
             hx-post="{% url 'expenses:reports_monthly' %}"
             hx-include="#month-year-form"
             hx-target="#uncategorized-expenses-row-{{ expense.id }}"
-            hx-select="#uncategorized-expenses-row-{{ expense.id }}"
+            hx-select="#uncategorized-expenses-{{ expense.id }}"
             hx-swap="outerHTML"
             name="category_update"
     >
