@@ -3,21 +3,17 @@ services:
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env
+
   web:
     build: ./mm_project
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./mm_project:/app
     ports:
-      - "13000:80"
-    environment:
-      - DJANGO_SETTINGS_MODULE=mm_project.settings.default
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - "${DJANGO_PORT}:8000"
+    env_file:
+      - .env
     depends_on:
       - db
