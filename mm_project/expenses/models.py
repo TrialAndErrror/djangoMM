@@ -28,11 +28,17 @@ class ExpenseCategory(models.Model):
     budget_category = models.ForeignKey(Budget, blank=True, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('expenses:expense_category_view', kwargs={'pk': self.pk})
 
 class Expense(models.Model):
     name = models.CharField(max_length=150)

@@ -8,7 +8,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView,
 from rest_framework.reverse import reverse_lazy
 
 from accounts.models import Account
-from expenses.forms import MonthYearForm, ExpenseUpdateForm
+from expenses.forms import ExpenseUpdateForm
 from expenses.lookups import get_expense_categories_for_user
 from expenses.models import Expense, Budget
 from services.calendar import handle_calendar_scroll, get_month_choices, get_year_choices

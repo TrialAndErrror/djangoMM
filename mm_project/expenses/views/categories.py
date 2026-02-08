@@ -49,7 +49,7 @@ class ExpenseCategoryUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPas
 class ExpenseCategoryDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = "expense_categories/delete.html"
     model = ExpenseCategory
-    success_url = reverse_lazy('expenses:all_expense_categories')
+    success_url = reverse_lazy('expenses:expense_category_list')
 
     def get_success_message(self, cleaned_data):
         return f'Expense Category "{cleaned_data.get('name')}" Deleted'
@@ -77,7 +77,7 @@ class ViewExpenseCategoriesList(LoginRequiredMixin, FormView):
             owner=self.request.user
         ).order_by("name").all()
         form = self.get_form()
-        form.set_target_url(reverse_lazy('expenses:all_expense_categories'))
+        form.set_target_url(reverse_lazy('expenses:expense_category_list'))
 
         return render(request, self.template_name, {'form': form, 'expense_categories': expenses})
 

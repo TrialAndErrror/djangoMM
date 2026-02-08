@@ -14,7 +14,7 @@ from accounts.models import Account
 # Create your views here.
 @login_required
 def view_all_accounts(request):
-    accounts = Account.objects.filter(owner=request.user).order_by("balance")
+    accounts = Account.objects.filter(owner=request.user).order_by("-last_update")
     context = {
         'accounts': accounts,
         'user': request.user.username

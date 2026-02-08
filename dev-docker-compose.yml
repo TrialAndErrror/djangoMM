@@ -5,13 +5,14 @@ services:
       - ./data/db:/var/lib/postgresql/data
     env_file:
       - .env
+
   web:
     build: ./mm_project
-    command: ["gunicorn", "--bind", "0.0.0.0:80", "--worker-class", "gevent", "mm_project.wsgi:application"]
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./mm_project:/app
     ports:
-      - "${DJANGO_PORT}:80"
+      - "${DJANGO_PORT}:8000"
     env_file:
       - .env
     depends_on:
