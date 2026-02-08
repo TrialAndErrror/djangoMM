@@ -1,4 +1,3 @@
-
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import DetailView, CreateView, UpdateView, ListView
@@ -22,7 +21,22 @@ class BudgetDetailView(LoginRequiredMixin, DetailView):
         context['category_choices'] = ExpenseCategory.objects.filter(budget_category_id__isnull=True, owner=self.request.user).order_by('name').values_list('id', 'name')
         if category := kwargs.get('category_id'):
             context['category'] = category
-            context['matching_expenses'] = Expense.objects.filter(category_id=category).order_by("date")
+            expenses = Expense.objects.filter(category_id=category).order_by("date")
+
+            # Group expenses by month
+            expenses_by_month = {}
+            for expense in expenses:
+                month_key = expense.date.strftime('%Y-%m')
+                month_display = expense.date.strftime('%B %Y')
+                if month_key not in expenses_by_month:
+                    expenses_by_month[month_key] = {
+                        'month_display': month_display,
+                        'expenses': []
+                    }
+                expenses_by_month[month_key]['expenses'].append(expense)
+
+            # Sort by month (most recent first)
+            context['expenses_by_month'] = dict(sorted(expenses_by_month.items(), reverse=True))
         return context
 
     def post(self, request, *args, **kwargs):

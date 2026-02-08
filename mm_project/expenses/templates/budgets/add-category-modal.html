@@ -1,6 +1,6 @@
 <div class="modal fade" id="expense-category-modal" tabindex="-1" role="dialog" aria-labelledby="expense-category-modal-label"
      aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="expense-category-modal-label">Add Expense Category</h5>
@@ -25,32 +25,45 @@
                     {% endfor %}
                 </select>
                 <div id="matching-expenses-table">
-                    {% if matching_expenses %}
+                    {% if expenses_by_month %}
                         <h2>Matching Expenses</h2>
-                        <table class="table sortable border-primary">
-                            <thead>
-                            <tr>
-                                <th>Expense</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Account</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for expense in matching_expenses %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
-                                            {{ expense.name }}
-                                        </a>
-                                    </td>
-                                    <td>{{ expense.amount }}</td>
-                                    <td>{{ expense.date }}</td>
-                                    <td>{{ expense.account.name }}</td>
-                                </tr>
+                        <div class="row">
+                            {% for month_key, month_data in expenses_by_month.items %}
+                                <div class="col-12 col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">{{ month_data.month_display }}</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-sm mb-0">
+                                                <thead>
+                                                <tr>
+                                                    <th>Expense</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                    <th class="d-none d-lg-table-cell">Account</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for expense in month_data.expenses %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'expenses:expense_detail' pk=expense.pk %}">
+                                                                {{ expense.name }}
+                                                            </a>
+                                                        </td>
+                                                        <td>${{ expense.amount }}</td>
+                                                        <td>{{ expense.date|date:"m/d" }}</td>
+                                                        <td class="d-none d-lg-table-cell">{{ expense.account.name }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
-                            </tbody>
-                        </table>
+                        </div>
                     {% elif category %}
                         This category does not have any active expenses
                     {% endif %}
