@@ -44,14 +44,14 @@
                                 <h3>Budget Amount: $ {{ object.amount }}</h3>
                                 <div class="d-flex flex-wrap">
                                     {% for category in object.expensecategory_set.all %}
-                                        <div class="badge bg-primary-outline border border-primary text-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                        <div class="badge bg-primary-outline border border-primary text-primary d-flex align-items-center" style="font-size: 1rem; padding: 0.5rem 1rem;">
                                             {{ category.name }}
                                             <form style="display: inline;">
                                                 <input hidden name="category_id" value="{{ category.id }}" />
                                                 <input hidden name="action" value="remove" />
                                                 <button
                                                         type="button"
-                                                        class="btn btn-sm btn-link p-0 ms-2"
+                                                        class="btn btn-link p-0 ms-2 text-decoration-none"
                                                         hx-post="#"
                                                         hx-swap="outerHTML"
                                                         hx-target="#budget-data-card"
