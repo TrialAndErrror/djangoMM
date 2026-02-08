@@ -25,10 +25,10 @@
                     {% endfor %}
                 </select>
                 <div id="matching-expenses-table">
-                    {% if expenses_by_month %}
+                    {% if modal_expenses_by_month %}
                         <h2>Matching Expenses</h2>
                         <div class="row">
-                            {% for month_key, month_data in expenses_by_month.items %}
+                            {% for month_key, month_data in modal_expenses_by_month.items %}
                                 <div class="col-12 col-md-6 mb-3">
                                     <div class="card">
                                         <div class="card-header">

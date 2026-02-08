@@ -19,24 +19,55 @@ class BudgetDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_choices'] = ExpenseCategory.objects.filter(budget_category_id__isnull=True, owner=self.request.user).order_by('name').values_list('id', 'name')
+
+        # Group all expenses in this budget by month, then by category
+        budget = self.get_object()
+        expenses = Expense.objects.filter(
+            category__budget_category=budget,
+            owner=self.request.user
+        ).select_related('category').order_by('-date')
+
+        # Group by month first, then by category within each month
+        expenses_by_month = {}
+        for expense in expenses:
+            month_key = expense.date.strftime('%Y-%m')
+            month_display = expense.date.strftime('%B %Y')
+
+            if month_key not in expenses_by_month:
+                expenses_by_month[month_key] = {
+                    'month_display': month_display,
+                    'categories': {}
+                }
+
+            category_name = expense.category.name if expense.category else 'Uncategorized'
+            if category_name not in expenses_by_month[month_key]['categories']:
+                expenses_by_month[month_key]['categories'][category_name] = []
+
+            expenses_by_month[month_key]['categories'][category_name].append(expense)
+
+        # Sort by month (most recent first) and convert to list for template
+        context['expenses_by_month'] = dict(sorted(expenses_by_month.items(), reverse=True))
+
+        # For the modal - group expenses by month for a specific category
         if category := kwargs.get('category_id'):
             context['category'] = category
             expenses = Expense.objects.filter(category_id=category).order_by("date")
 
             # Group expenses by month
-            expenses_by_month = {}
+            modal_expenses_by_month = {}
             for expense in expenses:
                 month_key = expense.date.strftime('%Y-%m')
                 month_display = expense.date.strftime('%B %Y')
-                if month_key not in expenses_by_month:
-                    expenses_by_month[month_key] = {
+                if month_key not in modal_expenses_by_month:
+                    modal_expenses_by_month[month_key] = {
                         'month_display': month_display,
                         'expenses': []
                     }
-                expenses_by_month[month_key]['expenses'].append(expense)
+                modal_expenses_by_month[month_key]['expenses'].append(expense)
 
             # Sort by month (most recent first)
-            context['expenses_by_month'] = dict(sorted(expenses_by_month.items(), reverse=True))
+            context['modal_expenses_by_month'] = dict(sorted(modal_expenses_by_month.items(), reverse=True))
+
         return context
 
     def post(self, request, *args, **kwargs):
