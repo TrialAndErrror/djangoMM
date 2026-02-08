@@ -42,7 +42,7 @@
                         <div class="card-body">
                             <div class="d-flex flex-column" style="gap: 1rem">
                                 <h3>Budget Amount: $ {{ object.amount }}</h3>
-                                <div class="d-flex flex-wrap">
+                                <div class="d-flex flex-wrap gap-3">
                                     {% for category in object.expensecategory_set.all %}
                                         <div class="badge bg-primary-outline border border-primary text-primary d-flex align-items-center" style="font-size: 1rem; padding: 0.5rem 1rem;">
                                             {{ category.name }}
@@ -64,7 +64,7 @@
                                         </div>
                                     {% endfor %}
                                     <button type="button"
-                                            class="btn btn-primary btn-lg"
+                                            class="btn btn-primary btn-lg ms-auto"
                                             data-bs-toggle="modal"
                                             data-bs-target="#expense-category-modal">
                                         Add Category
