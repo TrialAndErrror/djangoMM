@@ -89,6 +89,26 @@ class MonthlyExpenseReportView(FormView):
 
         context['budget_choices'] = get_budgets(user=self.request.user)
 
+        total_savings = Expense.objects.filter(
+            category__special_type='savings',
+            owner=self.request.user,
+            date__month=month,
+            date__year=year,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        if total_savings:
+            context['total_savings'] = total_savings
+
+        total_income = Expense.objects.filter(
+            category__special_type='income',
+            owner=self.request.user,
+            date__month=month,
+            date__year=year,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        if total_income:
+            context['total_income'] = total_income
+
+
         return context
 
     def post(self, *args, **kwargs):

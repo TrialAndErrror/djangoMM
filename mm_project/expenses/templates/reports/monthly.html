@@ -126,6 +126,18 @@
                             <p class="money-large">$ {{ non_budget_total|intcomma }}</p>
                             Unbudgeted Spending
                         </div>
+                        {% if total_income %}
+                            <div>
+                                <p class="money-large">$ {{ total_income|intcomma }}</p>
+                                Total Income
+                            </div>
+                        {% endif %}
+                        {% if total_savings %}
+                            <div>
+                                <p class="money-large">$ {{ total_savings|intcomma }}</p>
+                                Total Savings
+                            </div>
+                        {% endif %}
                     </div>
                 {% endif %}
                 <div class="col-12 mb-4">
