@@ -19,7 +19,7 @@ class ExpenseCategoryDetailView(LoginRequiredMixin, DetailView):
 class ExpenseCategoryCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = "expense_categories/create.html"
     model = ExpenseCategory
-    fields = ['name', 'description', 'owner']
+    fields = ['name', 'description', 'special_type', 'exclude', 'owner']
 
     def get_success_message(self, cleaned_data):
         return f'Expense Category "{cleaned_data.get('name')}" Created'
@@ -37,7 +37,7 @@ class ExpenseCategoryCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateV
 class ExpenseCategoryUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "expense_categories/edit.html"
     model = ExpenseCategory
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'special_type', 'exclude']
 
     def get_success_message(self, cleaned_data):
         return f'Expense "{cleaned_data.get('name')}" Updated'

@@ -6,6 +6,14 @@
         {% if category.description %}{{ category.description }}{% endif %}
     </td>
     <td>
+        {% if category.special_type %}{{ category.get_special_type_display }}{% endif %}
+    </td>
+    <td>
+        {% if category.exclude %}
+            <span class="badge bg-warning text-dark">Excluded</span>
+        {% endif %}
+    </td>
+    <td>
         <form>
             {% csrf_token %}
             <select

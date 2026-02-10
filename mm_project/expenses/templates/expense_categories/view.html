@@ -16,6 +16,8 @@
                 <div class="col ml-5">
                     <p>Name: {{ object.name }}</p>
                     <p>Description: {{ object.description }}</p>
+                    <p>{% if object.special_type %}Special Type: {{ object.get_special_type_display }}{% endif %}</p>
+                    <p>{% if object.exclude %}<span class="badge bg-warning text-dark">Excluded from Spending</span>{% endif %}</p>
                     <p>{% if object.budget_category %}Budget: {{ object.budget_category.name}}{% endif %}</p>
 
                     {% if object.expenses_set %}

@@ -23,10 +23,19 @@ class Budget(models.Model):
 
 
 class ExpenseCategory(models.Model):
+    SPECIAL_TYPE_CHOICES = [
+        ('', 'None'),
+        ('savings', 'Savings'),
+        ('income', 'Income'),
+        ('transfer', 'Transfer'),
+    ]
+
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True, null=True)
     budget_category = models.ForeignKey(Budget, blank=True, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    special_type = models.CharField(max_length=50, choices=SPECIAL_TYPE_CHOICES, blank=True, default='')
+    exclude = models.BooleanField(default=False, help_text="Exclude this category from spending calculations")
 
     class Meta:
         ordering = ['name']
